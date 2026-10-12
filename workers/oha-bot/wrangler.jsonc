@@ -1,0 +1,19 @@
+{
+  // Bot nhận việc oHa (skill bot-nhan-viec, bản gọn port sang Worker + D1).
+  // Khoá + mã chat KHÔNG nằm ở đây: đưa bằng `wrangler secret put` (đọc từ .env dự án qua stdin).
+  "name": "oha-bot",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "observability": { "enabled": true },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "oha-db", "database_id": "b2393c60-280f-4617-ae3b-c9c93a80c83e" }
+  ],
+  "ai": { "binding": "AI", "remote": true },
+  // Mục 7c: quét lời chưa trả lời quá 15 phút.
+  "triggers": { "crons": ["*/5 * * * *"] },
+  "vars": {
+    "TG_BOT_USERNAME": "nguyclaudebot",
+    "THOAI_MODELS": "@cf/openai/whisper-large-v3-turbo,@cf/openai/whisper"
+  }
+}

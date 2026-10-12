@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Vận Hạn Chung - Current Planets{% endblock %}
+
+{% block head_extra %}
+<style>
+    .app-container { max-width: 1200px; margin: 0 auto; }
+    .title-auto-scale { white-space: nowrap; overflow: hidden; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="app-container p-4 md:p-8 pt-16">
+    <a href="/vanhan" class="text-blue-500 hover:text-blue-400 mb-4 inline-block hover:underline">&larr; Quay lại Menu Vận Hạn</a>
+
+    <!-- INPUT SECTION -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded shadow mb-8 border border-gray-200 dark:border-gray-700">
+        <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-600 pb-2 text-center text-yellow-600 dark:text-yellow-500">Vận Hạn Chung (Current Sky)</h2>
+        
+        <form action="/vanhan/chung" method="POST">
+            <input type="hidden" id="lat" name="lat" value="{{ loc.lat }}">
+            <input type="hidden" id="lon" name="lon" value="{{ loc.lon }}">
+            <input type="hidden" id="tz" name="tz" value="{{ loc.tz }}">
+            <input type="hidden" id="address" name="address" value="{{ loc.address }}">
+
+            <div class="hidden">
+                <div class="mb-4">
+                    <label class="block text-sm font-bold mb-1 text-gray-600 dark:text-gray-400">Đối tượng</label>
+                    <select disabled class="w-full p-3 border rounded bg-gray-100 dark:bg-gray-700 text-gray-500 cursor-not-allowed font-bold">
+                        <option selected>Chart of the moment</option>
+                    </select>
+                </div>
+
+                <div class="mb-4 relative">
+                    <label class="block text-sm font-bold mb-1 text-gray-600 dark:text-gray-400">Địa điểm (Điều chỉnh nếu cần)</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="search-input" value="{{ loc.address.split(',')[0] }}" placeholder="Nhập tên thành phố..." class="w-full p-3 border rounded text-sm dark:bg-gray-700" oninput="onSearchInput()">
+                        <button type="button" onclick="searchLocation()" class="bg-blue-500 text-white px-4 rounded hover:bg-blue-600"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div id="search-results" class="hidden absolute z-50 w-full bg-white dark:bg-gray-700 border shadow-lg max-h-40 overflow-y-auto text-black mt-1 rounded"></div>
+                    <p class="text-xs text-gray-400 mt-1">Đang chọn: {{ loc.address }} ({{ loc.tz }})</p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-center mt-4">
+                <input type="checkbox" name="show_real_angle" id="show_real_angle" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600">
+                <label for="show_real_angle" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Hiển thị "Góc thật" (Show Real Orb)</label>
+            </div>
+
+            <div class="text-center mt-6">
+                <button type="submit" class="bg-yellow-600 text-white font-bold py-3 px-10 rounded shadow hover:bg-yellow-500 transition transform hover:-translate-y-1 uppercase">
+                    Check Current Planets
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- RESULTS SECTION -->
+    {% if chart_img %}
+    <div class="space-y-8">
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow text-center flex flex-col items-center border border-gray-200 dark:border-gray-700">
+            <div class="w-full overflow-hidden mb-2">
+                <h3 class="font-bold text-lg text-yellow-600 dark:text-yellow-500 whitespace-nowrap overflow-hidden text-ellipsis title-auto-scale">Chart of the Moment</h3>
+            </div>
+            <img src="data:image/png;base64,{{ chart_img }}" class="max-w-full h-auto mx-auto rounded border border-gray-200 dark:border-gray-700">
+        </div>
+        
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow h-fit border border-gray-200 dark:border-gray-700">
+            <h3 class="font-bold text-lg mb-4 border-b border-gray-200 dark:border-gray-700 pb-2 text-center text-gray-800 dark:text-gray-200 uppercase">Phân Tích Chi Tiết</h3>
+            <div class="text-sm bg-gray-50 dark:bg-gray-900 p-4 rounded border border-gray-200 dark:border-gray-700 h-full text-gray-800 dark:text-gray-200">
+                {{ report | safe }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let debounceTimer;
+    async function searchLocation() {
+        const query = document.getElementById('search-input').value;
+        const resultDiv = document.getElementById('search-results');
+        if (!query) { resultDiv.classList.add('hidden'); return; }
+        resultDiv.innerHTML = '<div class="p-2 text-gray-500 text-xs">Đang tìm...</div>';
+        resultDiv.classList.remove('hidden');
+
+        try {
+            const res = await fetch(`/api/search-location?q=${encodeURIComponent(query)}`);
+            const data = await res.json();
+            resultDiv.innerHTML = '';
+            if (data.length === 0) { resultDiv.innerHTML = '<div class="p-2 text-red-500 text-xs">Không tìm thấy.</div>'; return; }
+
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'p-2 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer border-b border-gray-100 dark:border-gray-600 text-xs text-black dark:text-white';
+                div.textContent = item.display_name;
+                div.onclick = () => {
+                    document.getElementById('lat').value = item.lat;
+                    document.getElementById('lon').value = item.lon;
+                    document.getElementById('tz').value = item.tz;
+                    document.getElementById('address').value = item.display_name;
+                    document.getElementById('search-input').value = item.display_name.split(',')[0];
+                    resultDiv.classList.add('hidden');
+                };
+                resultDiv.appendChild(div);
+            });
+        } catch (e) { resultDiv.classList.add('hidden'); }
+    }
+    function onSearchInput() { clearTimeout(debounceTimer); debounceTimer = setTimeout(searchLocation, 500); }
+    
+    function scaleTitleElement(el) {
+        if (!el) return; el.style.fontSize = '';
+        const parent = el.parentElement; const maxWidth = parent.clientWidth;
+        const textWidth = el.scrollWidth; const currentSize = parseFloat(window.getComputedStyle(el).fontSize);
+        if (textWidth > maxWidth) { const newSize = Math.max(10, currentSize * (maxWidth / textWidth)); el.style.fontSize = `${newSize}px`; }
+    }
+    function runScaleAll() {
+        document.querySelectorAll('.title-auto-scale').forEach(el => scaleTitleElement(el));
+    }
+    window.addEventListener('resize', runScaleAll); document.addEventListener('DOMContentLoaded', () => { setTimeout(runScaleAll, 200); });
+</script>
+{% endblock %}

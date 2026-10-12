@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Astro System{% endblock %}</title>
+
+    <!-- CSS Chung -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- CẤU HÌNH TAILWIND ĐỂ DÙNG CLASS 'dark' -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+
+    <!-- SCRIPT KHỞI TẠO THEME (Chạy ngay lập tức để tránh nháy hình) -->
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    {% block head_extra %}{% endblock %}
+
+    <!-- CSS ĐIỀU KHIỂN SPIN BÊN PHẢI - CHỐNG ZOOM ẢO -->
+    <style>
+        /* CHỐNG ZOOM ẢO CHO NÚT SÁNG TỐI */
+        #theme-toggle {
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Ẩn nút spinner mặc định */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        .smart-spin-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .smart-spin-input {
+            /* Ép 16px để iPhone không tự zoom khi focus */
+            font-size: 16px !important; 
+            padding-right: 22px !important;
+            width: 100% !important;
+            text-align: center !important;
+        }
+
+        .smart-spin-arrows {
+            position: absolute;
+            right: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            width: 20px;
+            height: 90%;
+            justify-content: center;
+            border-left: 1px solid rgba(156, 163, 175, 0.3);
+            z-index: 10;
+        }
+
+        .spin-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50%;
+            font-size: 9px;
+            cursor: pointer;
+            color: #6b7280;
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+            transition: background 0.2s;
+            /* CHẶN ZOOM KHI BẤM NHANH NHƯNG KHÔNG CHẶN ZOOM 2 NGÓN TAY */
+            touch-action: manipulation; 
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .dark .spin-btn { color: #9ca3af; }
+        .spin-btn:hover { background: rgba(37, 99, 235, 0.1); color: #2563eb; }
+
+        /* CSS CHO NÚT NUÔI TOOL GÓC TRÁI */
+        #nuoitool-widget {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .nuoitool-hidden {
+            transform: translateX(-85%);
+        }
+        /* CHỈ TẠO KHOẢNG TRỐNG TRÊN MOBILE ĐỂ KHÔNG BỊ NÚT CHE CONTENT, DESKTOP GIỮ NGUYÊN (md:pb-0) */
+        body {
+            padding-bottom: 70px;
+        }
+        @media (min-width: 768px) {
+            body {
+                padding-bottom: 0px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen text-gray-800 dark:text-gray-200 transition-colors duration-300">
+
+    <!-- NÚT CHUYỂN ĐỔI THEME -->
+    <button id="theme-toggle" class="fixed top-4 right-4 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition shadow-lg border border-gray-300 dark:border-gray-600">
+        <svg id="theme-toggle-light-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+        </svg>
+        <svg id="theme-toggle-dark-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+        </svg>
+    </button>
+
+    <!-- NÚT NUÔI TOOL FLOATING (BOTTOM LEFT) -->
+    <div id="nuoitool-widget" class="fixed bottom-6 left-0 z-[60] flex items-center">
+        <!-- Nút chính -->
+        <a href="/nuoitool" class="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-r-full shadow-lg transition-all group">
+            <i class="fas fa-coffee group-hover:animate-bounce"></i>
+            <span class="font-bold text-sm tracking-wide">NuôiTool</span>
+        </a>
+        <!-- Nút ẩn/hiện (Pull-tab) -->
+        <button id="nuoitool-toggle" class="ml-1 bg-gray-400 dark:bg-gray-600 text-white w-6 h-10 rounded-full flex items-center justify-center shadow-md opacity-70 hover:opacity-100 transition-all">
+            <i id="nuoitool-icon" class="fas fa-chevron-left text-[10px]"></i>
+        </button>
+    </div>
+
+    <!-- NỘI DUNG CHÍNH -->
+    {% block content %}{% endblock %}
+
+    <!-- LOGIC THEME -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        function updateThemeIcons() {
+            if (document.documentElement.classList.contains('dark')) {
+                themeToggleDarkIcon.classList.add('hidden');
+                themeToggleLightIcon.classList.remove('hidden');
+            } else {
+                themeToggleLightIcon.classList.add('hidden');
+                themeToggleDarkIcon.classList.remove('hidden');
+            }
+        }
+        updateThemeIcons();
+
+        // CHỐNG ZOOM CHO NÚT THEME KHI BẤM LIÊN TIẾP
+        themeToggleBtn.addEventListener('touchend', function(e) {
+            const now = Date.now();
+            if (now - (this.lastTap || 0) < 300) e.preventDefault();
+            this.lastTap = now;
+        }, {passive: false});
+
+        themeToggleBtn.addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            updateThemeIcons();
+        });
+    </script>
+
+    <!-- LOGIC NUÔI TOOL TOGGLE -->
+    <script>
+        const widget = document.getElementById('nuoitool-widget');
+        const toggleBtn = document.getElementById('nuoitool-toggle');
+        const widgetIcon = document.getElementById('nuoitool-icon');
+
+        // Khôi phục trạng thái ẩn/hiện từ LocalStorage
+        if (localStorage.getItem('nuoitool_hidden') === 'true') {
+            widget.classList.add('nuoitool-hidden');
+            widgetIcon.classList.replace('fa-chevron-left', 'fa-chevron-right');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const isHidden = widget.classList.toggle('nuoitool-hidden');
+            localStorage.setItem('nuoitool_hidden', isHidden);
+            if (isHidden) {
+                widgetIcon.classList.replace('fa-chevron-left', 'fa-chevron-right');
+            } else {
+                widgetIcon.classList.replace('fa-chevron-right', 'fa-chevron-left');
+            }
+        });
+    </script>
+
+    <!-- LOGIC SMART SPINNERS (RIGHT SIDE) -->
+    <script>
+        function setupSmartSpinners() {
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                // Sửa: Lấy cả name hoặc id để nhận diện, bổ sung 'house'
+                const nameOrId = (input.name || input.id || "").toLowerCase();
+                const isDay = nameOrId.includes('day');
+                const isMonth = nameOrId.includes('month');
+                const isYear = nameOrId.includes('year');
+                const isHour = nameOrId.includes('hour');
+                const isMinute = nameOrId.includes('min');
+                const isHouse = nameOrId.includes('house');
+
+                if (!isDay && !isMonth && !isYear && !isHour && !isMinute && !isHouse) return;
+                if (input.dataset.spinnerSetup) return;
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'smart-spin-wrapper';
+                input.parentNode.insertBefore(wrapper, input);
+
+                const arrowsDiv = document.createElement('div');
+                arrowsDiv.className = 'smart-spin-arrows';
+                
+                const btnUp = document.createElement('button');
+                btnUp.type = 'button'; btnUp.className = 'spin-btn up'; btnUp.innerHTML = '▲';
+                const btnDown = document.createElement('button');
+                btnDown.type = 'button'; btnDown.className = 'spin-btn down'; btnDown.innerHTML = '▼';
+
+                input.classList.add('smart-spin-input');
+                wrapper.appendChild(input);
+                wrapper.appendChild(arrowsDiv);
+                arrowsDiv.appendChild(btnUp);
+                arrowsDiv.appendChild(btnDown);
+                input.dataset.spinnerSetup = "true";
+
+                const getMin = () => (isHour || isMinute) ? 0 : 1;
+                const getMaxDays = (container) => {
+                    // Sửa: Tìm ô tháng/năm bằng cả name và id
+                    const mEl = container.querySelector('input[name*="month"], input[id*="month"]');
+                    const yEl = container.querySelector('input[name*="year"], input[id*="year"]');
+                    const m = parseInt(mEl?.value) || 0;
+                    const y = parseInt(yEl?.value) || 0;
+                    if (m < 1 || m > 12) return 31;
+                    return new Date(y || 2000, m, 0).getDate();
+                };
+
+                const adjust = (delta) => {
+                    let val = parseInt(input.value);
+                    if (isNaN(val)) val = getMin();
+                    
+                    let max = 9999;
+                    if (isMonth) max = 12;
+                    else if (isHour) max = 23;
+                    else if (isMinute) max = 59;
+                    else if (isHouse) max = 12;
+                    else if (isDay) max = getMaxDays(wrapper.closest('.flex, .grid, form'));
+
+                    val += delta;
+                    
+                    // Logic vòng lặp đặc biệt cho House
+                    if (isHouse) {
+                        if (val > max) val = 1;
+                        else if (val < 1) val = 12;
+                    } else if (!isYear) {
+                        if (val > max) val = getMin();
+                        else if (val < getMin()) val = max;
+                    }
+                    input.value = val;
+
+                    if (isMonth || isYear) {
+                        const dEl = wrapper.closest('.flex, .grid, form').querySelector('input[name*="day"]');
+                        if (dEl) {
+                            const dMax = getMaxDays(wrapper.closest('.flex, .grid, form'));
+                            if (parseInt(dEl.value) > dMax) dEl.value = dMax;
+                        }
+                    }
+
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                };
+
+                btnUp.onclick = (e) => { e.preventDefault(); adjust(1); };
+                btnDown.onclick = (e) => { e.preventDefault(); adjust(-1); };
+
+                [btnUp, btnDown].forEach(b => {
+                    b.addEventListener('touchend', (e) => {
+                        const now = Date.now();
+                        if (now - (b.lastTap || 0) < 300) e.preventDefault();
+                        b.lastTap = now;
+                    }, {passive: false});
+                });
+
+                input.addEventListener('blur', () => {
+                    let v = parseInt(input.value);
+                    if (isNaN(v)) return;
+                    if (isMonth && (v < 1 || v > 12)) input.value = (v < 1) ? 1 : 12;
+                    if (isHour && (v < 0 || v > 23)) input.value = (v < 0) ? 0 : 23;
+                    if (isMinute && (v < 0 || v > 59)) input.value = (v < 0) ? 0 : 59;
+                    if (isHouse && (v < 0 || v > 12)) input.value = (v < 0) ? 0 : 12;
+                    if (isDay) {
+                        const mMax = getMaxDays(wrapper.closest('.flex, .grid, form'));
+                        if (v < 1) input.value = 1;
+                        if (v > mMax) input.value = mMax;
+                    }
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', setupSmartSpinners);
+        const spinnerObserver = new MutationObserver(setupSmartSpinners);
+        spinnerObserver.observe(document.body, { childList: true, subtree: true });
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

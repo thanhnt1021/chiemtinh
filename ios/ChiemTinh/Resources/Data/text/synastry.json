@@ -1,0 +1,603 @@
+{
+  "mo_ta": "Quy trình luận Synastry 3 phần + bảng ma trận ký hiệu 10x5 + luận hành tinh cá nhân x cá nhân và cá nhân x vòng ngoài + 2 chìa khoá hạnh phúc.",
+  "nguon_chinh": [
+    "THAM KHẢO/CTNC - BỔ TÚC 05 - Full quy trình luận Synastry.md (208 dòng)",
+    "BUỔI HỌC/CTNC - Buổi học 5&6 - Chiêm tinh quan hệ.md (386 dòng)",
+    "BUỔI HỌC/CTNC - Buổi học 6.md (202 dòng — trùng lặp gần như hoàn toàn với nửa sau của Buổi học 5&6)",
+    "THAM KHẢO/CTNC - Tương Tác hành tinh Synastry.md (76 dòng — đã rút riêng vào hanh-tinh.json)"
+  ],
+  "cong_cu": [
+    "https://www.astro-seek.com/ (lập synastry, bảng Aspect table, chỉnh orb ở Extended settings)",
+    "https://chiemtinh.jst4.fun/ (tool nội bộ để nhìn và đếm góc)"
+  ],
+  "orb_synastry": "10 độ (chỉnh trong Extended settings của astro-seek). Góc rất chặt (độ lệch dưới 1 độ): khung đậm. Góc lỏng: khung nét đứt.",
+  "ba_level_tam_linh_cua_mqh": [
+    "Level 1: Trả nợ: có duyên kiếp trước nên gặp để trả.",
+    "Level 2: Học hỏi: học được bài học nào đấy từ người kia.",
+    "Level 3: Đồng sáng tạo: Nhờ tương tác với đối phương mà mình tự phát triển thứ của riêng mình."
+  ],
+  "nguon_level_tam_linh": "CTNC - Buổi học 5&6 - Chiêm tinh quan hệ.md:142-145",
+  "quy_trinh": [
+    {
+      "phan": "Phần I. Ấn tượng về mỗi người (Giới thiệu nhân vật)",
+      "noi_dung": [
+        "Muốn biết 2 người tương tác với nhau thế nào thì đầu tiên phải biết mỗi người là ai, cư xử ra sao, cần gì trong mối quan hệ.",
+        "1) Ấn tượng tổng quan vắn tắt về mỗi người: thường chỉ cần xem Lõi tính cách (phẩm chất chính – cũng là cách cư xử trong mối quan hệ) và Nhà trội (quan tâm điều gì – cũng sẽ cần được thỏa mãn những khía cạnh đó trong mối quan hệ) => Phẩm chất = cho đi; Mối quan tâm = cần nhận về",
+        "2) Từ ấn tượng trên, nêu ngay vài nhận định sơ bộ về những điểm hoà hợp/xung đột tiềm tàng khi hai người kết đôi. Để ý những điểm chung & trái ngược nhau giữa hai người."
+      ],
+      "nguon": "CTNC - BỔ TÚC 05 - Full quy trình luận Synastry.md:7-13"
+    },
+    {
+      "phan": "Phần II. Xem tương tác nhà",
+      "tong_quan": [
+        "Xem các hành tinh của người này rơi vào những nhà nào của người kia và ngược lại.",
+        "Xem 2 người gửi hành tinh nhiều vào nhà nào của nhau => mỗi người được người kia kích thích chú tâm vào các lĩnh vực gì. Sau đó tổng hợp cả 2 chiều để xem các NHÀ TRỘI: cả mối quan hệ chủ yếu xoay quanh các lĩnh vực gì.",
+        "Lưu ý: Khi chọn nhà mà mỗi người được kích hoạt nhiều lẫn nhà trội, chỉ nên lấy từ 2-3 nhà có tổng điểm hành tinh cao nhất.",
+        "Lưu ý: Nhà trội không bắt buộc phải xuất hiện ở cả 2 cột tương tác. Nếu chỉ ở 1 cột thôi, nhưng tổng điểm cao, thì vẫn là nhà trội. Vì khi người này kích hoạt nhà X của người kia, thì nhà X trở thành mối quan tâm CHUNG của cả hai người.",
+        "Xem cả 2 người không tác động vào nhà nào của nhau (nhà trống) => 2 người không kích thích nhau để tâm đến lĩnh vực gì một cách tự nhiên. Sẽ là vấn đề nếu nhà trống lại là nhà trội của 1 trong 2 người. Khi đó người này sẽ cần chủ động chia sẻ nhu cầu của mình với người kia. Người kia cũng cần chủ động quan tâm hỏi thăm về lĩnh vực này."
+      ],
+      "tra_cuu_nhanh": [
+        "Dấu hiệu yêu nhau, thu hút nhau: kích hoạt nhiều vào h1-5-7-8 (h1 kiểu để ý vẻ ngoài, thích từ cái nhìn đầu tiên)",
+        "Dấu hiệu hôn nhân (M): 4-5-7 (Gần đây thấy cả 8 10?)"
+      ],
+      "quy_tac_hanh_tinh_roi_vao_nha": [
+        "=> Chức năng hành tinh của người này sẽ tìm sự thỏa mãn thông qua lĩnh vực X của người kia",
+        "=> Người hành tinh sẽ để tâm và muốn can thiệp vào lĩnh vực X của người nhà => nếu nhà X của người nhà tốt thì người hành tinh cảm thấy thỏa mãn",
+        "=> Người nhà cảm thấy được truyền động lực, thay đổi thái độ với lĩnh vực X của mình; nhưng về lâu dài có thể bị lệ thuộc vào chức năng của người hành tinh (vì đây không phải là động lực tự thân mà là động lực do người khác đem lại) và khi người hành tinh gửi hành tinh bị bệnh (chức năng không ổn sẵn) thì lĩnh vực X của người nhà cũng tệ theo",
+        "=> Người nhà X muốn ổn thì phải lo cho hành tinh người A ổn.",
+        "=> Khi hành tinh người A bất ổn, thì tất cả những mối quan hệ xung quanh họ đều bất ổn trên 1 lĩnh vực nào đó. Dựa trên sự bất ổn của các mối quan hệ thân cận xung quanh, có thể truy ngược nguồn gốc để biết hành tinh của mình đang mắc bệnh, và đang lây bệnh cho người khác."
+      ],
+      "hanh_tinh_roi_vao_nha_nguoi_kia": [
+        {
+          "hanh_tinh": "Mặt trời",
+          "truyen": "truyền động lực",
+          "chi_tiet": "người Mặt trời cổ vũ, khích lệ, định hướng và truyền động lực cho nhà X của người nhà, thấy hãnh diện khi nhà X tốt; Người nhà đôi khi có cảm giác mình đang cố gắng vì người Mặt trời chứ không phải vì mình, vì người Mặt trời muốn thế chứ mình không muốn thế, vì Sun vốn có tính chất áp đặt"
+        },
+        {
+          "hanh_tinh": "Mặt trăng",
+          "truyen": "truyền sự nhạy cảm",
+          "chi_tiet": "người Mặt trăng quan tâm chăm sóc lĩnh vực X của người nhà, khi lĩnh vực X của người nhà tốt thì cảm thấy an toàn yên tâm; Người nhà trở nên nhạy cảm hơn, dễ vui dễ buồn vì chuyện ở nhà X, có nhu cầu X phải ổn"
+        },
+        {
+          "hanh_tinh": "Thuỷ",
+          "truyen": "truyền ý tưởng",
+          "chi_tiet": "người Thủy thích bàn luận góp ý về lĩnh vực X của người nhà; Người nhà nhận được nhiều ý tưởng, thích trò chuyện hơn, và bị ảnh hưởng từ lời nói của người Thuỷ"
+        },
+        {
+          "hanh_tinh": "Kim",
+          "truyen": "truyền sự thích thú trân trọng",
+          "chi_tiet": "người Kim muốn làm lĩnh vực X của người nhà đẹp đẽ dễ chịu, và có xu hướng thích khen ngợi/trân trọng/thích thú lĩnh vực X của nhà, thích đồng hành cùng người nhà trong lĩnh vực X, lĩnh vực nhà X tốt thì thấy sướng; Người nhà thấy được trân trọng, khoái trải nghiệm lĩnh vực X hơn, muốn làm cho X đẹp đẽ dễ chịu nhất vì người Kim",
+          "vi_du": "Kim mình rơi vào H9 họ: mình đánh giá cao tri thức của họ, thích đồng hành học tập cùng họ. Ngược lại họ càng khoái phát triển tri thức để được mình khen"
+        },
+        {
+          "hanh_tinh": "Hoả",
+          "truyen": "truyền dũng cảm",
+          "chi_tiet": "người Hỏa thúc đẩy sự quyết đoán hành động ở lĩnh vực X của người nhà; Người nhà cảm thấy có nhiều năng lượng hơn, dũng cảm hơn nhưng cũng dễ nóng nảy tranh cãi trong lĩnh vực này"
+        },
+        {
+          "hanh_tinh": "Mộc",
+          "truyen": "truyền sự khuếch đại",
+          "chi_tiet": "người Mộc muốn người nhà trải nghiệm phong phú trong lĩnh vực đó, nhìn được điểm tốt của người nhà trong lĩnh vực đó; Người nhà cảm thấy lạc quan hơn, may mắn hơn, muốn mở rộng"
+        },
+        {
+          "hanh_tinh": "Thổ",
+          "truyen": "truyền sự tiết chế",
+          "chi_tiet": "người Thổ cấm đoán khống chế, thúc đẩy sự trưởng thành chín chắn của người nhà; Người nhà cảm thấy cần thận trọng và có trách nhiệm hơn với lĩnh vực đó"
+        },
+        {
+          "hanh_tinh": "Thiên Vương",
+          "truyen": "truyền sự bất thường",
+          "chi_tiet": "khuyến khích người nhà nổi loạn"
+        },
+        {
+          "hanh_tinh": "Hải Vương",
+          "truyen": "truyền sự mơ mộng",
+          "chi_tiet": "khiến người nhà có những mơ mộng bay bổng về lĩnh vực đó"
+        },
+        {
+          "hanh_tinh": "Diêm Vương",
+          "truyen": "truyền sự cực đoan",
+          "chi_tiet": "khuyến khích làm tới cùng, đồng thời có sự kiểm soát, thao túng người nhà trong lĩnh vực đó"
+        },
+        {
+          "hanh_tinh": "CR (Chart Ruler)",
+          "truyen": "lĩnh vực để tâm trước tiên",
+          "chi_tiet": "cho thấy người CR để tâm và muốn tác động đến lĩnh vực nào của người kia trước tiên, hoặc có thể cho thấy 2 người ban đầu tiếp cận với nhau thông qua gì",
+          "vi_du": "CR rơi vào H5: ban đầu tiếp cận vì để ý đến tài năng/sở thích của người kia đầu tiên"
+        }
+      ],
+      "nguon": "CTNC - BỔ TÚC 05 - Full quy trình luận Synastry.md:16-73; CTNC - Buổi học 5&6 - Chiêm tinh quan hệ.md:180-201"
+    },
+    {
+      "phan": "Phần III. Xem tương tác góc hợp",
+      "quy_tac": [
+        "Khi 1 hành tinh người A tạo góc với 1 hành tinh người B => Mỗi người dùng chức năng của mình để chi phối tác động lên chức năng của người kia (VD Thổ A – Moon B: người A cấm đoán, tiết chế bớt cảm xúc của người B; người B quan tâm đến các trách nhiệm, nỗi khổ của người A)",
+        "=> Tạo ra sự trưởng thành của chức năng của mỗi người (nhờ sự cho nhận phẩm chất) => cho thấy 2 người phát triển gì thông qua mối quan hệ. Quá trình giúp nhau học bài học này suôn sẻ hay trắc trở tùy thuộc vào góc đó là góc cứng hay mềm",
+        "=> Cách luận 1 góc trong synastry y hệt như luận góc trong natal: Quan trọng là CÓ GÓC, mềm hay cứng không quan trọng. Hễ thấy có góc, là cần chỉ ra bức tranh chung (tiềm năng tốt đẹp nhất) của sự tương tác giữa hai hành tinh đó của hai người là gì. Mềm hay cứng chỉ nói lên hai người hợp tác nhau dễ dàng từ đầu, hay là trục trặc lệch pha cần xung đột mới hiểu nhau để cùng nhau đạt được tiềm năng tốt đẹp nhất đó thôi."
+      ],
+      "buoc_1_tong_quan": [
+        "Nhiều xanh hay đỏ => Hoà hợp hay mâu thuẫn. Tính chất bài học của mối quan hệ:",
+        "Synastry nhiều góc mềm: bài học là hãy trân trọng nhau (vì làm gì người kia cũng ok nên dễ chủ quan, không trân trọng đủ người kia, dễ take for granted)",
+        "Synastry nhiều góc cứng: bài học là kiên nhẫn chịu khó, từ các mâu thuẫn xung đột với nhau mà nhận ra vấn đề trong mình và trưởng thành (mối quan hệ khó quá nên hoặc giải tán sớm, hoặc ở bên nhau lâu thì quý và trân trọng)",
+        "Xem có nhiều Quincunx không (từ 3 trở lên thì hay có cảm giác định mệnh, duyên nợ)"
+      ],
+      "buoc_2a_theme_chinh": {
+        "dinh_nghia": "Hành tinh trội của 1 người trong Synastry là hành tinh tạo nhiều góc nhất với các hành tinh và cung Mọc của người kia (tối đa 11 góc; không tính các điểm hình học/tiểu hành tinh; nếu cần ưu tiên thì ưu tiên hành tinh nào tạo nhiều góc chặt hơn, và ưu tiên hành tinh cá nhân).",
+        "y_nghia": [
+          "Cho thấy chức năng nào của mình chi phối lớn nhất đến các chức năng của người kia. Đó cũng là chức năng được tác động nhiều nhất, có cơ hội phát triển nhiều nhất nhờ tương tác với các chức năng người kia",
+          "Theme chính cho thấy bức tranh chung của mối quan hệ, mỗi người đóng vai trò chủ đạo gì trong mối quan hệ, chi phối đối phương thế nào, phát triển nhiều nhất ở chức năng gì.",
+          "Theme chính là vai trò, Nhà trội là bối cảnh của mối quan hệ."
+        ],
+        "quy_trinh_3_buoc": [
+          "B1: Hình dung mỗi người đóng vai gì trong mối quan hệ, tưởng tượng họ làm gì, có thái độ chủ yếu gì trong câu chuyện (nêu phẩm chất của hành tinh trước)",
+          "B2: Sử dụng quy tắc tương tác năng lượng xem họ truyền đi nhận về gì, chi phối thay đổi đối phương thế nào",
+          "B3: Rút ra mỗi người có thể học nhiều bài học, phát triển nhiều nhất về chức năng gì của bản thân"
+        ],
+        "vi_du_theme_Moon_Sun": [
+          "B1: Người này đóng vai chị gái emo: nhạy cảm, quan tâm, thích chăm sóc, dễ lo âu bất an, cần được đảm bảo an toàn. Người kia đóng vai anh trai kiêu hãnh: giàu năng lượng, thích dẫn dắt định hướng, cổ vũ khích lệ. Một người phấn đấu một người quan tâm => tri kỉ",
+          "B2: Người này quan tâm chăm sóc cho các mục tiêu phấn đấu của người kia; người kia khích lệ người này bộc lộ cảm xúc, đề ra định hướng để người này thỏa mãn các nhu cầu bản thân. => Có vẻ người Sun nên là người định hướng mối quan hệ. Nếu người Moon bất an hoặc nếu người Sun hoang mang/không rõ hướng đi của bản thân thì mối quan hệ sẽ tệ.",
+          "B3: Đây cũng là 2 chức năng mà mỗi người có cơ hội trưởng thành nhiều nhất (Người Moon có thể trưởng thành hơn về cảm xúc, xác định chính xác các nhu cầu của mình; người Sun học nhiều bài học về định hướng sống, nên hướng tới điều gì)."
+        ],
+        "luu_y": "Trong theme chính phải có hành tinh cá nhân. Nếu 2 bên đều là hành tinh xã hội/thế hệ thì ít nhất 1 trong 2 bên cần tính thêm 1 hành tinh cá nhân nhiều góc."
+      },
+      "buoc_2b_theme_phu": {
+        "dinh_nghia": "Xem 2 người có cặp hành tinh nào tạo góc đôi (double whammy) với nhau (hành tinh này của tôi tạo góc với hành tinh kia của anh và ngược lại). Ví dụ Sun của tôi tạo góc với Moon của anh và Moon của tôi tạo góc với Sun của anh => 2 chức năng này chi phối và học hỏi lẫn nhau => tạo màu sắc phụ của mối quan hệ",
+        "luu_y": "Theme phụ phải có ít nhất 1 hành tinh cá nhân",
+        "vi_du": [
+          "Sun – Mercury: nói chuyện góp ý cho các định hướng của nhau, cổ vũ cho các ý tưởng của nhau",
+          "Moon – Jupiter: chiều chuộng và khuếch đại cảm xúc của nhau"
+        ],
+        "ket": "Không cần luận hết các góc có trong Synastry, luận theme chính và theme phụ là ra bức tranh của mối quan hệ rồi."
+      },
+      "buoc_2c_hanh_tinh_trung_dinh_truc": {
+        "mo_ta": "4 đỉnh trục là 4 điểm nhạy cảm, quy định cách nhìn nhận hành xử của mình với những chuyện hệ trọng nhất trong đời => nếu người kia tác động đỉnh trục mình thì họ biến đổi mình lớn. Chỉ tính hành tinh cá nhân.",
+        "bang": [
+          {
+            "truc": "AC",
+            "chu_de": "cá tính",
+            "y": "người kia khiến mình thoải mái sống thật, thể hiện cá tính hơn",
+            "dau_hieu_hon_nhan": false
+          },
+          {
+            "truc": "IC",
+            "chu_de": "an toàn",
+            "y": "khiến mình cảm thấy an toàn, thân thuộc, như người trong gia đình",
+            "dau_hieu_hon_nhan": true
+          },
+          {
+            "truc": "DC",
+            "chu_de": "hợp tác",
+            "y": "khiến mình muốn đồng hành, tôn trọng, thỏa hiệp",
+            "dau_hieu_hon_nhan": true
+          },
+          {
+            "truc": "MC",
+            "chu_de": "phấn đấu",
+            "y": "khiến mình nể và cũng muốn được nể, muốn có danh tiếng sự nghiệp tốt",
+            "dau_hieu_hon_nhan": false
+          }
+        ],
+        "ghi_chu": "Dấu hiệu hôn nhân (M): hay gặp hành tinh kích hoạt vào IC và DC"
+      },
+      "buoc_2d_diem_tam_linh": {
+        "dieu_kien": "Chỉ tính hành tinh cá nhân tạo góc trùng, lệch dưới 3 độ.",
+        "bang": [
+          {
+            "diem": "La hầu",
+            "y": "cảm giác có duyên, luôn hành xử ngây thơ, rất muốn thử nghiệm với người đó (người dạy mình bài học kiếp này); ngây thơ háo hức mới lạ",
+            "cach_check": "check góc TRÙNG La Hầu"
+          },
+          {
+            "diem": "Kế đô",
+            "y": "thấy quen thuộc nhưng có thể hờ hững với người đó (cảm giác kiếp trước đã trải qua nhiều thứ với người này rồi)",
+            "cach_check": "check góc ĐỐI ĐỈNH La Hầu"
+          },
+          {
+            "diem": "Chiron",
+            "y": "người kia dễ chạm vào tổn thương/trigger mình, nhưng cũng có thể chữa lành được cho mình",
+            "cach_check": "check góc TRÙNG Chiron"
+          },
+          {
+            "diem": "Vertex",
+            "y": "cảm giác có vướng mắc, có nợ phải trả (nợ gì tùy thuộc Vertex mình ở nhà nào); chủ nợ của bạn",
+            "cach_check": "check góc TRÙNG hoặc ĐỐI ĐỈNH Vertex"
+          }
+        ]
+      },
+      "nguon": "CTNC - BỔ TÚC 05 - Full quy trình luận Synastry.md:89-209; CTNC - Buổi học 5&6 - Chiêm tinh quan hệ.md:210-289"
+    }
+  ],
+  "chia_khoa_hanh_phuc": [
+    {
+      "so": 1,
+      "ten": "Chìa khoá hạnh phúc 1 (từ tương tác NHÀ)",
+      "noi_dung": [
+        "Nhà nào trội: 2 người cùng cố gắng làm lĩnh vực đó tốt => cả 2 hạnh phúc, thấy ý nghĩa",
+        "Xem mỗi người được kích hoạt nhà nào nhiều => khi mình cố gắng làm tốt lĩnh vực đó thì người kia cũng thấy thỏa mãn, thấy sự hiện diện của họ có ý nghĩa.",
+        "Nhà trống: Chủ động chia sẻ và chủ động quan tâm (nếu nhà trống cũng là nhà mà 1 trong 2 người đề cao)"
+      ],
+      "nguon": "CTNC - BỔ TÚC 05 - Full quy trình luận Synastry.md:77-85; CTNC - Buổi học 5&6 - Chiêm tinh quan hệ.md:204-208"
+    },
+    {
+      "so": 2,
+      "ten": "Chìa khoá hạnh phúc 2 (từ THEME CHÍNH)",
+      "noi_dung": [
+        "Mỗi người thực hiện tốt vai trò hành tinh của mình trong theme chính (một cách TÍCH CỰC): VD mình đóng vai Kim => Mình biết trân trọng, khen ngợi người kia. Thay vì đòi hỏi, lười biếng, né tránh tranh cãi (biểu hiện tiêu cực của Kim).",
+        "Mỗi người TỰ chăm lo phát triển tốt chức năng hành tinh của mình trong theme chính (xem bản đồ sao cá nhân để biết phát triển thế nào). Chức năng mình tốt thì tác động lên người kia tốt => hạnh phúc. VD: Mình đóng vai Kim. Trong bds cá nhân của mình thì Kim ở nhà 9 => Tự chăm lo phát triển tri thức sẽ khiến Kim của mình thoả mãn, thấy tự tin => Kim của mình tác động tốt lên người kia => mối quan hệ hạnh phúc!",
+        "Nếu mối quan hệ hỏng, hãy nhìn lại bản thân (vì có thể là do 1 hành tinh trội của mình bị bệnh)"
+      ],
+      "nguon": "CTNC - BỔ TÚC 05 - Full quy trình luận Synastry.md:157-162; CTNC - Buổi học 5&6 - Chiêm tinh quan hệ.md:167-175"
+    }
+  ],
+  "ma_tran_ky_hieu": {
+    "mo_ta": "Bảng ma trận 10 hàng (10 hành tinh) x 5 cột (5 hành tinh cá nhân) gán ký hiệu tính chất cho từng cặp hành tinh trong Synastry.",
+    "cot": [
+      "SUN",
+      "MOON",
+      "MERCURY",
+      "VENUS",
+      "MARS"
+    ],
+    "chu_thich_ky_hieu": [
+      {
+        "ky_hieu": "M",
+        "nghia": "khả năng kết hôn cao"
+      },
+      {
+        "ky_hieu": "m",
+        "nghia": "khả năng kết hôn nhỏ"
+      },
+      {
+        "ky_hieu": "><",
+        "nghia": "xung đột đối kháng, xung đột quyền lực"
+      },
+      {
+        "ky_hieu": "S",
+        "nghia": "sức hút giới tính cao"
+      },
+      {
+        "ky_hieu": "⚡️",
+        "nghia": "sét đánh, định mệnh, mqh bất thường"
+      },
+      {
+        "ky_hieu": "🌀",
+        "nghia": "phức tạp, rối rắm, mù quáng, cực đoan"
+      },
+      {
+        "ky_hieu": "^.^",
+        "nghia": "bạn tốt, thân thiện dễ chịu vs nhau"
+      },
+      {
+        "ky_hieu": "/",
+        "nghia": "(bản gốc dùng dấu gạch chéo cho ô không gán ký hiệu nào)"
+      }
+    ],
+    "bang": [
+      {
+        "hang": "SUN",
+        "SUN": "><",
+        "MOON": null,
+        "MERCURY": null,
+        "VENUS": null,
+        "MARS": null
+      },
+      {
+        "hang": "MOON",
+        "SUN": "m",
+        "MOON": "^.^",
+        "MERCURY": null,
+        "VENUS": null,
+        "MARS": null
+      },
+      {
+        "hang": "MERCURY",
+        "SUN": "/",
+        "MOON": "^.^",
+        "MERCURY": "/",
+        "VENUS": null,
+        "MARS": null
+      },
+      {
+        "hang": "VENUS",
+        "SUN": "m, S",
+        "MOON": "^.^ - m",
+        "MERCURY": "/",
+        "VENUS": "^.^",
+        "MARS": null
+      },
+      {
+        "hang": "MARS",
+        "SUN": "><",
+        "MOON": "S",
+        "MERCURY": "/",
+        "VENUS": "SSSSS",
+        "MARS": ">< - S"
+      },
+      {
+        "hang": "JUPITER",
+        "SUN": "^.^ - m",
+        "MOON": "^.^",
+        "MERCURY": "/",
+        "VENUS": "M",
+        "MARS": "^.^ - S"
+      },
+      {
+        "hang": "SATURN",
+        "SUN": "><",
+        "MOON": "><,M",
+        "MERCURY": "/",
+        "VENUS": "M",
+        "MARS": ">><< - m"
+      },
+      {
+        "hang": "URANUS",
+        "SUN": "/",
+        "MOON": "⚡️",
+        "MERCURY": "/",
+        "VENUS": "⚡️",
+        "MARS": "/"
+      },
+      {
+        "hang": "NEPTUNE",
+        "SUN": "m????",
+        "MOON": "🌀",
+        "MERCURY": "/",
+        "VENUS": "🌀",
+        "MARS": "S"
+      },
+      {
+        "hang": "PLUTO",
+        "SUN": "><",
+        "MOON": "🌀 - S",
+        "MERCURY": "/",
+        "VENUS": "🌀 - S",
+        "MARS": ">< - S"
+      }
+    ],
+    "ghi_chu_ban_goc": [
+      "Ô MARS x VENUS bản gốc ghi \"SSSSS\" (nhấn mạnh sức hút giới tính rất cao).",
+      "Ô MARS x MARS bản gốc ghi \">< - S\".",
+      "Ô SATURN x MARS bản gốc ghi \">><< - m\".",
+      "Ô NEPTUNE x SUN bản gốc ghi \"m????\" (thầy còn phân vân).",
+      "Nửa trên đường chéo của bảng để trống trong bản gốc (bảng tam giác dưới)."
+    ],
+    "nguon": "CTNC - Buổi học 6.md:91-112"
+  },
+  "luan_hanh_tinh_ca_nhan_x_ca_nhan": [
+    {
+      "cap": "Sun-Sun",
+      "luan": "tôi định hướng cho mục tiêu sống của anh, Áp đặt ý chí lên nhau, xung đột cá tính",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Sun-Moon",
+      "luan": "tri kỷ, hỗ trợ tinh thần, định hướng cho nhu cầu, quan tâm chăm sóc ủng hộ cho mục tiêu của anh (cái tôi phấn đấu là cái cô cần)",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Sun-Thủy",
+      "luan": "góp ý cho định hướng sống của nhau (không có kí hiệu)",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Sun-Kim",
+      "luan": "trân trọng mục tiêu sống của Sun, định hình gu (Kim muốn thì Sun sẽ chỉ cách thức cho làm)",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Sun-Hỏa",
+      "luan": "cạnh tranh, thúc đẩy hành động, (hành động vì định hướng sống (?))",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Moon-Moon",
+      "luan": "thấu hiểu, đồng cảm cảm xúc của nhau, hiểu nhu cầu nhau",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Moon-Kim",
+      "luan": "chăm sóc cho sở thích của nhau, trân trọng cảm xúc, dịu dàng chăm sóc nhau tốt, lười",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Moon-Thủy",
+      "luan": "Khuyến khích nói ra nhu cầu cảm xúc. Chăm sóc cho tư duy",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Moon-Hỏa",
+      "luan": "Cảm xúc mãnh liệt, dễ bốc đồng, phí vào nhau, tức thì đấm nhau, quan tâm chăm sóc dục vọng, cảm xúc thất thường làm bốc hỏa tịt ngòi dục vọng. lệch sóng. Moon có thể tủi thân, do cần quan tâm dịu dàng hơn trong khi Mars thì thô bạo",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Thủy-Thủy",
+      "luan": "Cùng nói",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Thủy-Kim",
+      "luan": "thích nói chuyện nịnh nhau",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Thủy-Hỏa",
+      "luan": "Nói thì làm, làm thì nói, cặp đôi quyết đoán, đã nói là làm",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Kim-Kim",
+      "luan": "đồng điệu về gu hưởng thụ, cảm xúc của nhau",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Kim-Hỏa",
+      "luan": "Sex, trân trọng khen ngợi dục vọng, hành động của người kia",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    },
+    {
+      "cap": "Hỏa-Hỏa",
+      "luan": "thúc nhau giúp nhau dũng cảm hành động lên, nhưng cũng dễ va chạm (thúc đẩy dục vọng, hành động mạnh mẽ lên, dễ cạnh tranh)",
+      "nguon": "CTNC - Buổi học 6.md:115-133"
+    }
+  ],
+  "luan_hanh_tinh_ca_nhan_x_vong_ngoai": [
+    {
+      "cap": "Mộc-Sun",
+      "luan": "cho nhau lạc quan, chiều cho định hướng, ngược lại thì cổ vũ cho lí tưởng sống (góc thầy trò, cổ vũ lạc quan hơn, khuyến khích phát triển về định hướng sống)",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Mộc-Moon",
+      "luan": "Chiều chuộng cảm xúc của đối phương, quan tâm chăm sóc cho lí tưởng sống, đôi khi hơi dung túng, làm hư nhau",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Mộc-Thủy",
+      "luan": "nói nhiều, suy nghĩ lạc quan, nói nhiều điều thiện lành với nhau",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Mộc-Kim",
+      "luan": "Trân trọng lòng tốt, lí tưởng sống; chiều chuộng hay quà cáp cho nhau (Venus chiều chuộng, trân trọng, muốn đồng hành với những lý tưởng của anh)",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Mộc-Hỏa",
+      "luan": "chiều theo dục vọng đối phương; khuyến khích hành động, có lí tưởng gì thì làm đi (hôn nhân dựa trên dạy dỗ nhau cùng làm một cái gì đó, đồng nghiệp, lạc quan hơn về hành động)",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Thổ-Sun",
+      "luan": "Theo đuổi mục tiêu thận trọng, có trách nhiệm hơn; dẫn dắt nhau bằng quy củ, nề nếp (tiết chế trong định hướng sống, trách nhiệm và chịu khổ để theo đuổi định hướng sống)",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Thổ-Moon",
+      "luan": "tiết chế, kìm hãm cảm xúc, trưởng thành về cảm xúc và nhu cầu, quan tâm tới trách nhiệm của Thổ. Góc này là kiểu, 1 là ở cạnh 1 tí là đã rất khó chịu rồi, nhưng ở cạnh nhau được thì lại siêu bền. (Saturn thúc đẩy sự trưởng thành về mặt cảm xúc. Moon quan tâm đến trách nhiệm mặc cảm bi quan của Saturn)",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Thổ-Thủy",
+      "luan": "Thúc đẩy nhau suy nghĩ chín chắn lên.",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Thổ-Kim",
+      "luan": "Kìm hãm sở thích, chi tiêu phải trách nhiệm vào, trân trọng nguyên tắc và trách nhiệm của anh (Saturn kiểm soát áp chế những sở thích của Venus, nhưng cũng khiến Venus trưởng thành hơn)",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Thổ-Hỏa",
+      "luan": "kìm hãm hành động, thúc đẩy phải sống trách nhiệm lên. (Thổ trưởng thành và chịu trách nhiệm, có nguyên tắc rõ ràng cho hành động của mình, chịu khổ vì đam mê dục vọng - Hỏa dũng cảm đặt ra giới hạn và kỉ luật hơn với mối quan hệ)",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Uranus-Sun",
+      "luan": "Định hướng người khác thường và độc đáo -> siêu sáng tạo, thay đổi thế giới (sáng tạo, mới lạ hơn trong định hướng sống)",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Uranus-Moon",
+      "luan": "hành động bất thường khiến cảm xúc của Moon bị lên xuống (nhạy cảm với sự nổi loạn phá luật của người kia. Khuyến khích người kia tự do bộc lộ cảm xúc). Về lâu dài Uranus muốn tách ra vì Moon thất thường quá",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Uranus-Thủy",
+      "luan": "khuyến khích ăn nói khác thường, thúc đẩy tư duy kì lạ.",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Uranus-Kim",
+      "luan": "(trân trọng, ngợi khen sự nổi loạn), Tự do sáng tạo gu thẩm mĩ theo kiểu độc đáo, phá cách, Gu thẩm mĩ, kết giao nổi loạn hơn, khuyến khích chi tiêu kiểu lạ đời.",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Uranus-Hỏa",
+      "luan": "khuyến khích hành động kì quái. (thử nghiệm tình dục, hành động kì quái)",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Neptune-Sun",
+      "luan": "khuyến khích nhau sống mơ mộng và lí tưởng hóa cuộc đời, Sống bao dung hơn, dễ cảm thông với người khác, Khuyến khích lòng tốt hướng đến con người, làm việc thiện, hướng nhau sống trắc ẩn thương người hơn",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Neptune-Moon",
+      "luan": "cảm xúc mù mờ không rõ ràng, mơ mộng hão huyền, thần tượng hóa",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Neptune-Thủy",
+      "luan": "hiểu lầm lời nói, nói lời tốt lành",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Neptune-Kim",
+      "luan": "trân trọng sự mù mờ, lãng mạn, tâm linh",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Neptune-Hỏa",
+      "luan": "Thực hiện hóa giấc mơ, tạo ra mộng tưởng về tình dục, dục vọng trong bóng tối, huyễn hoặc đam mê",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Pluto-Sun",
+      "luan": "Theo đuổi quyền lực, tham vọng (cực đoan với định hướng sống)",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Pluto-Moon",
+      "luan": "Thao túng cảm xúc nhau (Pluto tạo hấp lực đẩy cảm xúc của Moon lên)",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Pluto-Thủy",
+      "luan": "thao túng, điều khiển suy nghĩ nhau, dễ nghi ngờ suy diễn. (đào sâu suy nghĩ, dễ nghi ngờ và thao túng)",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Pluto-Kim",
+      "luan": "mối quan hệ cực đoan, phức tạp, có thể ngoại tình bất chấp. (cực đoan với sở thích của nhau, thao túng sở thích của người kia, trân trọng khen ngợi sự tham vọng và ý muốn kiểm soát của người kia)",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    },
+    {
+      "cap": "Pluto-Hỏa",
+      "luan": "tham vọng, thao túng hành động",
+      "nguon": "CTNC - Buổi học 6.md:136-164"
+    }
+  ],
+  "so_ban_ghi": {
+    "buoc_quy_trinh": 3,
+    "o_ma_tran": 50,
+    "cap_ca_nhan_x_ca_nhan": 15,
+    "cap_ca_nhan_x_vong_ngoai": 25,
+    "chia_khoa_hanh_phuc": 2
+  },
+  "ghi_chu_bien_tap": "Đã bỏ các từ tục trong bản gốc Buổi học 6: dòng 143 \"khó chịu vkl\" -> \"rất khó chịu\", \"siêu cmn bền\" -> \"siêu bền\"; dòng 174 \"-> SIDA\" (tiếng lóng chỉ trạng thái tệ) đã lược. Giữ nguyên toàn bộ nghĩa.",
+  "so_sanh_voi_composite": {
+    "mo_ta": "Synastry hợp xem cặp đôi đang diễn ra, là công cụ chính đạo. Composite là công cụ xem số phận của mối quan hệ, mang tính định mệnh cao — thầy KHÔNG khuyến khích dùng.",
+    "ly_do_khong_khuyen_khich": [
+      "Có thể ra kết quả khác Synastry. Composite không có giá trị giải quyết vấn đề đang diễn ra.",
+      "Vì dễ bị quan tâm về số mệnh của mối quan hệ chứ không quan tâm về cảm nhận của bản thân và đối phương nữa.",
+      "Ví dụ muốn mối quan hệ dài lâu không bị hủy, thì tự dưng lại cố gồng.",
+      "Chú tâm vào Composite thì đổ lỗi cho mối quan hệ và không chịu trách nhiệm cho đời mình.",
+      "Composite chỉ xem được nếu 2 người có mối quan hệ sâu sắc, có thời gian dài ảnh hưởng tới nhau nhiều."
+    ],
+    "composite_thiet_lap": "Phương pháp trung điểm (Midpoint Method): trung bình cộng chỉ số của 2 người. Ví dụ Sun composite = (Sun A + Sun B)/2",
+    "nguon": "CTNC - Buổi học 5&6 - Chiêm tinh quan hệ.md:46-141"
+  },
+  "uu_viet_cua_synastry": [
+    "Tính đào sâu",
+    "Tính cải thiện mối quan hệ",
+    "Tính trách nhiệm của mối quan hệ",
+    "Tính phản ánh sự trưởng thành của 1 người trong từng giai đoạn: người bạn chọn, là bài học bạn cần học và trưởng thành trong giai đoạn ấy."
+  ],
+  "dao_ly_cuoi_buoi": [
+    "Cuộc sống này đều là xoay quanh mối quan hệ, dù mối quan hệ đó là với chính bản thân mình, với người mình gặp hàng ngày (dù thân thiết hay không), với vũ trụ (vận hạn). Bạn không hề đơn độc.",
+    "Câu hỏi đúng không phải \"Mối quan hệ này có thể kết hôn được không, có nên yêu tiếp không hay dừng lại?\" mà là \"Mối quan hệ này có đang tốt không?\" — xem Nhà trội có đang hoạt động tốt không, Theme chính có đang đúng vai trò không.",
+    "Câu hỏi đúng thứ hai: \"Mình có đang tốt lên nhờ mối quan hệ này không?\" Nếu mình đang tốt lên thì mối quan hệ tốt lên.",
+    "Life is all about relationship."
+  ],
+  "nguon_dao_ly": "CTNC - Buổi học 6.md:176-200"
+}

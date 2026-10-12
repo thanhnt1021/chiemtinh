@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% from "macros/location_picker.html" import render_location_picker %}
+
+{% block title %}Nhập Liệu - Astro System{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-4 max-w-4xl pt-16">
+    <a href="/dashboard" class="text-blue-500 mb-4 inline-block hover:underline">&larr; Quay lại Menu</a>
+
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">{% if edit_profile %}Chỉnh Sửa Hồ Sơ{% else %}Thêm Hồ Sơ Mới{% endif %}</h1>
+        <a href="/user" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm transition">
+            <i class="fas fa-list"></i> Danh Sách
+        </a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="mb-4 p-3 rounded {{ 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200' if category == 'error' else 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200' }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="bg-white dark:bg-gray-800 p-6 rounded shadow-lg border border-gray-200 dark:border-gray-700">
+        <form action="/input" method="POST" class="space-y-4" onsubmit="const btn=this.querySelector('button[type=submit]'); btn.disabled=true; btn.innerText='ĐANG XỬ LÝ...';">
+            <input type="hidden" name="return_to" value="{{ request.args.get('return_to', '') }}">
+            <input type="hidden" name="other_profile" value="{{ request.args.get('other_profile', '') }}">
+            <input type="hidden" name="role" value="{{ request.args.get('role', '') }}">
+            <input type="hidden" name="r_day" value="{{ request.args.get('day', '') }}">
+            <input type="hidden" name="r_month" value="{{ request.args.get('month', '') }}">
+            <input type="hidden" name="r_year" value="{{ request.args.get('year', '') }}">
+
+            {% if edit_profile %} <input type="hidden" name="original_name" value="{{ edit_profile.name }}"> {% endif %}
+
+            <div>
+                <label class="block text-sm font-bold mb-1">Họ Tên</label>
+                <input type="text" name="name" value="{{ edit_profile.name if edit_profile else '' }}" required class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500 transition-colors text-gray-900 dark:text-white">
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+                <div><label class="block text-sm font-bold mb-1">Ngày</label><input type="number" name="day" value="{{ edit_profile.dob.day if edit_profile else '' }}" required class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"></div>
+                <div><label class="block text-sm font-bold mb-1">Tháng</label><input type="number" name="month" value="{{ edit_profile.dob.month if edit_profile else '' }}" required class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"></div>
+                <div><label class="block text-sm font-bold mb-1">Năm</label><input type="number" name="year" value="{{ edit_profile.dob.year if edit_profile else '' }}" required class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <div><label class="block text-sm font-bold mb-1">Giờ (0-23)</label><input type="number" name="hour" value="{{ edit_profile.tob.hour if edit_profile else '12' }}" required class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"></div>
+                <div><label class="block text-sm font-bold mb-1">Phút</label><input type="number" name="minute" value="{{ edit_profile.tob.minute if edit_profile else '0' }}" required class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"></div>
+            </div>
+
+            {{ render_location_picker(prefix='', profile=edit_profile) }}
+
+            <div>
+                <label class="block text-sm font-bold mb-1">Giới tính</label>
+                <select name="gender" class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <option value="Female" {% if edit_profile and edit_profile.gender == 'Female' %}selected{% endif %}>Nữ</option>
+                    <option value="Male" {% if edit_profile and edit_profile.gender == 'Male' %}selected{% endif %}>Nam</option>
+                    <option value="Other" {% if edit_profile and edit_profile.gender == 'Other' %}selected{% endif %}>Khác</option>
+                </select>
+            </div>
+
+            <div class="mt-4 border-t pt-4 border-gray-200 dark:border-gray-700">
+                <details class="group">
+                    <summary class="flex items-center font-bold text-sm text-blue-600 dark:text-blue-400 cursor-pointer select-none">
+                        <span><i class="fas fa-cog mr-1"></i> Tùy chọn nâng cao (Múi giờ thủ công)</span>
+                        <span class="ml-auto transform group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="mt-2 p-3 bg-gray-50 dark:bg-gray-700 rounded text-sm">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Hệ thống tự động tra cứu múi giờ quốc tế (DST). Chỉ nhập nếu bạn muốn ghi đè.</p>
+                        <label class="block text-xs font-bold mb-1">Múi giờ (GMT Offset)</label>
+                        <input type="number" step="0.5" name="manual_tz" value="{{ edit_profile.tz_offset if edit_profile and edit_profile.tz_offset else '' }}" placeholder="Để trống để tự động" class="w-full p-2 border rounded dark:bg-gray-600 text-gray-900 dark:text-white">
+                    </div>
+                </details>
+            </div>
+
+            <div class="flex gap-4 pt-4">
+                <button type="submit" class="flex-1 bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded transition shadow-md">
+                    <i class="fas fa-save mr-2"></i> {% if edit_profile %}Cập Nhật{% else %}Lưu Hồ Sơ{% endif %}
+                </button>
+                {% if edit_profile %}
+                <a href="/user" class="flex-1 bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 rounded transition text-center flex items-center justify-center">Hủy Bỏ</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const existingNames = {{ profiles|map(attribute='name')|list|tojson }};
+    const isEdit = {{ 'true' if edit_profile else 'false' }};
+    const originalName = "{{ edit_profile.name if edit_profile else '' }}";
+
+    function validateInputName() {
+        const nameInput = document.getElementsByName('name')[0];
+        const submitBtn = document.querySelector('button[type="submit"]');
+        const currentVal = nameInput.value.trim().toLowerCase();
+        let errorMsg = document.getElementById('soft-name-error');
+
+        if (!errorMsg) {
+            errorMsg = document.createElement('p');
+            errorMsg.id = 'soft-name-error';
+            errorMsg.className = 'text-red-500 text-xs font-bold mt-1';
+            nameInput.parentNode.appendChild(errorMsg);
+        }
+
+        if (currentVal && (!isEdit || currentVal !== originalName.toLowerCase())) {
+            if (existingNames.some(n => n.toLowerCase() === currentVal)) {
+                errorMsg.innerText = "⚠️ Tên hồ sơ đã tồn tại, vui lòng chọn tên khác!";
+                submitBtn.disabled = true; submitBtn.style.opacity = '0.5'; return;
+            }
+        }
+        errorMsg.innerText = "";
+        submitBtn.disabled = false; submitBtn.style.opacity = '1';
+    }
+    document.getElementsByName('name')[0].addEventListener('blur', validateInputName);
+</script>
+{% endblock %}

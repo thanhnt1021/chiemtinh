@@ -1,0 +1,302 @@
+<!-- app/templates/transit_modals_shared.html -->
+<style>
+    /* CSS CHUNG CHO CÁC MODAL TRANSIT */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 10px; }
+    .modal-box { background: white; width: 100%; max-width: 700px; border-radius: 12px; padding: 20px; max-height: 90vh; overflow-y: auto; position: relative; }
+    .dark .modal-box { background: #1f2937; color: white; border: 1px solid #374151; }
+
+    /* CLASS GỐC CỦA MODAL GÓC ĐỂ LÀM CHUẨN */
+    .exact-highlight { background-color: #f0fdf4; border: 2px solid #bbf7d0 !important; font-size: 1.05rem; font-weight: 800; color: #166534; }
+    .dark .exact-highlight { background-color: #064e3b; color: #ecfdf5; }
+
+    .time-small { font-size: 10px; opacity: 0.8; display: block; margin-top: 2px; font-family: monospace; }
+    .transit-link { color: #10b981 !important; text-decoration: underline; font-weight: bold; font-size: 10px; }
+
+    /* CLASS CHO NHÀ TRANSIT - LẤY ĐÚNG THÔNG SỐ TỪ .exact-highlight SANG */
+    .date-highlight-large {
+        font-size: 1.05rem; /* Giống hệt Modal Góc */
+        font-weight: 800;    /* Giống hệt Modal Góc */
+        line-height: 1.2;
+        display: block;
+    }
+
+    .no-wrap-info {
+        white-space: nowrap !important;
+        font-size: 9px !important;
+        display: block;
+        width: 100%;
+        letter-spacing: -0.3px;
+    }
+
+    @media (max-width: 640px) {
+        .modal-box { width: 96% !important; padding: 15px 8px !important; }
+    }
+</style>
+
+<!-- MODAL TRA GÓC -->
+<div id="modal-tra" class="modal-overlay">
+    <div class="modal-box shadow-2xl">
+        <div class="flex justify-between border-b pb-3 mb-4">
+            <h4 class="font-bold text-blue-600 uppercase">Giai đoạn tạo góc</h4>
+            <button onclick="closeModal()" class="text-xl">&times;</button>
+        </div>
+        <!-- Thêm hàng tiêu đề nhỏ cho 3 dropdown -->
+        <div class="grid grid-cols-3 gap-2 text-[10px] font-bold text-gray-400 uppercase text-center mb-1">
+            <span>Transit</span>
+            <span>Góc</span>
+            <span>Cá nhân</span>
+        </div>
+        <div class="grid grid-cols-3 gap-2 mb-4">
+            <select id="m-trans" class="p-2 border rounded text-xs dark:bg-gray-700">
+                {% for p in TRANSIT_PLANET_ORDER %}<option value="{{ p }}">{{ p }}</option>{% endfor %}
+            </select>
+            <select id="m-asp" class="p-2 border rounded text-xs dark:bg-gray-700">
+                {% for a in MAJOR_ASPECTS %}<option value="{{ a }}">{{ ASPECTS_DEF[a].symbol }} {{ a }}</option>{% endfor %}
+            </select>
+            <select id="m-natal" class="p-2 border rounded text-xs dark:bg-gray-700"></select>
+        </div>
+        <div class="flex items-center gap-2 mb-6">
+            <span class="text-xs font-bold">Từ ngày:</span>
+            <input type="number" id="m-day" class="w-14 p-1 border rounded text-center dark:bg-gray-700">
+            <input type="number" id="m-month" class="w-14 p-1 border rounded text-center dark:bg-gray-700">
+            <input type="number" id="m-year" class="w-20 p-1 border rounded text-center dark:bg-gray-700">
+            <button id="m-btn-run" onclick="runTra()" class="bg-green-600 text-white px-4 py-1 rounded font-bold ml-auto text-xs uppercase">Tra cứu</button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-center border-collapse">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                    <tr class="text-[10px] md:text-xs font-bold uppercase">
+                        <th class="p-3 border">GÓC BẮT ĐẦU</th>
+                        <th class="p-3 border text-blue-600">GÓC CHÍNH XÁC</th>
+                        <th class="p-3 border">GÓC KẾT THÚC</th>
+                    </tr>
+                </thead>
+                <tbody id="m-results"></tbody>
+            </table>
+        </div>
+        <div class="mt-4 text-center"><button onclick="closeModal()" class="bg-gray-500 text-white px-10 py-2 rounded font-bold uppercase text-xs">Đóng</button></div>
+    </div>
+</div>
+
+<!-- MODAL HỒI VỊ -->
+<div id="modal-hoivi" class="modal-overlay">
+    <div class="modal-box shadow-2xl border-t-4 border-purple-500">
+        <div class="flex justify-between border-b pb-3 mb-4">
+            <h4 class="font-bold text-purple-600 uppercase">Giai đoạn Hồi vị</h4>
+            <button onclick="closeHoiVi()" class="text-xl">&times;</button>
+        </div>
+        <div class="grid grid-cols-1 gap-2 mb-4">
+            <select id="mh-trans" class="p-3 border rounded text-sm font-bold bg-purple-50 dark:bg-gray-700">
+                {% for p in RETURN_PLANET_ORDER %}<option value="{{ p }}">{{ p }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="flex items-center gap-2 mb-6">
+            <span class="text-xs font-bold">Từ ngày:</span>
+            <input type="number" id="mh-day" class="w-14 p-1 border rounded text-center dark:bg-gray-700">
+            <input type="number" id="mh-month" class="w-14 p-1 border rounded text-center dark:bg-gray-700">
+            <input type="number" id="mh-year" class="w-20 p-1 border rounded text-center dark:bg-gray-700">
+            <button id="mh-btn-run" onclick="runHoiVi()" class="bg-purple-600 text-white px-4 py-1 rounded font-bold ml-auto text-xs uppercase">Tra cứu</button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-center border-collapse">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                    <tr class="text-[10px] md:text-xs font-bold uppercase">
+                        <th class="p-3 border">BẮT ĐẦU</th>
+                        <th class="p-3 border text-purple-600">HỒI VỊ CHÍNH XÁC (0º)</th>
+                        <th class="p-3 border">KẾT THÚC</th>
+                    </tr>
+                </thead>
+                <tbody id="mh-results"></tbody>
+            </table>
+        </div>
+        <div class="mt-4 text-center"><button onclick="closeHoiVi()" class="bg-gray-500 text-white px-10 py-2 rounded font-bold uppercase text-xs">Đóng</button></div>
+    </div>
+</div>
+
+<!-- MODAL NHÀ TRANSIT -->
+<div id="modal-nhatransit" class="modal-overlay">
+    <div class="modal-box shadow-2xl border-t-4 border-blue-500">
+        <div class="flex justify-between border-b pb-3 mb-4">
+            <h4 id="mn-title" class="font-bold text-blue-600 uppercase">Hành trình tại Nhà</h4>
+            <button onclick="closeNhaTransit()" class="text-xl">&times;</button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-center border-collapse">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                    <tr class="text-[10px] md:text-xs font-bold uppercase">
+                        <th class="p-4 border">VÀO NHÀ</th>
+                        <th class="p-4 border">RA KHỎI NHÀ</th>
+                    </tr>
+                </thead>
+                <tbody id="mn-results"></tbody>
+            </table>
+        </div>
+        <div class="mt-6 text-center"><button onclick="closeNhaTransit()" class="bg-gray-500 text-white px-10 py-2 rounded font-bold uppercase text-xs">Đóng</button></div>
+    </div>
+</div>
+
+<script>
+    function closeModal() { document.getElementById('modal-tra').style.display = 'none'; }
+    function closeHoiVi() { document.getElementById('modal-hoivi').style.display = 'none'; }
+    function closeNhaTransit() { document.getElementById('modal-nhatransit').style.display = 'none'; }
+
+    function getTargetProfileName() {
+        const modeInput = document.getElementById('mode-input');
+        if (modeInput && modeInput.value === 'existing') {
+            return document.getElementsByName('profile')[0].value;
+        } else {
+            const newNameInput = document.getElementById('new_name');
+            return (newNameInput && newNameInput.value) ? newNameInput.value : "{{ selected }}";
+        }
+    }
+
+    async function openTra(tP, asp, nP) {
+        document.getElementById('modal-tra').style.display = 'flex';
+        document.getElementById('m-trans').value = tP;
+        document.getElementById('m-asp').value = asp;
+        const nSel = document.getElementById('m-natal');
+        nSel.innerHTML = '';
+        {{ (TRANSIT_PLANET_ORDER + NATAL_SPECIAL_POINTS) | tojson }}.forEach(p => {
+            const o = document.createElement('option'); o.value = p; o.textContent = p; nSel.appendChild(o);
+        });
+        nSel.value = nP;
+
+        const dInput = document.getElementsByName('t_day')[0] || document.getElementsByName('new_day')[0];
+        const mInput = document.getElementsByName('t_month')[0] || document.getElementsByName('new_month')[0];
+        const yInput = document.getElementsByName('t_year')[0] || document.getElementsByName('new_year')[0];
+
+        document.getElementById('m-day').value = dInput ? dInput.value : new Date().getDate();
+        document.getElementById('m-month').value = mInput ? mInput.value : new Date().getMonth() + 1;
+        document.getElementById('m-year').value = yInput ? yInput.value : new Date().getFullYear();
+        runTra();
+    }
+
+    async function runTra() {
+        const resBody = document.getElementById('m-results'), btn = document.getElementById('m-btn-run');
+        btn.disabled = true; resBody.innerHTML = '<tr><td colspan="3" class="p-6 text-sm italic text-blue-500 font-bold text-center">Đang quét vùng ảnh hưởng (Orb < 3°)...</td></tr>';
+
+        const payload = {
+            p_trans: document.getElementById('m-trans').value,
+            aspect: document.getElementById('m-asp').value,
+            p_natal: document.getElementById('m-natal').value,
+            day: document.getElementById('m-day').value,
+            month: document.getElementById('m-month').value,
+            year: document.getElementById('m-year').value,
+            natal_name: getTargetProfileName().trim()
+        };
+
+        try {
+            const r = await fetch('/api/tra-goc-transit', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+            const data = await r.json();
+            if(!data.length) resBody.innerHTML = '<tr><td colspan="3" class="p-6 text-xs text-red-500 font-bold text-center uppercase">Không tạo góc chính xác</td></tr>';
+            else {
+                resBody.innerHTML = '';
+                data.forEach(item => {
+                    const tr = document.createElement('tr');
+                    let hitsHtml = item.exact_hits.length ? '' : '<span class="text-gray-400 italic no-wrap-info">Không tạo góc chính xác</span>';
+                    item.exact_hits.forEach(hit => {
+                        const link = `/vanhan/rieng?profile=${encodeURIComponent(payload.natal_name)}&day=${hit.d.split('/')[0]}&month=${hit.d.split('/')[1]}&year=${hit.d.split('/')[2]}`;
+                        hitsHtml += `<div class="mb-3 pb-2 border-b border-gray-100 dark:border-gray-700 last:border-0"><span class="block font-bold">${hit.d}</span><span class="time-small text-current">${hit.t}</span><a href="${link}" target="_blank" class="transit-link mt-1 block uppercase">Transit lúc đó</a></div>`;
+                    });
+                    tr.innerHTML = `<td class="p-3 border text-[11px] bg-gray-50/30"><b>${item.start.d}</b><span class="time-small text-blue-500 font-bold">${item.start.t}</span></td><td class="p-3 border exact-highlight text-center">${hitsHtml}</td><td class="p-3 border text-[11px] bg-gray-50/30"><b>${item.end.d}</b><span class="time-small text-red-500 font-bold">${item.end.t}</span></td>`;
+                    resBody.appendChild(tr);
+                });
+            }
+        } catch(e) { resBody.innerHTML = '<tr><td colspan="3" class="p-6 text-red-500 text-xs font-bold text-center">Lỗi kết nối.</td></tr>'; }
+        finally { btn.disabled = false; }
+    }
+
+    async function openHoiVi() {
+        const sel = document.getElementById('sel-hoivi');
+        const p = sel ? sel.value : 'Jupiter';
+        document.getElementById('modal-hoivi').style.display = 'flex';
+        document.getElementById('mh-trans').value = p;
+
+        const dInput = document.getElementsByName('t_day')[0] || document.getElementsByName('new_day')[0];
+        const mInput = document.getElementsByName('t_month')[0] || document.getElementsByName('new_month')[0];
+        const yInput = document.getElementsByName('t_year')[0] || document.getElementsByName('new_year')[0];
+
+        document.getElementById('mh-day').value = dInput ? dInput.value : new Date().getDate();
+        document.getElementById('mh-month').value = mInput ? mInput.value : new Date().getMonth() + 1;
+        document.getElementById('mh-year').value = yInput ? yInput.value : new Date().getFullYear();
+        runHoiVi();
+    }
+
+    async function runHoiVi() {
+        const resBody = document.getElementById('mh-results'), btn = document.getElementById('mh-btn-run');
+        btn.disabled = true; resBody.innerHTML = '<tr><td colspan="3" class="p-6 text-sm italic text-purple-500 font-bold text-center">Đang quét giai đoạn hồi vị Nhà...</td></tr>';
+
+        const payload = {
+            p_trans: document.getElementById('mh-trans').value,
+            day: document.getElementById('mh-day').value,
+            month: document.getElementById('mh-month').value,
+            year: document.getElementById('mh-year').value,
+            natal_name: getTargetProfileName().trim()
+        };
+
+        try {
+            const r = await fetch('/api/tra-hoi-vi', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+            const data = await r.json();
+            if(!data.length) resBody.innerHTML = '<tr><td colspan="3" class="p-6 text-xs text-red-500 font-bold text-center uppercase">Không có hồi vị chính xác</td></tr>';
+            else {
+                resBody.innerHTML = '';
+                data.forEach(item => {
+                    const tr = document.createElement('tr');
+                    let hitsHtml = item.exact_hits.length ? '' : '<span class="text-gray-400 italic no-wrap-info">Không có hồi vị chính xác</span>';
+                    item.exact_hits.forEach(hit => {
+                        const link = `/vanhan/rieng?profile=${encodeURIComponent(payload.natal_name)}&day=${hit.d.split('/')[0]}&month=${hit.d.split('/')[1]}&year=${hit.d.split('/')[2]}`;
+                        hitsHtml += `<div class="mb-3 pb-2 border-b border-gray-100 dark:border-gray-700 last:border-0"><span class="block font-bold">${hit.d}</span><span class="time-small text-current">${hit.t}</span><a href="${link}" target="_blank" class="transit-link mt-1 block uppercase text-purple-500">Transit lúc đó</a></div>`;
+                    });
+                    tr.innerHTML = `<td class="p-3 border text-[11px] bg-gray-50/30"><b>${item.start.d}</b><span class="time-small">${item.start.t}</span><div class="text-[9px] text-blue-500 font-bold mt-1 uppercase">VÀO H${item.house}</div></td><td class="p-3 border exact-highlight text-center">${hitsHtml}</td><td class="p-3 border text-[11px] bg-gray-50/30"><b>${item.end.d}</b><span class="time-small">${item.end.t}</span><div class="text-[9px] text-red-500 font-bold mt-1 uppercase">RA H${item.house}</div></td>`;
+                    resBody.appendChild(tr);
+                });
+            }
+        } catch(e) { resBody.innerHTML = '<tr><td colspan="3" class="p-6 text-red-500 text-xs font-bold text-center">Lỗi kết nối.</td></tr>'; }
+        finally { btn.disabled = false; }
+    }
+
+    async function openNhaTransit(pName) {
+        document.getElementById('modal-nhatransit').style.display = 'flex';
+        const resBody = document.getElementById('mn-results'), title = document.getElementById('mn-title');
+        title.innerText = `Đang tính toán cho ${pName}...`;
+        resBody.innerHTML = '<tr><td colspan="2" class="p-8 text-sm italic text-blue-500 font-bold text-center">Đang xác định ranh giới Nhà...</td></tr>';
+
+        const dInput = document.getElementsByName('t_day')[0] || document.getElementsByName('new_day')[0] || {value: new Date().getDate()};
+        const mInput = document.getElementsByName('t_month')[0] || document.getElementsByName('new_month')[0] || {value: new Date().getMonth() + 1};
+        const yInput = document.getElementsByName('t_year')[0] || document.getElementsByName('new_year')[0] || {value: new Date().getFullYear()};
+
+        try {
+            const r = await fetch('/api/tra-nha-transit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    p_trans: pName,
+                    natal_name: getTargetProfileName().trim(),
+                    day: dInput.value, month: mInput.value, year: yInput.value
+                })
+            });
+            const item = await r.json();
+            if(!item || !item.start) {
+                resBody.innerHTML = '<tr><td colspan="2" class="p-8 text-red-500 font-bold text-center uppercase">Lỗi dữ liệu.</td></tr>';
+            } else {
+                const sL = `/vanhan/rieng?profile=${encodeURIComponent(getTargetProfileName().trim())}&day=${item.start.d.split('/')[0]}&month=${item.start.d.split('/')[1]}&year=${item.start.d.split('/')[2]}`;
+                const eL = `/vanhan/rieng?profile=${encodeURIComponent(getTargetProfileName().trim())}&day=${item.end.d.split('/')[0]}&month=${item.end.d.split('/')[1]}&year=${item.end.d.split('/')[2]}`;
+
+                title.innerText = `Thời gian ${pName} ở Nhà ${item.house}`;
+                resBody.innerHTML = `
+                    <tr>
+                        <td class="p-6 border bg-gray-50/30 text-center">
+                            <span class="date-highlight-large text-gray-800 dark:text-gray-200">${item.start.d}</span>
+                            <div class="time-small text-blue-500 dark:text-blue-400 font-bold">${item.start.t}</div>
+                            <a href="${sL}" target="_blank" class="transit-link mt-1 block uppercase">Transit lúc đó</a>
+                        </td>
+                        <td class="p-6 border bg-gray-50/30 text-center">
+                            <span class="date-highlight-large text-gray-800 dark:text-gray-200">${item.end.d}</span>
+                            <div class="time-small text-red-500 dark:text-red-400 font-bold">${item.end.t}</div>
+                            <a href="${eL}" target="_blank" class="transit-link mt-1 block uppercase">Transit lúc đó</a>
+                        </td>
+                    </tr>`;
+            }
+        } catch(e) { resBody.innerHTML = '<tr><td colspan="2" class="p-8 text-red-500 font-bold text-center">Lỗi kết nối server.</td></tr>'; }
+    }
+</script>

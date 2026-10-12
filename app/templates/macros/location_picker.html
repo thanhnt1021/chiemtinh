@@ -1,0 +1,142 @@
+<!-- app/templates/macros/location_picker.html -->
+{% macro render_location_picker(prefix, profile=None) %}
+<div class="location-picker-group" data-prefix="{{ prefix }}">
+    {% set loc_obj = profile.loc if (profile and profile.loc) else {} %}
+    
+    {% set current_cc = loc_obj.country_code or 'vn' %}
+    {% set current_addr = loc_obj.address or '' %}
+    {% set current_tz = loc_obj.tz or '' %}
+    {% set current_lat = loc_obj.lat or '' %}
+    {% set current_lon = loc_obj.lon or '' %}
+
+    <div class="mb-3">
+        <label class="block text-[11px] font-bold mb-1 text-gray-500 dark:text-gray-400 uppercase tracking-widest">Quốc gia</label>
+        <select id="{{ prefix }}country_select" 
+                name="{{ prefix }}country_code"
+                onchange="toggleCustomCountry('{{ prefix }}')"
+                class="w-full p-2 border rounded bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-blue-500 transition-all border-gray-300 dark:border-gray-600 shadow-sm text-gray-900 dark:text-white">
+            <option value="vn" {% if current_cc == 'vn' %}selected{% endif %}>Vietnam</option>
+            <option value="us" {% if current_cc == 'us' %}selected{% endif %}>United States</option>
+            <option value="gb" {% if current_cc == 'gb' %}selected{% endif %}>United Kingdom</option>
+            <option value="au" {% if current_cc == 'au' %}selected{% endif %}>Australia</option>
+            <option value="ca" {% if current_cc == 'ca' %}selected{% endif %}>Canada</option>
+            <option value="fr" {% if current_cc == 'fr' %}selected{% endif %}>France</option>
+            <option value="de" {% if current_cc == 'de' %}selected{% endif %}>Germany</option>
+            <option value="jp" {% if current_cc == 'jp' %}selected{% endif %}>Japan</option>
+            <option value="kr" {% if current_cc == 'kr' %}selected{% endif %}>South Korea</option>
+            <option value="ru" {% if current_cc == 'ru' %}selected{% endif %}>Russia</option>
+            <option value="in" {% if current_cc == 'in' %}selected{% endif %}>India</option>
+            <option value="th" {% if current_cc == 'th' %}selected{% endif %}>Thailand</option>
+            <option value="sg" {% if current_cc == 'sg' %}selected{% endif %}>Singapore</option>
+            <option value="">-- Toàn thế giới --</option>
+            <option value="other" {% if current_cc == 'other' %}selected{% endif %}>Khác...</option>
+        </select>
+    </div>
+
+    <div id="{{ prefix }}custom_country_div" class="mb-3 {% if current_cc != 'other' %}hidden{% endif %}">
+        <label class="block text-[11px] font-bold mb-1 text-red-500 uppercase tracking-widest">Điền quốc gia (Tiếng Anh)</label>
+        <input type="text" id="{{ prefix }}custom_country_input" 
+               placeholder="Ví dụ: Switzerland" 
+               class="w-full p-2 border border-red-200 rounded bg-red-50 dark:bg-gray-800 text-sm focus:ring-2 focus:ring-red-500 shadow-inner text-gray-900 dark:text-white">
+    </div>
+
+    <div class="relative">
+        <label class="block text-[11px] font-bold mb-1 text-gray-500 dark:text-gray-400 uppercase tracking-widest">Tỉnh/Thành phố hoặc địa danh</label>
+        <div class="flex gap-1">
+            <input type="text" id="{{ prefix }}search" 
+                   value="{{ current_addr.split(',')[0] if current_addr else '' }}" 
+                   placeholder="Nhập tên địa danh..." 
+                   oninput="onTypeLoc('{{ prefix }}')" 
+                   class="w-full p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white shadow-inner">
+            <button type="button" onclick="searchLoc('{{ prefix }}')" class="bg-blue-600 text-white px-4 rounded shadow hover:bg-blue-500 transition active:scale-95">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+        
+        <div id="{{ prefix }}results" class="hidden absolute z-[300] w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 shadow-2xl rounded mt-1 max-h-[500px] overflow-y-auto min-w-[320px]">
+        </div>
+        
+        <div id="{{ prefix }}status" class="text-[10px] text-green-600 dark:text-green-400 mt-1 font-bold">
+            {% if current_tz %}
+                ✅ Vị trí: {{ current_tz }} ({{ current_lat|round(2) }}, {{ current_lon|round(2) }})
+            {% endif %}
+        </div>
+    </div>
+
+    <input type="hidden" name="{{ prefix }}lat" id="{{ prefix }}lat" value="{{ current_lat }}">
+    <input type="hidden" name="{{ prefix }}lon" id="{{ prefix }}lon" value="{{ current_lon }}">
+    <input type="hidden" name="{{ prefix }}tz" id="{{ prefix }}tz" value="{{ current_tz }}">
+    <input type="hidden" name="{{ prefix }}address" id="{{ prefix }}addr" value="{{ current_addr }}">
+</div>
+
+<script>
+    if (!window.locTimers) window.locTimers = {};
+
+    function toggleCustomCountry(prefix) {
+        const sel = document.getElementById(prefix + 'country_select');
+        const div = document.getElementById(prefix + 'custom_country_div');
+        if (sel.value === 'other') { div.classList.remove('hidden'); } else { div.classList.add('hidden'); }
+    }
+
+    function onTypeLoc(p) {
+        if (window.locTimers[p]) clearTimeout(window.locTimers[p]);
+        window.locTimers[p] = setTimeout(() => searchLoc(p), 600);
+    }
+
+    async function searchLoc(prefix) {
+        const queryInput = document.getElementById(prefix + 'search');
+        const query = queryInput.value.trim();
+        const countryCode = document.getElementById(prefix + 'country_select').value;
+        const customCountryInput = document.getElementById(prefix + 'custom_country_input');
+        const customCountry = customCountryInput ? customCountryInput.value.trim() : "";
+        const resDiv = document.getElementById(prefix + 'results');
+        const statusDiv = document.getElementById(prefix + 'status');
+        
+        if (query.length < 2) { resDiv.classList.add('hidden'); return; }
+        resDiv.classList.remove('hidden');
+        resDiv.innerHTML = '<div class="p-4 text-xs text-blue-500 font-bold italic flex items-center bg-gray-50 dark:bg-gray-700"><i class="fas fa-atlas fa-spin mr-2"></i> Đang bóc tách dữ liệu...</div>';
+
+        try {
+            const url = `/api/search-location?q=${encodeURIComponent(query)}&cc=${countryCode}&cn=${encodeURIComponent(customCountry)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            resDiv.innerHTML = '';
+            
+            if (!data || data.length === 0) {
+                resDiv.innerHTML = '<div class="p-4 text-xs text-red-500 font-bold bg-white dark:bg-gray-800 text-center">Không tìm thấy địa điểm.</div>';
+                return;
+            }
+
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'p-3 hover:bg-blue-50 dark:hover:bg-gray-700 cursor-pointer text-[11px] border-b border-gray-100 dark:border-gray-700 text-gray-800 dark:text-gray-200 text-left transition-colors font-medium';
+                div.innerHTML = item.display_name;
+                
+                div.onclick = () => {
+                    document.getElementById(prefix + 'lat').value = item.lat;
+                    document.getElementById(prefix + 'lon').value = item.lon;
+                    document.getElementById(prefix + 'tz').value = item.tz;
+                    document.getElementById(prefix + 'addr').value = item.display_name.split(' = ')[0];
+                    document.getElementById(prefix + 'search').value = item.short_name.split(',')[0];
+                    statusDiv.innerHTML = "✅ Tọa độ: " + item.tz + " (" + item.lat.toFixed(2) + ", " + item.lon.toFixed(2) + ")";
+                    resDiv.classList.add('hidden');
+                };
+                resDiv.appendChild(div);
+            });
+        } catch (error) { 
+            console.error("Loc Search Error:", error);
+            resDiv.innerHTML = '<div class="p-4 text-xs text-red-600 font-bold bg-white dark:bg-gray-800">Lỗi kết nối server.</div>'; 
+        }
+    }
+
+    document.addEventListener('mousedown', function(e) {
+        const containers = document.querySelectorAll('.location-picker-group');
+        containers.forEach(container => {
+            if (!container.contains(e.target)) {
+                const results = container.querySelector('[id$="results"]');
+                if (results) results.classList.add('hidden');
+            }
+        });
+    });
+</script>
+{% endmacro %}

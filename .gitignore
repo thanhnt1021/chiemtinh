@@ -1,0 +1,56 @@
+# --- SECRET / CREDENTIAL (BẮT BUỘC — kiểm trước lần commit đầu) ---
+secret.key
+mine01.json
+*.json.key
+.env
+.env.*
+!.env.example
+credentials*.json
+token*.json
+serviceaccount*.json
+service-account*.json
+*.key
+*.pem
+*.p12
+*.env
+!*.env.example
+.claude/settings.local.json
+.claude/.univ3-fresh.json
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+build/
+dist/
+
+# --- Log & runtime ---
+logs/
+*.log
+
+# --- Bản sinh / dump code ---
+full_project_source.txt
+old.txt
+
+# --- OS ---
+.DS_Store
+
+# --- IDE ---
+.idea/
+.vscode/
+.claude/sep-viec/
+
+# --- Bot nhận việc oHa ---
+workers/oha-bot/.wrangler/
+workers/oha-bot/.dev.vars
+.dev.vars
+.wrangler/
+node_modules/
+
+# --- Media chưa chốt (founder chưa xác nhận có thuộc repo) ---
+input/cho/
+input/nhan/
+Dai_Kim.m4a

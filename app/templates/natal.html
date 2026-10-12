@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% from "macros/location_picker.html" import render_location_picker %}
+
+{% block title %}Lá Số Cá Nhân - Astro System{% endblock %}
+
+{% block head_extra %}
+<style>
+    .app-container { max-width: 1200px; margin: 0 auto; }
+    .title-auto-scale { white-space: nowrap; overflow: hidden; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="app-container p-4 md:p-8 pt-16">
+    <a href="/dashboard" class="text-blue-500 hover:text-blue-400 mb-4 inline-block">&larr; Menu</a>
+
+    <div class="bg-white dark:bg-gray-800 p-6 rounded shadow mb-8 border border-gray-200 dark:border-gray-700">
+        <h2 class="text-xl font-bold mb-4 border-b border-gray-200 dark:border-gray-600 pb-2 text-center text-blue-600 dark:text-blue-400 uppercase tracking-widest">Nhập Dữ Liệu Natal</h2>
+
+        <form action="/natal" method="POST" id="natal-form" onsubmit="const btn=this.querySelector('button[type=submit]'); if(!btn.disabled){ btn.disabled=true; btn.innerText='ĐANG XỬ LÝ...'; return true; } return false;">
+            <input type="hidden" name="mode" id="mode-input" value="existing">
+            <input type="hidden" name="quick_action" id="quick_action" value="">
+
+            <div class="flex mb-4 bg-gray-200 dark:bg-gray-700 rounded p-1">
+                <button type="button" id="btn-exist" onclick="switchTab('existing')" class="flex-1 py-2 rounded bg-blue-600 text-white font-bold transition">Có sẵn</button>
+                <button type="button" id="btn-new" onclick="switchTab('new')" class="flex-1 py-2 rounded font-bold transition text-gray-700 dark:text-gray-300">Nhập mới</button>
+            </div>
+
+            <div id="tab-existing">
+                <label class="block mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Chọn hồ sơ:</label>
+                <select name="profile" class="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white mb-4">
+                    {% for p_item in profiles %}
+                    <option value="{{ p_item.name }}" {% if selected == p_item.name %}selected{% endif %}>{{ p_item.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="tab-new" class="hidden space-y-4">
+                <div>
+                    <input type="text" name="new_name" id="new_name" oninput="validateUniqueName()" placeholder="Họ tên người mới" class="w-full p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                    <p id="name-error" class="text-red-500 text-[10px] font-bold mt-1 hidden">Tên hồ sơ đã tồn tại.</p>
+                </div>
+                <div class="flex gap-2">
+                    <input type="number" name="new_day" placeholder="Ngày" class="w-1/3 p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700">
+                    <input type="number" name="new_month" placeholder="Tháng" class="w-1/3 p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700">
+                    <input type="number" name="new_year" placeholder="Năm" class="w-1/3 p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700">
+                </div>
+                <div class="flex gap-2">
+                    <input type="number" name="new_hour" placeholder="Giờ" class="w-1/2 p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700">
+                    <input type="number" name="new_minute" placeholder="Phút" class="w-1/2 p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700">
+                </div>
+
+                {{ render_location_picker(prefix='new_', profile=p) }}
+
+                <select name="new_gender" class="w-full p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <option value="Female">Nữ</option>
+                    <option value="Male">Nam</option>
+                    <option value="Other">Khác</option>
+                </select>
+                <div class="flex items-center mt-2">
+                    <input type="checkbox" name="save_to_db" id="save_chk" class="mr-2 w-4 h-4 rounded">
+                    <label for="save_chk" class="text-sm text-gray-700 dark:text-gray-300 cursor-pointer">Lưu vào danh sách hồ sơ</label>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-center mt-4">
+                <input type="checkbox" name="show_real_angle" id="show_real_angle" {% if show_real_angle %}checked{% endif %} class="w-4 h-4 text-blue-600 rounded">
+                <label for="show_real_angle" class="ml-2 text-sm text-gray-900 dark:text-gray-300 cursor-pointer">Hiển thị "Góc thật" (Real Orb)</label>
+            </div>
+
+            <div class="text-center mt-6">
+                <button type="submit" onclick="document.getElementById('quick_action').value=''" class="bg-blue-600 text-white font-bold py-3 px-10 rounded shadow hover:bg-blue-500 transition uppercase tracking-widest">XEM BẢN ĐỒ</button>
+            </div>
+        </form>
+    </div>
+
+    {% if chart_img %}
+    <div class="space-y-8">
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow text-center flex flex-col items-center border border-gray-200 dark:border-gray-700 shadow-xl">
+            <div class="w-full flex justify-end gap-2 mb-4">
+                <button type="button" onclick="submitQuickAction('transit_now')" class="bg-green-600 text-white text-[9px] sm:text-xs font-bold py-1.5 px-3 rounded shadow transition">Transit Hiện Tại</button>
+                <button type="button" onclick="submitQuickAction('cycle_1y')" class="bg-orange-500 text-white text-[9px] sm:text-xs font-bold py-1.5 px-3 rounded shadow transition">Đại Hạn 1 Năm</button>
+            </div>
+            
+            <div class="flex items-center justify-center space-x-2 mb-4 w-full overflow-hidden">
+                <h3 id="main-chart-title" class="font-bold text-lg text-blue-600 dark:text-blue-400 whitespace-nowrap overflow-hidden text-ellipsis">{{ selected }}</h3>
+                {% if selected %}
+                <a href="/edit_profile/{{ selected }}?return_to=natal" class="flex-shrink-0 text-xs bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 px-2 py-1 rounded transition" title="Sửa thông tin">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                {% endif %}
+            </div>
+
+            <img src="data:image/png;base64,{{ chart_img }}" class="max-w-full h-auto mx-auto rounded border border-gray-200 dark:border-gray-700 shadow-lg">
+        </div>
+
+        {% if transit_report %}
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow border border-gray-200 dark:border-gray-700 text-sm shadow-md">
+            {{ transit_report[0] | safe }}
+        </div>
+        {% if transit_report[1] %}
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow border border-gray-200 dark:border-gray-700 text-sm mt-8 shadow-md">
+            {{ transit_report[1] | safe }}
+        </div>
+        {% endif %}
+        {% endif %}
+
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow border border-gray-200 dark:border-gray-700 mt-8">
+            <h3 class="font-bold text-lg mb-4 border-b pb-2 text-center uppercase tracking-widest">Phân Tích Chi Tiết Natal</h3>
+            <div class="text-sm bg-gray-50 dark:bg-gray-900 p-4 rounded border dark:border-gray-700 shadow-inner">{{ report | safe }}</div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% include 'transit_modals_shared.html' %}
+
+<script>
+    const existingNames = {{ profiles|map(attribute='name')|list|tojson }};
+    
+    function validateUniqueName() {
+        const mode = document.getElementById('mode-input').value;
+        const nameInput = document.getElementById('new_name');
+        const errorMsg = document.getElementById('name-error');
+        if (mode === 'new' && existingNames.some(n => n.toLowerCase() === nameInput.value.trim().toLowerCase())) {
+            errorMsg.classList.remove('hidden'); return;
+        }
+        errorMsg.classList.add('hidden');
+    }
+
+    function switchTab(mode) {
+        document.getElementById('mode-input').value = mode;
+        const btnE = document.getElementById('btn-exist'), btnN = document.getElementById('btn-new');
+        const tabE = document.getElementById('tab-existing'), tabN = document.getElementById('tab-new');
+        if(mode === 'existing') {
+            tabE.classList.remove('hidden'); tabN.classList.add('hidden');
+            btnE.classList.add('bg-blue-600', 'text-white'); btnE.classList.remove('text-gray-700', 'dark:text-gray-300');
+            btnN.classList.remove('bg-blue-600', 'text-white'); btnN.classList.add('text-gray-700', 'dark:text-gray-300');
+        } else {
+            tabE.classList.add('hidden'); tabN.classList.remove('hidden');
+            btnN.classList.add('bg-blue-600', 'text-white'); btnN.classList.remove('text-gray-700', 'dark:text-gray-300');
+            btnE.classList.remove('bg-blue-600', 'text-white'); btnE.classList.add('text-gray-700', 'dark:text-gray-300');
+        }
+    }
+
+    function submitQuickAction(action) {
+        document.getElementById('quick_action').value = action;
+        document.getElementById('natal-form').submit();
+    }
+</script>
+{% endblock %}

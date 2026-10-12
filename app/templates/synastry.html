@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% from "macros/location_picker.html" import render_location_picker %}
+
+{% block title %}Tương Hợp Cặp Đôi - Astro System{% endblock %}
+
+{% block head_extra %}
+<style>
+    .app-container { max-width: 1200px; margin: 0 auto; }
+    .title-auto-scale { white-space: nowrap; overflow: hidden; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="app-container p-4 md:p-8 pt-16">
+    <a href="/dashboard" class="text-blue-500 hover:text-blue-400 mb-4 inline-block">&larr; Quay lại Dashboard</a>
+    
+    <form action="/synastry" method="POST" onsubmit="const btn=this.querySelector('button[type=submit]'); btn.disabled=true; btn.innerText='ĐANG XỬ LÝ...';">
+        <div class="grid grid-cols-2 gap-2 md:gap-6 mb-6">
+            <!-- NGƯỜI A -->
+            <div class="bg-white dark:bg-gray-800 p-2 md:p-4 rounded shadow border border-gray-200 dark:border-gray-700 shadow-md">
+                <div class="flex justify-between items-center mb-2 border-b pb-2 overflow-hidden">
+                    <h3 class="font-bold text-blue-500 text-xs md:text-base title-auto-scale">Người A (Trong)</h3>
+                    {% if selected_A %}<a href="/edit_profile/{{ selected_A }}?return_to=synastry&other_profile={{ selected_B if selected_B else '' }}&role=A" class="flex-shrink-0 text-[10px] bg-blue-100 text-blue-600 px-1 rounded font-bold">Edit</a>{% endif %}
+                </div>
+                <input type="hidden" name="mode_A" id="mode_A" value="existing">
+                <div class="flex mb-3 bg-gray-200 dark:bg-gray-700 rounded p-0.5 text-[10px]">
+                    <button type="button" id="btn-A-exist" onclick="switchTab('A','existing')" class="flex-1 py-1 rounded bg-blue-600 text-white transition">Có sẵn</button>
+                    <button type="button" id="btn-A-new" onclick="switchTab('A','new')" class="flex-1 py-1 rounded transition text-gray-700 dark:text-gray-300">Nhập mới</button>
+                </div>
+                <div id="tab-A-exist"><select name="profileA" class="w-full p-1 border rounded bg-gray-50 dark:bg-gray-700 text-xs text-gray-900 dark:text-white border-gray-300 dark:border-gray-600">{% for p_item in profiles %}<option value="{{ p_item.name }}" {% if selected_A == p_item.name %}selected{% endif %}>{{ p_item.name }}</option>{% endfor %}</select></div>
+                <div id="tab-A-new" class="hidden space-y-2">
+                    <input type="text" name="A_name" id="A_name" oninput="validateUniqueSynastry()" placeholder="Tên A" class="w-full p-1 border rounded bg-gray-50 dark:bg-gray-700 text-xs text-gray-900 dark:text-white border-gray-300 dark:border-gray-600">
+                    <p id="A-name-error" class="text-red-500 text-[9px] font-bold hidden">⚠️ Tên người A đã tồn tại.</p>
+                    <div class="flex gap-1">
+                        <input type="number" name="A_day" placeholder="D" class="w-1/3 p-1 border rounded text-xs bg-gray-50 dark:bg-gray-700">
+                        <input type="number" name="A_month" placeholder="M" class="w-1/3 p-1 border rounded text-xs bg-gray-50 dark:bg-gray-700">
+                        <input type="number" name="A_year" placeholder="Y" class="w-1/3 p-1 border rounded text-xs bg-gray-50 dark:bg-gray-700">
+                    </div>
+                    <div class="flex gap-1">
+                        <input type="number" name="A_hour" placeholder="Giờ" class="w-1/2 p-1 border rounded text-xs bg-gray-50 dark:bg-gray-700">
+                        <input type="number" name="A_minute" placeholder="Phút" class="w-1/2 p-1 border rounded text-xs bg-gray-50 dark:bg-gray-700">
+                    </div>
+                    
+                    {{ render_location_picker(prefix='A_', profile=pA) }}
+
+                    <select name="A_gender" class="w-full p-1 border rounded text-[10px] bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                        <option value="Female">Nữ</option><option value="Male">Nam</option><option value="Other">Khác</option>
+                    </select>
+                    <label class="flex items-center text-[10px] cursor-pointer"><input type="checkbox" name="save_A" id="save_A" onchange="validateUniqueSynastry()" class="mr-1"> Lưu hồ sơ</label>
+                </div>
+            </div>
+
+            <!-- NGƯỜI B -->
+            <div class="bg-white dark:bg-gray-800 p-2 md:p-4 rounded shadow border border-gray-200 dark:border-gray-700 shadow-md">
+                <div class="flex justify-between items-center mb-2 border-b pb-2 overflow-hidden">
+                    <h3 class="font-bold text-red-500 text-xs md:text-base title-auto-scale">Người B (Ngoài)</h3>
+                    {% if selected_B %}<a href="/edit_profile/{{ selected_B }}?return_to=synastry&other_profile={{ selected_A if selected_A else '' }}&role=B" class="flex-shrink-0 text-[10px] bg-blue-100 text-blue-600 px-1 rounded font-bold">Edit</a>{% endif %}
+                </div>
+                <input type="hidden" name="mode_B" id="mode_B" value="existing">
+                <div class="flex mb-3 bg-gray-200 dark:bg-gray-700 rounded p-0.5 text-[10px]">
+                    <button type="button" id="btn-B-exist" onclick="switchTab('B','existing')" class="flex-1 py-1 rounded bg-blue-600 text-white transition">Có sẵn</button>
+                    <button type="button" id="btn-B-new" onclick="switchTab('B','new')" class="flex-1 py-1 rounded transition text-gray-700 dark:text-gray-300">Nhập mới</button>
+                </div>
+                <div id="tab-B-exist"><select name="profileB" class="w-full p-1 border rounded bg-gray-50 dark:bg-gray-700 text-xs text-gray-900 dark:text-white border-gray-300 dark:border-gray-600">{% for p_item in profiles %}<option value="{{ p_item.name }}" {% if selected_B == p_item.name %}selected{% endif %}>{{ p_item.name }}</option>{% endfor %}</select></div>
+                <div id="tab-B-new" class="hidden space-y-2">
+                    <input type="text" name="B_name" id="B_name" oninput="validateUniqueSynastry()" placeholder="Tên B" class="w-full p-1 border rounded bg-gray-50 dark:bg-gray-700 text-xs text-gray-900 dark:text-white border-gray-300 dark:border-gray-600">
+                    <p id="B-name-error" class="text-red-500 text-[9px] font-bold hidden">⚠️ Tên người B đã tồn tại.</p>
+                    <div class="flex gap-1">
+                        <input type="number" name="B_day" placeholder="D" class="w-1/3 p-1 border rounded text-xs bg-gray-50 dark:bg-gray-700">
+                        <input type="number" name="B_month" placeholder="M" class="w-1/3 p-1 border rounded text-xs bg-gray-50 dark:bg-gray-700">
+                        <input type="number" name="B_year" placeholder="Y" class="w-1/3 p-1 border rounded text-xs bg-gray-50 dark:bg-gray-700">
+                    </div>
+                    <div class="flex gap-1">
+                        <input type="number" name="B_hour" placeholder="Giờ" class="w-1/2 p-1 border rounded text-xs bg-gray-50 dark:bg-gray-700">
+                        <input type="number" name="B_minute" placeholder="Phút" class="w-1/2 p-1 border rounded text-xs bg-gray-50 dark:bg-gray-700">
+                    </div>
+
+                    {{ render_location_picker(prefix='B_', profile=pB) }}
+
+                    <select name="B_gender" class="w-full p-1 border rounded text-[10px] bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                        <option value="Female">Nữ</option><option value="Male">Nam</option><option value="Other">Khác</option>
+                    </select>
+                    <label class="flex items-center text-[10px] cursor-pointer"><input type="checkbox" name="save_B" id="save_B" onchange="validateUniqueSynastry()" class="mr-1"> Lưu hồ sơ</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-center mt-4">
+            <input type="checkbox" name="show_real_angle" id="show_real_angle" class="w-4 h-4 text-blue-600 rounded">
+            <label for="show_real_angle" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer">Hiển thị "Góc thật" (Show Real Orb)</label>
+        </div>
+
+        <div class="text-center mt-6">
+            <button type="submit" class="bg-green-600 text-white font-bold py-3 px-10 rounded shadow hover:bg-green-500 text-lg transition transform hover:-translate-y-1 uppercase tracking-widest">XEM TƯƠNG HỢP</button>
+        </div>
+    </form>
+
+    {% if chart_img %}
+    <div class="space-y-8 mt-8">
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow text-center flex flex-col items-center border border-gray-200 dark:border-gray-700 shadow-xl">
+            <h3 id="title-synastry" class="font-bold text-lg text-blue-600 dark:text-blue-400 tracking-widest uppercase mb-4">Bản Đồ Synastry</h3>
+            <img src="data:image/png;base64,{{ chart_img }}" class="max-w-full h-auto mx-auto rounded border border-gray-200 dark:border-gray-700 shadow-xl">
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded shadow border border-gray-200 dark:border-gray-700 shadow-md">
+            <h3 id="title-analysis" class="font-bold text-xl text-center text-gray-800 dark:text-gray-200 uppercase tracking-widest mb-4">PHÂN TÍCH CHI TIẾT</h3>
+            <div class="text-sm bg-gray-50 dark:bg-gray-900 p-4 rounded border dark:border-gray-700 shadow-inner">{{ report_html | safe }}</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded shadow border border-gray-200 dark:border-gray-700 shadow-md">
+            <h3 id="title-grid" class="font-bold text-xl text-center text-gray-800 dark:text-gray-200 uppercase tracking-widest mb-4">BẢNG TƯƠNG TÁC GÓC</h3>
+            <div class="overflow-x-auto bg-white p-2 rounded shadow-lg border dark:border-gray-600">
+                <img src="data:image/png;base64,{{ grid_img }}" class="max-w-full h-auto" alt="Synastry Grid">
+            </div>
+        </div>
+        {% if theme_html %}
+        <div class="bg-white dark:bg-gray-800 p-4 md:p-6 rounded shadow border border-gray-200 dark:border-gray-700 shadow-md">
+            <h3 id="title-theme" class="font-bold text-xl text-center text-gray-800 dark:text-gray-200 uppercase tracking-widest mb-4">THEME CHÍNH CỦA MỐI QUAN HỆ</h3>
+            <div class="text-sm bg-gray-50 dark:bg-gray-900 p-4 rounded border dark:border-gray-700 text-gray-800 dark:text-gray-200 shadow-inner">{{ theme_html | safe }}</div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    const existingNames = {{ profiles|map(attribute='name')|list|tojson }};
+
+    function validateUniqueSynastry() {
+        const submitBtn = document.querySelector('button[type="submit"]');
+        let hasError = false;
+        ['A', 'B'].forEach(p_id => {
+            const mode = document.getElementById('mode_'+p_id).value;
+            const saveChk = document.getElementById('save_'+p_id);
+            const nameInput = document.getElementById(p_id+'_name');
+            const errorMsg = document.getElementById(p_id+'-name-error');
+            if (mode === 'new' && saveChk && saveChk.checked && existingNames.some(n => n.toLowerCase() === nameInput.value.trim().toLowerCase())) {
+                errorMsg.classList.remove('hidden'); hasError = true;
+            } else if (errorMsg) { errorMsg.classList.add('hidden'); }
+        });
+        submitBtn.disabled = hasError; submitBtn.style.opacity = hasError ? '0.5' : '1';
+    }
+
+    function switchTab(person, mode) {
+        document.getElementById(`mode_${person}`).value = mode;
+        const btnE = document.getElementById(`btn-${person}-exist`), btnN = document.getElementById(`btn-${person}-new`);
+        const tabE = document.getElementById(`tab-${person}-exist`), tabN = document.getElementById(`tab-${person}-new`);
+        if(mode === 'existing') {
+            tabE.classList.remove('hidden'); tabN.classList.add('hidden');
+            btnE.classList.add('bg-blue-600', 'text-white'); btnE.classList.remove('text-gray-700', 'dark:text-gray-300');
+            btnN.classList.remove('bg-blue-600', 'text-white'); btnN.classList.add('text-gray-700', 'dark:text-gray-300');
+        } else {
+            tabE.classList.add('hidden'); tabN.classList.remove('hidden');
+            btnN.classList.add('bg-blue-600', 'text-white'); btnN.classList.remove('text-gray-700', 'dark:text-gray-300');
+            btnE.classList.remove('bg-blue-600', 'text-white'); btnE.classList.add('text-gray-700', 'dark:text-gray-300');
+        }
+        validateUniqueSynastry();
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+[Unit]
+Description=Gunicorn instance for chiemtinh
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/root/astro_project
+Environment="PATH=/root/astro_project/venv/bin"
+ExecStart=/root/astro_project/venv/bin/gunicorn --config gunicorn_config.py wsgi:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

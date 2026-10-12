@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% from "macros/location_picker.html" import render_location_picker %}
+
+{% block title %}Vận Hạn Chi Tiết - Timeline - Astro System{% endblock %}
+
+{% block head_extra %}
+<style>
+    .app-container { max-width: 1200px; margin: 0 auto; padding: 0 5px; }
+    .timeline-img-container img { width: 100%; max-width: 100%; height: auto; display: block; }
+    .house-checkbox-card {
+        display: flex; align-items: center; justify-content: center; padding: 12px 5px; border: 2px solid transparent; border-radius: 10px;
+        background-color: #f3f4f6; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 800; font-size: 14px; color: #4b5563; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .dark .house-checkbox-card { background-color: #374151; color: #d1d5db; border-color: #4b5563; }
+    
+    .house-checkbox-input:checked + .house-checkbox-card { 
+        border-color: #10b981; background-color: #ecfdf5; color: #047857; 
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); 
+    }
+    .dark .house-checkbox-input:checked + .house-checkbox-card { 
+        border-color: #34d399; background-color: #064e3b; color: #d1fae5; 
+    }
+
+    /* Hiệu ứng mờ cho các ô bị disable khi đủ limit */
+    .house-checkbox-input:disabled + .house-checkbox-card {
+        opacity: 0.4;
+        cursor: not-allowed;
+        filter: grayscale(100%);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="app-container pt-16">
+    <a href="/vanhan" class="text-blue-500 hover:text-blue-400 mb-4 inline-block hover:underline">&larr; Menu Vận Hạn</a>
+
+    <div class="bg-white dark:bg-gray-800 p-6 rounded shadow mb-8 border border-gray-200 dark:border-gray-700 shadow-xl">
+        <h2 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-4 border-b pb-2 text-center uppercase tracking-widest">Vận Hạn Chi Tiết (Timeline)</h2>
+
+        <!-- Flash Messages cho trường hợp lỗi tính toán -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="mb-4 p-3 rounded text-sm font-bold {{ 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200' if category == 'error' else 'bg-green-100 text-green-700' }}">
+                <i class="fas fa-exclamation-triangle mr-1"></i> {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form action="/vanhan/chitiet" id="main-form" method="POST" onsubmit="const btn=document.getElementById('btn-submit'); btn.disabled=true; btn.innerHTML='<i class=\'fas fa-hourglass-half fa-spin mr-2\'></i> ĐANG \'FIRE\' DỮ LIỆU...'; btn.classList.add('animate-pulse');">
+            <input type="hidden" name="mode" id="mode-input" value="existing">
+
+            <div class="flex mb-4 bg-gray-200 dark:bg-gray-700 rounded p-1">
+                <button type="button" id="btn-exist" onclick="switchTab('existing')" class="flex-1 py-2 rounded bg-blue-600 text-white font-bold transition shadow-sm">Có sẵn</button>
+                <button type="button" id="btn-new" onclick="switchTab('new')" class="flex-1 py-2 rounded font-bold transition text-gray-700 dark:text-gray-300">Nhập mới</button>
+            </div>
+
+            <div id="tab-existing" class="mb-4">
+                <label class="block mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Chọn hồ sơ gốc:</label>
+                <select name="profile" class="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm">
+                    {% for p_item in profiles %}<option value="{{ p_item.name }}" {% if selected == p_item.name %}selected{% endif %}>{{ p_item.name }}</option>{% endfor %}
+                </select>
+            </div>
+
+            <div id="tab-new" class="hidden space-y-4 mb-4">
+                <input type="text" name="new_name" placeholder="Họ tên người mới" class="w-full p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600">
+                <div class="flex gap-2">
+                    <input type="number" name="new_day" placeholder="D" class="w-1/3 p-3 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <input type="number" name="new_month" placeholder="M" class="w-1/3 p-3 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <input type="number" name="new_year" placeholder="Y" class="w-1/3 p-3 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                </div>
+                <div class="flex gap-2">
+                    <input type="number" name="new_hour" placeholder="Giờ" class="w-1/2 p-3 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <input type="number" name="new_minute" placeholder="Phút" class="w-1/2 p-3 border rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                </div>
+
+                {{ render_location_picker(prefix='new_', profile=p) }}
+
+                <div class="flex items-center">
+                    <input type="checkbox" name="save_to_db" id="save_chk" class="mr-2 rounded">
+                    <label for="save_chk" class="text-sm cursor-pointer text-gray-700 dark:text-gray-300">Lưu hồ sơ vào danh sách</label>
+                </div>
+            </div>
+
+            <div class="mb-4 border-t pt-4 grid grid-cols-2 gap-4 border-gray-100 dark:border-gray-700">
+                <div>
+                    <label class="block mb-2 text-xs font-bold text-gray-500 uppercase tracking-widest">Từ ngày:</label>
+                    <input type="date" id="start_date" name="start_date" value="{{ start_date_str }}" onchange="validateDates()" class="w-full p-2 border rounded bg-white dark:bg-gray-600 text-sm text-black dark:text-white shadow-inner border-gray-300 dark:border-gray-600">
+                </div>
+                <div>
+                    <label class="block mb-2 text-xs font-bold text-gray-500 uppercase tracking-widest">Đến ngày:</label>
+                    <input type="date" id="end_date" name="end_date" value="{{ end_date_str }}" onchange="validateDates()" class="w-full p-2 border rounded bg-white dark:bg-gray-600 text-sm text-black dark:text-white shadow-inner border-gray-300 dark:border-gray-600">
+                </div>
+            </div>
+            <p id="date-error" class="text-[11px] text-red-600 font-bold mb-4 hidden bg-red-50 dark:bg-red-900/30 p-2 rounded border border-red-200"></p>
+
+            <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600 shadow-inner">
+                <label class="block mb-4 text-sm font-black text-gray-700 dark:text-gray-300 uppercase text-center tracking-widest">
+                    Lĩnh vực xem vận hạn (Tối đa 3 nhà)
+                </label>
+                <div class="grid grid-cols-4 gap-2 md:gap-4">
+                    {% for i in range(1, 13) %}
+                    <label class="relative select-none cursor-pointer">
+                        <input type="checkbox" name="house_{{ i }}" value="{{ i }}" class="house-checkbox-input sr-only" {% if i in selected_houses %}checked{% endif %} onchange="handleHouseLimit()">
+                        <div class="house-checkbox-card shadow-sm">H{{ i }}</div>
+                    </label>
+                    {% endfor %}
+                </div>
+                <p id="house-error" class="text-[11px] text-red-500 font-bold hidden mt-3 text-center">⚠️ Vui lòng chọn ít nhất một Nhà.</p>
+            </div>
+
+            <button type="submit" id="btn-submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg uppercase tracking-widest transition-all active:scale-[0.98]">XEM VẬN HẠN CHI TIẾT</button>
+        </form>
+    </div>
+
+    {% if chart_img %}
+    <div class="space-y-12">
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow text-center border border-gray-200 dark:border-gray-700 shadow-xl">
+            <h3 class="font-bold text-blue-600 mb-4 uppercase text-sm tracking-widest">Bản đồ sao & Đại hạn</h3>
+            <img src="data:image/png;base64,{{ chart_img }}" class="max-w-full h-auto mx-auto rounded shadow-lg border dark:border-gray-600">
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow border border-gray-200 dark:border-gray-700 text-sm shadow-md">
+            {{ house_report | safe }}
+        </div>
+
+        {% if timeline_img %}
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow border border-gray-200 dark:border-gray-700 overflow-hidden shadow-2xl">
+            <h3 class="font-bold text-center mb-6 uppercase text-gray-800 dark:text-white tracking-widest text-sm">BIỂU ĐỒ CHU KỲ VẬN HẠN CHI TIẾT</h3>
+            <div class="timeline-img-container shadow-inner bg-white p-1 rounded">
+                <img src="data:image/png;base64,{{ timeline_img }}" alt="Detailed Timeline">
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function switchTab(mode) {
+        document.getElementById('mode-input').value = mode;
+        const tabE = document.getElementById('tab-existing'), tabN = document.getElementById('tab-new');
+        const btnE = document.getElementById('btn-exist'), btnN = document.getElementById('btn-new');
+        if(mode === 'existing') {
+            tabE.classList.remove('hidden'); tabN.classList.add('hidden');
+            btnE.classList.add('bg-blue-600', 'text-white'); btnE.classList.remove('text-gray-700', 'dark:text-gray-300');
+            btnN.classList.remove('bg-blue-600', 'text-white'); btnN.classList.add('text-gray-700', 'dark:text-gray-300');
+        } else {
+            tabE.classList.add('hidden'); tabN.classList.remove('hidden');
+            btnN.classList.add('bg-blue-600', 'text-white'); btnN.classList.remove('text-gray-700', 'dark:text-gray-300');
+            btnE.classList.remove('bg-blue-600', 'text-white'); btnE.classList.add('text-gray-700', 'dark:text-gray-300');
+        }
+    }
+
+    function validateDates() {
+        const d1 = new Date(document.getElementById('start_date').value), d2 = new Date(document.getElementById('end_date').value);
+        const btn = document.getElementById('btn-submit'), err = document.getElementById('date-error');
+        let msg = "";
+        if (d2 < d1) msg = "⚠️ Ngày kết thúc phải sau ngày bắt đầu.";
+        else if ((d2 - d1) / (1000 * 3600 * 24) > 366) msg = "⚠️ Khoảng thời gian tối đa là 1 năm (366 ngày).";
+        
+        if (msg) { err.innerText = msg; err.classList.remove('hidden'); btn.disabled = true; btn.style.opacity = '0.5'; }
+        else { err.classList.add('hidden'); btn.disabled = false; btn.style.opacity = '1'; }
+    }
+
+    function handleHouseLimit() {
+        const checkboxes = document.querySelectorAll('.house-checkbox-input');
+        const checkedCount = document.querySelectorAll('.house-checkbox-input:checked').length;
+        const LIMIT = 3;
+
+        checkboxes.forEach(cb => {
+            if (!cb.checked) {
+                cb.disabled = checkedCount >= LIMIT;
+            } else {
+                cb.disabled = false;
+            }
+        });
+    }
+
+    document.getElementById('main-form').addEventListener('submit', function(e) {
+        const checked = document.querySelectorAll('.house-checkbox-input:checked');
+        const houseError = document.getElementById('house-error');
+        if (checked.length === 0) {
+            e.preventDefault(); houseError.classList.remove('hidden');
+            const btn = document.getElementById('btn-submit'); btn.disabled = false; btn.innerText = 'XEM VẬN HẠN CHI TIẾT';
+        } else { houseError.classList.add('hidden'); }
+    });
+
+    // Gọi hàm check limit ngay khi load để xử lý trường hợp submit bị lỗi quay lại
+    document.addEventListener('DOMContentLoaded', handleHouseLimit);
+</script>
+{% endblock %}

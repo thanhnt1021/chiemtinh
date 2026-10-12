@@ -1,0 +1,135 @@
+{
+  "mo_ta": "Lưỡng nguyên: 3 quy luật + 6 trục đối đỉnh trên vòng Hoàng đạo với 6 nhu cầu (tháp nhu cầu oHa) + ứng dụng.",
+  "nguon_chinh": [
+    "THAM KHẢO/CTNC - BỔ TÚC 03 - Lưỡng nguyên.md (46 dòng)",
+    "BUỔI HỌC/CTNC - Buổi học 3.md:112-156"
+  ],
+  "vi_du_cap_luong_nguyen_doi_thuong": [
+    "Yêu - Ghét",
+    "Hạnh phúc - Khổ đau"
+  ],
+  "ba_quy_luat": [
+    {
+      "so": 1,
+      "ten": "Song hành",
+      "noi_dung": "bởi cái kia tồn tại, nên cái này mới tồn tại"
+    },
+    {
+      "so": 2,
+      "ten": "Nuôi dưỡng nhau",
+      "noi_dung": "cái này càng lớn, thì bóng dáng cái kia cũng càng lớn"
+    },
+    {
+      "so": 3,
+      "ten": "Tự cân bằng",
+      "noi_dung": "khi quá nghiêng về thái cực này, tâm trí con người sẽ tự động tìm đến thái cực kia để cân bằng",
+      "dien_giai_buoi_hoc": "vật cực tất phản, thịnh cực tất suy"
+    }
+  ],
+  "nguon_ba_quy_luat": "CTNC - BỔ TÚC 03 - Lưỡng nguyên.md:6-13; CTNC - Buổi học 3.md:115-118",
+  "so_ban_ghi": 6,
+  "sau_truc_doi_dinh": [
+    {
+      "truc": "1-7",
+      "cung": "Bạch Dương - Thiên Bình",
+      "viet_tat": "BD-TB",
+      "nha": "H1 - H7",
+      "nhu_cau": "Nhận diện",
+      "dac_diem_chung": [
+        "Trưởng thành thông qua mối quan hệ, quan sát tìm hiểu con người nhiều."
+      ],
+      "vi_du_huong_vao_ra": "BD nhận diện mình bằng cách tự lập tự lực, TB nhận diện mình bằng tương tác soi chiếu với người khác."
+    },
+    {
+      "truc": "2-8",
+      "cung": "Kim Ngưu - Bọ Cạp",
+      "viet_tat": "KN-BC",
+      "nha": "H2 - H8",
+      "nhu_cau": "Sở hữu",
+      "dac_diem_chung": [
+        "Sở hữu, coi trọng vật chất, phân định giá trị, ham muốn tình dục cao."
+      ]
+    },
+    {
+      "truc": "3-9",
+      "cung": "Song Tử - Nhân Mã",
+      "viet_tat": "SoT-NM",
+      "nha": "H3 - H9",
+      "nhu_cau": "Tri thức",
+      "dac_diem_chung": [
+        "Thích tự do, háo kiến thức, biết chắc nhưng thử xem có ngoại lệ không.",
+        "Chính tà bất phân, đôi khi không biết mình là người tốt hay xấu."
+      ]
+    },
+    {
+      "truc": "4-10",
+      "cung": "Cự Giải - Ma Kết",
+      "viet_tat": "CG-MK",
+      "nha": "H4 - H10",
+      "nhu_cau": "Nương náu",
+      "dac_diem_chung": [
+        "Truyền thống, lề lối. Tính cách trách nhiệm kiểu phụ huynh. Làm sếp tốt nhưng hay áp đặt."
+      ]
+    },
+    {
+      "truc": "5-11",
+      "cung": "Sư Tử - Bảo Bình",
+      "viet_tat": "ST-BB",
+      "nha": "H5 - H11",
+      "nhu_cau": "Thể hiện",
+      "dac_diem_chung": [
+        "Ham vui, tự tin, kiêu tự nhiên, nổi bật, sáng tạo. Hay đàn đúm."
+      ]
+    },
+    {
+      "truc": "6-12",
+      "cung": "Xử Nữ - Song Ngư",
+      "viet_tat": "XN-SN",
+      "nha": "H6 - H12",
+      "nhu_cau": "Cống hiến",
+      "dac_diem_chung": [
+        "Thích phục vụ nhưng dễ tủi thân, đôi khi không chăm lo tốt cho bản thân, nhạy cảm, mong manh, nhạy cảm nỗi đau."
+      ],
+      "vi_du_bo_tuc_03": "Người có hành tinh tại XN & SN (hoặc h6 & h12) sẽ thường trực giằng xé giữa lao động - nghỉ ngơi, chê trách - tha thứ... nhưng tựu chung cả đời muốn thoả mãn nhu cầu \"cống hiến\", nhạy cảm với nỗi đau thiếu thốn của người khác, tận tuỵ nhưng dễ tủi thân..."
+    }
+  ],
+  "quy_tac_nua_tren_nua_duoi": "Các cung (và các nhà) ở nửa dưới thỏa mãn nhu cầu đó bằng cách hướng vào bản thân, các cung ở nửa trên bằng cách hướng ra ngoài.",
+  "nguon_sau_truc": "CTNC - BỔ TÚC 03 - Lưỡng nguyên.md:16-36; CTNC - Buổi học 3.md:119-135",
+  "ung_dung": [
+    {
+      "so": 1,
+      "ten": "Nhận định nhanh khi bản đồ sao có góc đối đỉnh",
+      "noi_dung": [
+        "Người thường trực giằng xé giữa 2 thái cực, nhưng đồng thời cũng sở hữu những đặc điểm chung, nhu cầu chung của cặp lưỡng nguyên đó.",
+        "Xét tổng quan nếu thấy có trục đối đỉnh (có góc đối đỉnh là có). Xem thuộc góc nào.",
+        "Nếu 2 hành tinh trong trục đều là hành tinh xã hội thì KHÔNG ghi nhận cung. Phải có ít nhất 1 trong 2 là hành tinh cá nhân thì mới ghi nhận cung.",
+        "ĐƠN GIẢN LÀ ĐỂ X2 THÔI (VÌ NHÀ VỚI CUNG CỦA MỖI BẢN ĐỒ LÀ KHÁC NHAU)"
+      ],
+      "nguon": "CTNC - BỔ TÚC 03 - Lưỡng nguyên.md:41; CTNC - Buổi học 3.md:138-143"
+    },
+    {
+      "so": 2,
+      "ten": "Nhu cầu ẩn của bản đồ sao dạng tập trung cao",
+      "noi_dung": [
+        "Với người có bản đồ sao dạng tập trung cao, hãy nhìn ra nhu cầu \"ẩn\" của họ (chính là khu vực đối diện với chùm hành tinh).",
+        "Bởi quy luật tự cân bằng, trong đời sẽ có lúc họ cực kì thèm khát (đến mức méo mó cực đoan) trải nghiệm ở khu vực này, tuy nhiên vì vốn họ không có hành tinh ở đây - không được trang bị các kinh nghiệm cần thiết - nên họ thường rất lúng túng, dễ mắc sai lầm.",
+        "Ví dụ: H12 hi sinh, lâu lâu sẽ nhu cầu muốn được công nhận (H6)"
+      ],
+      "ghi_chu_bien_tap": "Bản gốc BỔ TÚC 03 dòng 44 dùng từ lóng \"rất ngáo\" — đã thay bằng \"rất lúng túng\", giữ nguyên nghĩa.",
+      "nguon": "CTNC - BỔ TÚC 03 - Lưỡng nguyên.md:44; CTNC - Buổi học 3.md:144-147"
+    },
+    {
+      "so": 3,
+      "ten": "Hiểu sự bù trừ của 2 trục chính",
+      "noi_dung": [
+        "AC - DC: H1-H7",
+        "IC - MC: H4-H10",
+        "Đỉnh của H1-H4-H7-H10 -> 4 lĩnh vực hệ trọng nhất trong cuộc đời của con người",
+        "Lập thân - lập gia - lập thất - lập nghiệp",
+        "AC là mình thì tìm đối tác ngược lại ở H7",
+        "IC là mình đến với thế giới như nào thì sẽ muốn phấn đấu ở ngược lại."
+      ],
+      "nguon": "CTNC - Buổi học 3.md:149-156"
+    }
+  ]
+}

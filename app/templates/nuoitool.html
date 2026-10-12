@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Nuôi Tool - Chiêm Tinh Vui{% endblock %}
+
+{% block head_extra %}
+<style>
+    /* Dàn đều dòng văn bản, fix lỗi 1 chữ rớt dòng */
+    .balance-text {
+        text-wrap: balance;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-4 md:py-16 flex flex-col items-center justify-center min-h-[calc(100vh-80px)] md:min-h-[80vh]">
+
+    <!-- Header/Title -->
+    <header class="text-center mb-4 md:mb-10">
+        <h1 class="text-xl md:text-4xl font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-tighter mb-2 md:mb-4">
+            Ủng hộ nuôi tool
+        </h1>
+        <div class="h-1 w-16 md:w-20 bg-emerald-500 mx-auto rounded-full"></div>
+    </header>
+
+    <!-- QR Card -->
+    <div class="bg-white dark:bg-gray-800 p-4 md:p-8 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 max-w-[320px] md:max-w-sm w-full transition-transform hover:scale-[1.02]">
+        <div class="relative group">
+            <img src="{{ url_for('static', filename='bank.jpg') }}"
+                 alt="Vietcombank QR Code"
+                 class="w-full h-auto rounded-2xl border border-gray-100 dark:border-gray-600 shadow-inner">
+
+            <!-- Hiệu ứng trang trí -->
+            <div class="absolute -top-2 -right-2 md:-top-3 md:-right-3 bg-yellow-400 text-yellow-900 font-bold px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs shadow-md">
+                Buy me a coffee ☕
+            </div>
+        </div>
+
+        <!-- Thông điệp -->
+        <div class="mt-4 md:mt-10 text-center">
+            <h2 class="text-base md:text-xl font-bold text-gray-800 dark:text-white mb-2 md:mb-4 uppercase tracking-wide">Lời nhắn từ DEV</h2>
+            <div class="text-[11px] md:text-sm text-gray-600 dark:text-gray-300 leading-relaxed italic balance-text px-2">
+                <!-- Đoạn 1 -->
+                <p>Chiêm tinh Việt Nam có trở nên tươi đẹp hay không, reader Việt Nam có bước tới đài vinh quang sánh vai với các cường quốc năm châu được hay không, chính là nhờ một phần lớn ở công nuôi tool của các&nbsp;vị.</p>
+                
+                <!-- Đoạn 2: Tách riêng nhưng cùng font với đoạn trên -->
+                <p class="mt-1 md:mt-2">Hy vọng tool sẽ là một trợ thủ đắc lực trên hành trình Chiêm tinh của mỗi chúng&nbsp;ta.</p>
+                
+                <!-- Đoạn 3: Font đậm và màu Emerald -->
+                <p class="mt-2 md:mt-4 font-bold text-emerald-600 dark:text-emerald-400 not-italic">
+                    Trân trọng cảm ơn, bầu trời bless you!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="mt-4 md:mt-12 flex flex-col items-center space-y-2 md:space-y-4">
+        <a href="/dashboard" class="flex items-center space-x-2 text-blue-500 hover:text-blue-600 font-bold transition text-sm">
+            <i class="fas fa-arrow-left text-xs"></i>
+            <span>Quay lại Trang chủ</span>
+        </a>
+        <p class="text-[10px] md:text-xs text-gray-400">Cảm ơn sự đóng góp của bạn! ✨</p>
+    </div>
+
+</div>
+{% endblock %}

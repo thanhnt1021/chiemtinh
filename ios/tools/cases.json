@@ -1,0 +1,14 @@
+[
+  {"id":"TC01_HaNoi_1903_LMT",        "dob":"20/05/1903","tob":"06:15","lat":21.0285,"lon":105.8542,"tz":"Asia/Ho_Chi_Minh","ghi_chu":"Trước 01/07/1906 -> offset = lon/15 (LMT)"},
+  {"id":"TC02_Hue_1908_7h0630",       "dob":"03/11/1908","tob":"23:40","lat":16.4637,"lon":107.5909,"tz":"Asia/Ho_Chi_Minh","ghi_chu":"1906-07-01..1911-04-30 -> +7.1083"},
+  {"id":"TC03_HaNoi_1944_Nhat8h",     "dob":"29/02/1944","tob":"12:00","lat":21.0285,"lon":105.8542,"tz":"Asia/Ho_Chi_Minh","ghi_chu":"1943-01-01..1945-03-13 -> +8 (năm nhuận)"},
+  {"id":"TC04_HaNoi_1945_Nhat9h",     "dob":"20/05/1945","tob":"05:05","lat":21.0285,"lon":105.8542,"tz":"Asia/Ho_Chi_Minh","ghi_chu":"1945-03-14..1945-09-01 -> +9"},
+  {"id":"TC05_SaiGon_1958_MienNam7h", "dob":"15/08/1958","tob":"03:05","lat":10.7769,"lon":106.7009,"tz":"Asia/Ho_Chi_Minh","ghi_chu":"Miền Nam (lat<17) 1955-07-01..1959-12-31 -> +7"},
+  {"id":"TC06_SaiGon_1965_MienNam8h", "dob":"25/12/1965","tob":"19:20","lat":10.7769,"lon":106.7009,"tz":"Asia/Ho_Chi_Minh","ghi_chu":"Miền Nam sau 1960 -> +8"},
+  {"id":"TC07_HaNoi_1970_MienBac7h",  "dob":"01/01/1970","tob":"00:30","lat":21.0285,"lon":105.8542,"tz":"Asia/Ho_Chi_Minh","ghi_chu":"Miền Bắc 1945-1975 -> +7"},
+  {"id":"TC08_HaNoi_1990_Sau1975",    "dob":"15/05/1990","tob":"07:30","lat":21.0285,"lon":105.8542,"tz":"Asia/Ho_Chi_Minh","ghi_chu":"Sau 13/06/1975 -> +7"},
+  {"id":"TC09_Sydney_1985_NamBanCau", "dob":"04/07/1985","tob":"22:10","lat":-33.8688,"lon":151.2093,"tz":"Australia/Sydney","ghi_chu":"Nam bán cầu, mùa đông (không DST) -> +10"},
+  {"id":"TC10_Anchorage_2001_DST",    "dob":"21/06/2001","tob":"12:00","lat":61.2181,"lon":-149.9003,"tz":"America/Anchorage","ghi_chu":"Vĩ độ cao + đang DST -> -8"},
+  {"id":"TC11_Tromso_1995_ViDoCao",   "dob":"10/01/1995","tob":"02:00","lat":69.6492,"lon":18.9553,"tz":"Europe/Oslo","ghi_chu":"Vĩ độ 69.65 — Placidus không xác định, SwissEph tự rơi về Porphyry"},
+  {"id":"TC12_HaNoi_1990_ManualTZ",   "dob":"15/05/1990","tob":"07:30","lat":21.0285,"lon":105.8542,"tz":"Asia/Ho_Chi_Minh","manual_offset":"5.75","ghi_chu":"Ép offset thủ công +5.75 (Nepal) để kiểm nhánh manual_offset"}
+]

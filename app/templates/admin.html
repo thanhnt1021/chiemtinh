@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Quản Trị - Astro System{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-4 max-w-4xl pt-16">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-red-600 dark:text-red-500">TRANG QUẢN TRỊ (ADMIN)</h1>
+        <a href="/dashboard" class="text-blue-500 hover:underline"><i class="fas fa-arrow-left"></i> Quay lại Dashboard</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="mb-4 p-3 rounded {{ 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' if category == 'error' else 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- DANH SÁCH USER -->
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+        <h2 class="bg-gray-200 dark:bg-gray-700 px-4 py-2 font-bold text-lg text-gray-800 dark:text-white">Danh Sách Người Dùng</h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full leading-normal">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2 bg-gray-100 dark:bg-gray-900 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">ID</th>
+                        <th class="px-4 py-2 bg-gray-100 dark:bg-gray-900 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Username</th>
+                        <th class="px-4 py-2 bg-gray-100 dark:bg-gray-900 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Số Profiles</th>
+                        <th class="px-4 py-2 bg-gray-100 dark:bg-gray-900 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Ngày tạo</th>
+                        <th class="px-4 py-2 bg-gray-100 dark:bg-gray-900 text-right text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Xóa</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    {% for u in users %}
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                        <td class="px-4 py-2 text-sm">{{ u.id }}</td>
+                        <td class="px-4 py-2 text-sm font-bold">{{ u.username }}</td>
+                        <td class="px-4 py-2 text-sm text-center">{{ u.profile_count }}</td>
+                        <td class="px-4 py-2 text-xs text-gray-500 dark:text-gray-400">{{ u.created_at[:10] }}</td>
+                        <td class="px-4 py-2 text-right">
+                            {% if u.username != 'nguydev' %}
+                            <a href="/admin/delete_user/{{ u.id }}" onclick="return confirm('CẢNH BÁO: Xóa user sẽ xóa toàn bộ hồ sơ của họ. Tiếp tục?')" class="text-red-500 hover:text-red-700 transition">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                            {% else %}
+                            <span class="text-gray-400 text-xs">(Admin)</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

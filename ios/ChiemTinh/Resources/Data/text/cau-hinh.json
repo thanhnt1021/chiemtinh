@@ -1,0 +1,255 @@
+{
+  "mo_ta": "8 cấu hình (Aspect Patterns / Configurations) kèm tiêu chí số để code detect tự động.",
+  "nguon_chinh": "A-CHIÊM TINH - LUẬN/5. Dạng bản đồ + Cấu hình/5.2. Cấu hình/CTNC - 5.2 Cấu hình.md (102 dòng)",
+  "ghi_chu_orb": "Vault KHÔNG nêu orb cho các cấu hình này. Orb mặc định của code repo: Conjunction 10, Sextile 6, Square 10, Trine 10, Opposition 10, Semisextile 3.0, Quincunx 3.0 (nguồn /tmp/chiemtinh-repo/app/astro00_lib/const.py:53-61).",
+  "so_ban_ghi": 8,
+  "du_lieu": [
+    {
+      "so": 1,
+      "ten": "Stellium",
+      "ten_vi": "chùm sao",
+      "nhan_biet": "3 hoặc nhiều hơn 3 hành tinh trùng tụ nhau ở cùng một cung, hoặc cùng một nhà.",
+      "tieu_chi_so": {
+        "so_hanh_tinh_toi_thieu": 3,
+        "dieu_kien": "cùng một cung HOẶC cùng một nhà",
+        "goc_lien_quan": "Trùng (Conjunction, 0 độ)"
+      },
+      "dac_diem": [
+        "Tập trung rất mạnh vào lĩnh vực của nhà đó, khuếch đại năng lượng của cung đó.",
+        "Tập trung, cực đoan, quyết đoán theo một hướng. Có thể làm được điều lớn lao nhưng dễ mất cân bằng, bỏ mặc các lĩnh vực khác trong cuộc sống.",
+        "Trong lĩnh vực nhà mà Stellium ngự trị, chủ thể có xu hướng cá nhân chủ nghĩa, tôi thích là tôi làm, không thỏa hiệp với người khác, không cân nhắc hay để tâm đến ý kiến bên ngoài."
+      ],
+      "nguon": "CTNC - 5.2 Cấu hình.md:11-17"
+    },
+    {
+      "so": 2,
+      "ten": "Grand Cross",
+      "ten_vi": "Đại thập tự",
+      "nhan_biet": "4 hành tinh vuông góc từng cặp với nhau tạo thành một hình vuông. Bên trong hình vuông là hai góc đối đỉnh chéo nhau.",
+      "tieu_chi_so": {
+        "so_hanh_tinh": 4,
+        "goc": [
+          {
+            "loai": "Vuông góc (Square)",
+            "do": 90,
+            "so_luong": 4
+          },
+          {
+            "loai": "Đối đỉnh (Opposition)",
+            "do": 180,
+            "so_luong": 2
+          }
+        ]
+      },
+      "dac_diem": [
+        "Gặp nhiều mâu thuẫn cả từ bên trong nội tâm lẫn từ bên ngoài môi trường. Luôn cảm giác đời “trắc trở”",
+        "Không bao giờ cảm thấy vừa lòng.",
+        "Có nội lực và năng lượng hành động cực kì lớn. Cách thức hành động tùy vào các cung ở đỉnh của hình vuông",
+        "Trong mọi mẫu Grand Cross, cần để ý tìm các góc hợp mềm (tam hợp, lục hợp) với các hành tinh nằm trong cấu hình, chúng sẽ đóng vai trò rất tốt trong việc tạo ra “lối thoát”, giải tỏa bớt căng thẳng của Grand Cross."
+      ],
+      "bien_the_theo_tinh_chat": [
+        {
+          "tinh_chat": "Tiên phong",
+          "luan": "hành động nhanh, dồn sức khủng khiếp trong thời gian ngắn => dễ kiệt sức, bồn chồn. Luôn nhấp nhổm tìm cách giải quyết mọi vấn đề nhìn thấy."
+        },
+        {
+          "tinh_chat": "Kiên định",
+          "luan": "Sức bền lớn, hành động chậm, cân nhắc kĩ. CỰC KÌ cứng đầu, cố chấp. Không nghe ai, tự làm tự chịu. Dồn nén nhiều, dễ căng thẳng, quá tải hoặc kiệt quệ cảm xúc. Cần có các thú vui, hoạt động thư giãn."
+        },
+        {
+          "tinh_chat": "Linh hoạt",
+          "luan": "Hành động mềm dẻo dựa theo tình hình và ý kiến người khác. Thiếu định hướng, dễ phân tán và lãng phí năng lượng. Hay hỏi ý người khác rồi lại tự làm mình rối thêm."
+        }
+      ],
+      "nguon": "CTNC - 5.2 Cấu hình.md:21-32"
+    },
+    {
+      "so": 3,
+      "ten": "T-square",
+      "ten_vi": "vuông chữ T",
+      "nhan_biet": "2 hành tinh đối đỉnh, cùng vuông góc với 1 hành tinh khác, tạo thành một tam giác vuông cân.",
+      "tieu_chi_so": {
+        "so_hanh_tinh": 3,
+        "goc": [
+          {
+            "loai": "Đối đỉnh (Opposition)",
+            "do": 180,
+            "so_luong": 1
+          },
+          {
+            "loai": "Vuông góc (Square)",
+            "do": 90,
+            "so_luong": 2
+          }
+        ]
+      },
+      "dac_diem": [
+        "Chịu nhiều mâu thuẫn nội tâm, nhưng nhờ đó có động lực phấn đấu, hoàn thiện.",
+        "Hành tinh ở đỉnh góc vuông đóng vai trò điểm tụ năng lượng, tạo ra động lực, thôi thúc hành động từ bên trong. Xem hành tinh này ở nhà nào => Tập trung làm tốt lĩnh vực đó sẽ tự động giải tỏa sự giằng xé của hai hành tinh còn lại. Nhưng quan trọng là phải HÀNH ĐỘNG.",
+        "Khu vực nhà đối diện với hành tinh ở đỉnh góc vuông có thể đóng vai trò “lối thoát”, là chỗ để xả năng lượng, giúp chủ thể thư giãn."
+      ],
+      "hanh_tinh_dac_biet": {
+        "ten": "đỉnh góc vuông (apex)",
+        "vai_tro": "điểm tụ năng lượng"
+      },
+      "nguon": "CTNC - 5.2 Cấu hình.md:36-45"
+    },
+    {
+      "so": 4,
+      "ten": "Grand Trine",
+      "ten_vi": "đại tam hợp",
+      "nhan_biet": "3 hành tinh tam hợp với nhau tạo thành một tam giác đều.",
+      "tieu_chi_so": {
+        "so_hanh_tinh": 3,
+        "goc": [
+          {
+            "loai": "Tam hợp (Trine)",
+            "do": 120,
+            "so_luong": 3
+          }
+        ]
+      },
+      "dac_diem": [
+        "Làm gì cũng thuận lợi, nhưng ít động lực phấn đấu.",
+        "Thường có tài năng thiên phú, nhưng dễ lãng phí, không tận dụng hết. Tài năng cụ thể tùy thuộc vào các cung ở đỉnh của tam giác."
+      ],
+      "bien_the_theo_nguyen_to": [
+        {
+          "nguyen_to": "Lửa",
+          "luan": "tự tin, tham vọng, sáng tạo, lôi cuốn người khác."
+        },
+        {
+          "nguyen_to": "Đất",
+          "luan": "đáng tin cậy, chăm chỉ. Hiếm khi rơi vào cảnh túng quẫn vật chất."
+        },
+        {
+          "nguyen_to": "Khí",
+          "luan": "tư duy mạnh, quảng giao, giỏi giao tiếp."
+        },
+        {
+          "nguyen_to": "Nước",
+          "luan": "nhạy cảm, giàu cảm thông, trực giác mạnh, giàu tưởng tượng."
+        }
+      ],
+      "nguon": "CTNC - 5.2 Cấu hình.md:48-57"
+    },
+    {
+      "so": 5,
+      "ten": "Kite",
+      "ten_vi": "cánh diều",
+      "nhan_biet": "Chính là một Grand Trine, nhưng cộng thêm một hành tinh thứ 4 nằm đối đỉnh với một trong 3 đỉnh của Grand Trine, tạo thành hình tứ giác giống cái diều.",
+      "tieu_chi_so": {
+        "so_hanh_tinh": 4,
+        "dieu_kien_tien_quyet": "phải có sẵn một Grand Trine",
+        "goc": [
+          {
+            "loai": "Tam hợp (Trine)",
+            "do": 120,
+            "so_luong": 3
+          },
+          {
+            "loai": "Đối đỉnh (Opposition)",
+            "do": 180,
+            "so_luong": 1
+          }
+        ]
+      },
+      "dac_diem": [
+        "Là phiên bản “nâng cấp” của Grand Trine, Kite vẫn mang đến tài năng, sự thuận lợi nhưng có động lực phấn đấu, tận dụng tiềm năng cao hơn.",
+        "Hành tinh thứ 4 (gọi là “đỉnh diều”) đóng vai trò mang đến thách thức, khó khăn cần giải quyết, nhưng nếu tập trung tận dụng/tối ưu hóa hành tinh này (làm tốt lĩnh vực nhà mà nó đang nằm) thì cả con diều sẽ được cất cánh, vươn tới thành công.",
+        "Chủ thể có xu hướng tập trung năng lượng lớn vào các hành tinh trong cấu hình Kite, bỏ mặc/xem nhẹ các hành tinh còn lại."
+      ],
+      "hanh_tinh_dac_biet": {
+        "ten": "đỉnh diều",
+        "vai_tro": "mang đến thách thức, khó khăn cần giải quyết"
+      },
+      "nguon": "CTNC - 5.2 Cấu hình.md:61-68"
+    },
+    {
+      "so": 6,
+      "ten": "Grand Sextile",
+      "ten_vi": "đại lục hợp",
+      "nhan_biet": "6 hành tinh lục hợp với nhau, tạo thành hình lục giác đều. RẤT hiếm gặp.",
+      "tieu_chi_so": {
+        "so_hanh_tinh": 6,
+        "goc": [
+          {
+            "loai": "Lục hợp (Sextile)",
+            "do": 60,
+            "so_luong": 6
+          }
+        ],
+        "ghi_chu": "RẤT hiếm gặp"
+      },
+      "dac_diem": [
+        "Đời thuận lợi, không phải quá tốn công trong bất cứ việc gì => ít động lực, đời ít điểm nhấn",
+        "Nhiều tài, nhiều cơ hội nhưng thường không tận dụng hết, để lãng phí.",
+        "Giao tiếp, quan hệ xã hội cực kì tốt.",
+        "Hiểu biết rộng nhưng dàn trải, khó tập trung."
+      ],
+      "nguon": "CTNC - 5.2 Cấu hình.md:72-80"
+    },
+    {
+      "so": 7,
+      "ten": "Yod",
+      "ten_vi": "ngón tay của Chúa",
+      "nhan_biet": "2 hành tinh lục hợp với nhau và cùng tạo góc ngũ chiếu (150 độ, biểu thị bằng đường xanh lá cây dài) với một hành tinh thứ 3 (đỉnh ngón tay).",
+      "tieu_chi_so": {
+        "so_hanh_tinh": 3,
+        "goc": [
+          {
+            "loai": "Lục hợp (Sextile)",
+            "do": 60,
+            "so_luong": 1
+          },
+          {
+            "loai": "Ngũ chiếu (Quincunx)",
+            "do": 150,
+            "so_luong": 2
+          }
+        ]
+      },
+      "dac_diem": [
+        "Hành tinh ở đỉnh ngón tay là nơi tạo ra thôi thúc hành động, còn hai hành tinh ở đáy tạo ra các cơ hội và nền tảng để hành động.",
+        "Chủ thể được cho là có “sứ mệnh” hành động theo hướng chỉ của hành tinh ở đỉnh ngón tay, có cảm giác như định mệnh luôn tình cờ đem đến các cơ hội để mình tận dụng/ phát triển trong lĩnh vực nhà mà hành tinh này đang nằm tại."
+      ],
+      "hanh_tinh_dac_biet": {
+        "ten": "đỉnh ngón tay (apex)",
+        "vai_tro": "nơi tạo ra thôi thúc hành động"
+      },
+      "nguon": "CTNC - 5.2 Cấu hình.md:84-89"
+    },
+    {
+      "so": 8,
+      "ten": "Mystic Rectangle",
+      "ten_vi": "chữ nhật huyền bí",
+      "nhan_biet": "4 hành tinh tạo thành một hình chữ nhật có cạnh ngoài là 2 góc tam hợp và 2 góc lục hợp, bên trong là hai góc đối đỉnh chéo nhau.",
+      "tieu_chi_so": {
+        "so_hanh_tinh": 4,
+        "goc": [
+          {
+            "loai": "Tam hợp (Trine)",
+            "do": 120,
+            "so_luong": 2
+          },
+          {
+            "loai": "Lục hợp (Sextile)",
+            "do": 60,
+            "so_luong": 2
+          },
+          {
+            "loai": "Đối đỉnh (Opposition)",
+            "do": 180,
+            "so_luong": 2
+          }
+        ]
+      },
+      "dac_diem": [
+        "“Ngoài suôn sẻ, trong trắc trở” - Sự nghiệp, cuộc sống thuận lợi nhưng nội tâm phức tạp mâu thuẫn. Bên trong họ nhiều giằng xé hơn ấn tượng bên ngoài.",
+        "Có động lực cần thiết để tận dụng, phát triển các tiềm năng cá nhân một cách hữu ích.",
+        "Tương tự Kite, cấu hình này có xu hướng lất át toàn bộ bản đồ sao, thu hết năng lượng và mối quan tâm của chủ thể vào nó."
+      ],
+      "nguon": "CTNC - 5.2 Cấu hình.md:93-100"
+    }
+  ]
+}

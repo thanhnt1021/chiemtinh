@@ -1,0 +1,354 @@
+{
+  "mo_ta": "10 hành tinh: phẩm chất tích cực/tiêu cực + 2 chiều tương tác 'truyền đi'/'nhận về' (dùng cho Synastry và Transit).",
+  "nguon_chinh": [
+    "A-CHIÊM TINH - LUẬN/z. other/CTNC - PHẨM CHẤT CỦA CÁC HÀNH TINH.md (59 dòng)",
+    "THAM KHẢO/CTNC - Tương Tác hành tinh Synastry.md (76 dòng)",
+    "BUỔI HỌC/CTNC - Buổi học 2.md dòng 299-352 (NGOÀI dải dòng cấm)",
+    "THAM KHẢO/CTNC - BỔ TÚC 02 - Full chức năng hành tinh.md (quy tắc 'Hành trình hành tinh', xem trường quy_tac_ung_dung)"
+  ],
+  "quy_tac_ung_dung": {
+    "pham_chat_ap_dung_cho": [
+      "a/ Là những phẩm chất chung của người trội hành tinh đó",
+      "b/ Là những phẩm chất thể hiện ra cá tính/vẻ ngoài, khi hành tinh nằm ở nhà 1",
+      "c/ Là những phẩm chất của đối tác, khi hành tinh nằm ở nhà 7"
+    ],
+    "ghi_chu_nguon_b": "Bản gốc dòng 7 ghi cụt \"khi hành tinh nằm ở nhà\" (thiếu số 1); suy ra từ ngữ cảnh đối chiếu với mục c/ nhà 7.",
+    "nguon_quy_tac": "CTNC - PHẨM CHẤT CỦA CÁC HÀNH TINH.md:4-8",
+    "an_du_dien_vien": {
+      "bang": [
+        [
+          "Hành tinh",
+          "Cung",
+          "Nhà"
+        ],
+        [
+          "Diễn viên",
+          "Vai diễn",
+          "Bối cảnh"
+        ],
+        [
+          "Actor",
+          "Character",
+          "Context"
+        ]
+      ],
+      "ghi_chu": [
+        "-> Mặt trời là nam chính, mặt trời đóng bối cảnh sự nghiệp (Lõi chính)",
+        "-> Mặt trăng là nữ chính, mặt trăng đóng bối cảnh hôn nhân",
+        "Sư Tử kiêu hãnh, ham vui, làm hề",
+        "Mặt Trời kiêu hãnh nhưng không ham vui",
+        "-> hành tinh là phiên bản nghiêm túc hơn cung tương ứng"
+      ],
+      "ghi_chu_bien_tap": "Bản gốc dòng 316 kết thúc bằng \"(biết cho vui đéo quan trọng lắm)\" — đã bỏ cả cụm chú thích tục này.",
+      "nguon": "CTNC - Buổi học 2.md:302-316"
+    },
+    "hanh_trinh_hanh_tinh": {
+      "mo_ta": "Phương pháp 'Hành trình hành tinh' - phát kiến riêng của thầy oHa.",
+      "buoc": [
+        {
+          "ten": "I. HÀNH TINH ĐANG Ở ĐÂU",
+          "y": [
+            "1/ Hành tinh ở cung nào - vận hành theo cách thức nào",
+            "2/ Hành tinh ở nhà nào - vận hành ở lĩnh vực nào",
+            "3/ Hành tinh tạo những góc nào - chịu ảnh hưởng bởi những chức năng nào, tạo nên những tài năng gì?"
+          ]
+        },
+        {
+          "ten": "II. HÀNH TINH ĐẾN TỪ ĐÂU",
+          "y": [
+            "Hành tinh là chủ của nhà nào thì nó \"đến từ\" nhà đó, phục vụ cho nhà đó nữa."
+          ]
+        },
+        {
+          "ten": "III. HÀNH TINH HƯỚNG ĐẾN ĐÂU",
+          "y": [
+            "1/ Hành tinh đang được ai làm chủ? Chủ của hành tinh chính là chủ của cung mà hành tinh đang nằm tại.",
+            "2/ Xem chủ của hành tinh đang ở nhà nào - hành tinh đang \"hướng đến\" nhà đó, biểu lộ phẩm chất thông qua nhà đó nữa."
+          ]
+        }
+      ],
+      "hai_hanh_trinh_quan_trong": [
+        "Hành trình Mặt trời: Những nơi Sun đi qua là những lịch vực ta gắn sự hãnh diện vào đó, muốn qua đó khẳng định mình, muốn làm tốt nhất ở đó để thấy đời mình có ý nghĩa => Hành trình khẳng định mình",
+        "Hành trình Mặt trăng: Những nơi Moon đi qua là những lĩnh vực chi phối mạnh cảm xúc của ta, những nơi ta có nhu cầu trải nghiệm đều đặn, những nơi cần củng cố vững vàng để ta thấy vững vàng => Hành trình xây sự an toàn"
+      ],
+      "nguon": "THAM KHẢO/CTNC - BỔ TÚC 02 - Full chức năng hành tinh.md:8-44"
+    },
+    "chart_ruler": {
+      "mo_ta": "Chủ lá số (Chart ruler - CR): Nếu Mặt trăng là xuất phát điểm, Mặt trời đặt ra đích hướng tới, thì hành tinh Chủ lá số là cái phương tiện chủ yếu ta sử dụng để tiến lên trên đường đời. Do đó Chart ruler có tầm quan trọng sánh ngang Sun Moon.",
+      "cach_doc": "Hãy xem CR của bạn là loại xe gì (hành tinh), chạy theo kiểu gì (cung), và chuyên chạy trên địa hình nào (nhà). Trong đó vị trí nhà cực kì quan trọng, cung thì bỏ qua cũng được.",
+      "cr_o_nha_nao_thi": [
+        "1. Đó là lĩnh vực chúng ta để tâm đến trước tiên và một cách tự nhiên khi gặp bất cứ chuyện gì.",
+        "2. Những trải nghiệm ở lĩnh vực đó chi phối, định hình thế giới quan và cá tính của chúng ta.",
+        "3. Ngoại hình thần thái chúng ta cũng sẽ mang màu sắc của nhà đó. Ví dụ cung Mọc gì chưa biết nhưng CR ở nhà 10 thì kiểu gì trông cũng có vẻ đạo mạo nghiêm nghị hơn, nhà 7 thì lịch sự ôn hòa (vì đụng chuyện gì cũng nghĩ cho mối quan hệ mà) v.v..",
+        "ĐẶC BIỆT, từ đó cũng dễ suy ra CR ở đâu thì khi làm tốt lĩnh vực đó ngoại hình chúng ta sẽ càng đẹp. CR nhà 10 càng có sự nghiệp uy tín tốt càng đẹp, CR nhà 5 càng sáng tạo vui chơi càng đẹp."
+      ],
+      "nguon": "THAM KHẢO/CTNC - BỔ TÚC 04 - Chủ lá số aka Chart ruler.md:8-20"
+    },
+    "phan_loai_hanh_tinh_tu_code": {
+      "hanh_tinh_ca_nhan": [
+        "Sun",
+        "Moon",
+        "Mercury",
+        "Venus",
+        "Mars"
+      ],
+      "hanh_tinh_vong_ngoai": [
+        "Jupiter",
+        "Saturn",
+        "Uranus",
+        "Neptune",
+        "Pluto"
+      ],
+      "diem_so_hanh_tinh": {
+        "Asc": 4,
+        "Sun": 4,
+        "Moon": 4,
+        "Mercury": 3,
+        "Venus": 3,
+        "Mars": 3,
+        "Jupiter": 2,
+        "Saturn": 2,
+        "Uranus": 1,
+        "Neptune": 1,
+        "Pluto": 1
+      },
+      "nguon": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:12,17,37-40 (KHÔNG phải từ vault)"
+    }
+  },
+  "so_ban_ghi": 11,
+  "du_lieu": [
+    {
+      "so": 0,
+      "ten": "AC (Ascendant / Cung Mọc)",
+      "ten_en": "Asc",
+      "ky_hieu": "AC",
+      "tich_cuc": [],
+      "tieu_cuc": [],
+      "truyen_di": "không",
+      "nhan_ve": "bị ảnh hưởng/thay đổi thế giới quan, cá tính, phong cách ngoại hình",
+      "vi_du_tuong_tac": [
+        "AC có góc với Thủy người kia => Những lời nói, ý tưởng người kia dễ làm thay đổi thế giới quan, cách biểu lộ cá tính của mình. Càng được bạn gợi ý mình càng nhiều ý tưởng khoe cá tính."
+      ],
+      "trang_thai": "thieu - AC không có bảng phẩm chất tích cực/tiêu cực trong file PHẨM CHẤT CỦA CÁC HÀNH TINH; chỉ có 2 chiều truyền đi/nhận về.",
+      "nguon": "CTNC - Tương Tác hành tinh Synastry.md:12-16"
+    },
+    {
+      "so": 1,
+      "ten": "Mặt trời",
+      "ten_en": "Sun",
+      "ky_hieu": "☉",
+      "tich_cuc": [
+        "Giàu năng lượng & ý chí, kiêu hãnh, uy nghiêm, thích lãnh đạo, giỏi sáng tạo"
+      ],
+      "tieu_cuc": [
+        "Kiêu căng, ích kỉ, chuyên quyền"
+      ],
+      "truyen_di": "cổ vũ, định hướng, áp đặt ý chí lên người kia",
+      "nhan_ve": "bị ảnh hưởng/thay đổi định hướng sống & cách khẳng định bản thân, có thể va chạm cái tôi",
+      "vi_du_tuong_tac": [
+        "Mặt trời rơi vào nhà 2 người kia => cổ vũ truyền động lực, định hướng cho người kia phát triển giá trị bản thân, phấn đấu kiếm tiền.",
+        "Mặt trời có góc với Kim người kia => ý chí, định hướng của mình tác động lên gu hưởng thụ, gu kết giao, quan điểm về cái đẹp của người kia, có thể truyền cảm hứng để người kia làm nghệ thuật. Ngược lại những ý thích, đòi hỏi hưởng thụ, sự ngợi khen trân trọng của người kia cũng ảnh hưởng lên định hướng sống, cách khẳng định bản thân của mình. Tôi sẽ để tâm phấn đấu vì những gì làm bạn hài lòng (góc này là một người phấn đấu một người trân trọng, tốt trong yêu đương)."
+      ],
+      "ghi_chu_buoi_hoc_2": [
+        "Anh trai kiêu hãnh",
+        "Muốn khẳng định mình -> vì bản thân",
+        "Cháy lên/vì mình lên",
+        "-> Mặt Trời nhà 1 là người kiêu hãnh, nổi bật, cá tính, thích thể hiện bản thân",
+        "-> Mặt Trời nhà 7 sẽ được người kiêu hãnh, nổi bật, cá tính, thích thể hiện bản thân hấp dẫn."
+      ],
+      "nguon": "CTNC - PHẨM CHẤT CỦA CÁC HÀNH TINH.md:11-15; CTNC - Tương Tác hành tinh Synastry.md:17-22; CTNC - Buổi học 2.md:318-323"
+    },
+    {
+      "so": 2,
+      "ten": "Mặt trăng",
+      "ten_en": "Moon",
+      "ky_hieu": "☽",
+      "tich_cuc": [
+        "Nhạy cảm, thích chăm sóc bao bọc, cần an toàn, dễ thu phục cảm xúc người khác => dễ nổi tiếng"
+      ],
+      "tieu_cuc": [
+        "Thất thường, ủ ê, giận dỗi"
+      ],
+      "truyen_di": "quan tâm, chăm sóc, truyền sự nhạy cảm. Các nhu cầu của mình tác động lên người kia",
+      "nhan_ve": "bị ảnh hưởng lên nhu cầu/cảm xúc, có thể trở nên lệ thuộc cảm xúc",
+      "vi_du_tuong_tac": [
+        "Mặt trăng rơi vào nhà 4 người kia => khiến người kia nhạy cảm hơn với sự an toàn tâm hồn, nhạy cảm hơn với chuyện gia đình, các vấn đề trong quá khứ/tuổi thơ. Đồng thời thích quan tâm chăm sóc cho sự an toàn yên ổn của người kia, quan tâm các vấn đề gia đình/tuổi thơ người kia (dấu hiệu thấy thân thương gần gũi như người nhà).",
+        "Mặt trăng có góc với Thổ người kia => quan tâm đến các trách nhiệm, sự vất vả của người kia, làm “mềm” bớt những nguyên tắc hà khắc của người kia. Ngược lại, cũng dễ bị ảnh hưởng cảm xúc bởi những cấm đoán, quy tắc của người kia: có thể tủi thân cảm thấy không được chia sẻ các nhu cầu, nhưng cũng có thể trở nên vững vàng hơn về cảm xúc (góc này hoặc rất bền, hoặc giải tán sớm)"
+      ],
+      "nguon": "CTNC - PHẨM CHẤT CỦA CÁC HÀNH TINH.md:16-20; CTNC - Tương Tác hành tinh Synastry.md:23-29; CTNC - Buổi học 2.md:324-325"
+    },
+    {
+      "so": 3,
+      "ten": "Sao Thủy",
+      "ten_en": "Mercury",
+      "ky_hieu": "☿",
+      "tich_cuc": [
+        "Nhanh nhạy, nhiều ý tưởng, logic tốt, thích vận động trí óc, giỏi giao tiếp, thích xê dịch thay đổi, trẻ trung hài hước"
+      ],
+      "tieu_cuc": [
+        "Nghĩ nhiều, dễ căng thẳng thần kinh, dễ phân tâm, lươn lẹo"
+      ],
+      "truyen_di": "góp ý tưởng, khuyến khích thử nghiệm, thúc đẩy giao tiếp",
+      "nhan_ve": "bị ảnh hưởng/thay đổi cách tư duy, giao tiếp",
+      "vi_du_tuong_tac": [
+        "Thủy rơi vào nhà 6 người kia => cung cấp các ý tưởng để người kia thử nghiệm trong cách thức làm việc, nếp sinh hoạt, sức khỏe. Tôi nhắc việc cho bạn.",
+        "Thủy có góc với Hỏa người kia => cung cấp ý tưởng để người kia hành động, khuyến khích người kia thử nghiệm cách làm mới, thúc người kia tức giận/muốn làm gì thì phải NÓI, dùng lời nói kích thích ham muốn người kia. Ngược lại sự dũng cảm quyết đoán hành động của người kia cũng thay đổi lối tư duy của mình (góc này một người nghĩ một người làm, tốt cho đồng nghiệp)"
+      ],
+      "ghi_chu_buoi_hoc_2": [
+        "Đứa con nít duy nhất",
+        "Nói chuyện, thử nghiệm đi"
+      ],
+      "nguon": "CTNC - PHẨM CHẤT CỦA CÁC HÀNH TINH.md:21-25; CTNC - Tương Tác hành tinh Synastry.md:30-35; CTNC - Buổi học 2.md:326-329"
+    },
+    {
+      "so": 4,
+      "ten": "Sao Kim",
+      "ten_en": "Venus",
+      "ky_hieu": "♀",
+      "tich_cuc": [
+        "Duyên dáng, có khiếu thẩm mĩ/nghệ thuật, thích hưởng thụ & thích được yêu, ôn hoà, biết trân trọng khen ngợi, dễ hút về mình may mắn/sự dễ chịu"
+      ],
+      "tieu_cuc": [
+        "Phù phiếm, lười biếng, nuông chiều bản thân, né tránh xung đột"
+      ],
+      "truyen_di": "thích thú, trân trọng, muốn đồng hành cùng. Các quan điểm giá trị, gu thẩm mĩ và các đòi hỏi hưởng thụ của mình sẽ gây tác động lên người kia.",
+      "nhan_ve": "bị ảnh hưởng/thay đổi ý thích, gu hưởng thụ/thẩm mĩ, gu kết giao, nhận thức giá trị",
+      "vi_du_tuong_tac": [
+        "Kim rơi vào nhà 9 người kia => trân trọng những hiểu biết, trải nghiệm, triết lí sống người kia. Khiến người kia tự tin hơn về tri thức, muốn phát triển tri thức (để được khen tiếp)",
+        "Kim có góc với Thiên Vương người kia => trân trọng, thích thú những tư duy hành động khác thường, bất ngờ, độc đáo của người kia (dấu hiệu yêu sét đánh), có thể muốn đồng hành cùng những dự định lạ thường của người kia. Ngược lại, những quan điểm khác thường của người kia cũng làm biến đổi đảo lộn ý thích, gu hưởng thụ, nhận thức về giá trị của mình. Vì chơi với đứa điên như bạn mà tôi cũng thích những trò khùng điên."
+      ],
+      "ghi_chu_buoi_hoc_2": [
+        "Làm mọi thứ để được đẹp, được yêu, được thích",
+        "Hành tinh thu hút may mắn (có sao Mộc nữa) - sao tốt nhỏ: vì ở đâu cũng trân trọng lĩnh vực ở nhà nó nằm (ví dụ H2 thì trân trọng tài lộc)"
+      ],
+      "nguon": "CTNC - PHẨM CHẤT CỦA CÁC HÀNH TINH.md:26-30; CTNC - Tương Tác hành tinh Synastry.md:36-41; CTNC - Buổi học 2.md:330-333"
+    },
+    {
+      "so": 5,
+      "ten": "Sao Hỏa",
+      "ten_en": "Mars",
+      "ky_hieu": "♂",
+      "tich_cuc": [
+        "Hành động quyết đoán, dũng cảm, thích cạnh tranh, giàu đam mê dục vọng, dồi dào sức lực"
+      ],
+      "tieu_cuc": [
+        "Nóng nảy hung bạo, bốc đồng, dễ gây/gặp tai nạn tổn thương"
+      ],
+      "truyen_di": "thúc đẩy dũng cảm, khuyến khích hành động/tranh đấu, tăng đam mê dục vọng",
+      "nhan_ve": "bị ảnh hưởng/thay đổi cách hành động & dục vọng",
+      "vi_du_tuong_tac": [
+        "Hỏa rơi vào nhà 11 người kia => thúc đẩy người kia dũng cảm theo đuổi các ước mơ hoài bão, con đường độc lập của mình, cũng thúc đẩy tham gia các hội nhóm, cộng đồng, kết bạn.",
+        "Hỏa có góc với Mặt trăng người kia => thúc đẩy người kia dũng cảm, thẳng thắn biểu lộ các cảm xúc, đấu tranh cho những nhu cầu của bản thân, cần gì thì làm luôn. Đồng thời chi phối cảm xúc người kia bằng những đam mê dục vọng của mình (dấu hiệu lực hút giới tính mạnh). Ngược lại, những cơn cảm xúc thất thường của người kia cũng có thể làm bốc hỏa hoặc tịt ngòi các đam mê và sự hăng hái của mình (mối quan hệ thất thường)"
+      ],
+      "ghi_chu_buoi_hoc_2": [
+        "Suốt đời đấu tranh (không đấu tranh không chịu được)",
+        "Sex drive lớn (do nhiều năng lượng, thích vận động)",
+        "Hỏa H3 -> hay vạ miệng",
+        "Hỏa H7 -> hay cãi nhau với người yêu"
+      ],
+      "nguon": "CTNC - PHẨM CHẤT CỦA CÁC HÀNH TINH.md:31-35; CTNC - Tương Tác hành tinh Synastry.md:42-47; CTNC - Buổi học 2.md:334-339"
+    },
+    {
+      "so": 6,
+      "ten": "Sao Mộc",
+      "ten_en": "Jupiter",
+      "ky_hieu": "♃",
+      "tich_cuc": [
+        "Hào phóng, chiều chuộng, thích mở rộng, giàu lí tưởng, lạc quan => may mắn"
+      ],
+      "tieu_cuc": [
+        "Quá đà, bừa bãi, dung túng, viển vông"
+      ],
+      "truyen_di": "chiều chuộng, rộng lượng, khuyến khích mở rộng, tăng lạc quan",
+      "nhan_ve": "bị ảnh hưởng/thay đổi lí tưởng sống, hệ đạo đức, lòng tốt",
+      "vi_du_tuong_tac": [
+        "Mộc rơi vào nhà nhà 1 người kia => khiến người kia nhìn đời tươi sáng hơn, khuyến khích người kia bộc lộ cá tính thoải mái, có thể nuông chiều người kia quá đà.",
+        "Mộc có góc với Kim người kia => rộng lượng, chiều chuộng các ý thích, gu hưởng thụ của người kia (dấu hiệu hay quà cáp, đối đãi tốt với nhau, góc hay gặp trong hôn nhân) nhưng cũng dễ gây “nhờn”. Khuyến khích người kia phát triển gu thẩm mĩ, giao thiệp xã hội, khiến người kia thấy lạc quan về giá trị bản thân. Ngược lại, cũng bị ảnh hưởng lí tưởng sống, hệ đạo đức từ ý thích/quan điểm về giá trị của người kia - chuyện đó trước nay tôi thấy vô đạo đức, nhưng bạn khoái nên tôi thấy nó cũng cool, quẩy lên."
+      ],
+      "nguon": "CTNC - PHẨM CHẤT CỦA CÁC HÀNH TINH.md:36-40; CTNC - Tương Tác hành tinh Synastry.md:48-53; CTNC - Buổi học 2.md:340-341"
+    },
+    {
+      "so": 7,
+      "ten": "Sao Thổ",
+      "ten_en": "Saturn",
+      "ky_hieu": "♄",
+      "tich_cuc": [
+        "Tiết chế, nguyên tắc, hệ thống, trách nhiệm, già dặn, chịu khổ tốt"
+      ],
+      "tieu_cuc": [
+        "Đè nén, hà khắc, bi quan, (tự) hoài nghi"
+      ],
+      "truyen_di": "kìm hãm tiết chế, áp đặt nguyên tác, thúc đẩy sự chín chắn - trách nhiệm - thận trọng",
+      "nhan_ve": "bị ảnh hưởng/thay đổi nhận thức về trách nhiệm, giới hạn, kỉ luật",
+      "vi_du_tuong_tac": [
+        "Thổ rơi vào nhà 7 người kia => khiến người kia thận trọng, có trách nhiệm với mối quan hệ giữa hai người, và cả các mối quan hệ khác nói chung.",
+        "Thổ có góc với Mặt trời người kia => Áp đặt quy tắc lên định hướng sống người kia, kìm hãm các mong muốn người kia (hai hành tinh đều mạnh mẽ và thích nắm quyền, nên góc này dễ có xung đột quyền lực). Nhưng đồng thời cũng thúc đẩy người kia chín chắn trưởng thành lên về định hướng sống. Ngược lại, cũng được cổ vũ truyền động lực để hoàn thành các trách nhiệm, bớt bi quan nhờ Mặt trời người kia."
+      ],
+      "nguon": "CTNC - PHẨM CHẤT CỦA CÁC HÀNH TINH.md:41-45; CTNC - Tương Tác hành tinh Synastry.md:54-59; CTNC - Buổi học 2.md:342-343"
+    },
+    {
+      "so": 8,
+      "ten": "Sao Thiên Vương",
+      "ten_en": "Uranus",
+      "ky_hieu": "♅",
+      "tich_cuc": [
+        "Ngẫu hứng, phá luật, cấp tiến, sáng tạo, nhân văn, thích tự do"
+      ],
+      "tieu_cuc": [
+        "Nổi loạn, khó kiểm soát, dễ cảm thấy lạc lõng, bất mãn"
+      ],
+      "truyen_di": "khuyến khích tinh thần nổi loạn - tự do, thúc đẩy sự khác thường độc đáo",
+      "nhan_ve": "bị ảnh hưởng/thay đổi tinh thần nổi loạn phá luật, tính sáng tạo",
+      "vi_du_tuong_tac": [
+        "Thiên Vương rơi vào nhà 10 người kia => thúc đẩy người kia dám lựa chọn những con đường khác thường trong sự nghiệp.",
+        "Thiên Vương có góc với Mặt trăng người kia => khiến cảm xúc người kia trải qua nhiều biến động khó lường, hay làm người kia bất ngờ, giúp người kia trải nghiệm nhiều cung bậc cảm xúc, khiến người kia có nhu cầu nổi loạn hơn. Ngược lại, cũng cảm thấy được người kia quan tâm lo lắng cho những phút bốc đồng nổi loạn của mình (đôi khi mình có thể thấy phiền) => Về lâu dài, người Mặt trăng dễ thấy người Thiên Vương xa cách, thiếu gần gũi với các nhu cầu và ham muốn gần gũi của mình."
+      ],
+      "ghi_chu_buoi_hoc_2": [
+        "Bảo Bình có nguyên tắc văn minh, nhưng Thiên Vương thì phá bỏ đi, không cần biết đang tốt hay không"
+      ],
+      "ghi_chu_bien_tap": "Bản gốc Buổi học 2 dòng 346 viết \"phá mẹ đi, éo cần biết\" — đã bỏ từ tục, giữ nguyên nghĩa.",
+      "nguon": "CTNC - PHẨM CHẤT CỦA CÁC HÀNH TINH.md:46-50; CTNC - Tương Tác hành tinh Synastry.md:60-65; CTNC - Buổi học 2.md:344-346"
+    },
+    {
+      "so": 9,
+      "ten": "Sao Hải Vương",
+      "ten_en": "Neptune",
+      "ky_hieu": "♆",
+      "tich_cuc": [
+        "Bay bổng, giàu tưởng tượng, trực giác mạnh, tâm linh, trắc ẩn, có khiếu nghệ thuật, thích lánh đời"
+      ],
+      "tieu_cuc": [
+        "Ảo tưởng, lẫn lộn, trốn tránh, than thân, tự hoại"
+      ],
+      "truyen_di": "cảm thông bao dung, khuyến khích mơ mộng - ảo vọng huyễn hoặc",
+      "nhan_ve": "bị ảnh hưởng/thay đổi các giấc mơ và lí tưởng",
+      "vi_du_tuong_tac": [
+        "Hải Vương rơi vào nhà 3 người kia => khiến người kia giàu mơ mộng, bay bổng hơn trong việc truyền đạt, viết lách.",
+        "Hải Vương có góc với Kim người kia => khiến người kia thích những trải nghiệm huyễn hoặc mờ ảo (dấu hiệu tình cảm mù quáng, thần tượng hóa nhau). Cảm thông cho những ý thích dù vô lý của người kia. Đồng thời làm tăng khả năng tưởng tượng, bay bổng trong sáng tạo nghệ thuật của người kia. Ngược lại, cũng cảm thấy được người kia trân trọng, muốn đồng hành cùng những mơ mộng đẹp của mình."
+      ],
+      "nguon": "CTNC - PHẨM CHẤT CỦA CÁC HÀNH TINH.md:51-55; CTNC - Tương Tác hành tinh Synastry.md:66-71; CTNC - Buổi học 2.md:347-348"
+    },
+    {
+      "so": 10,
+      "ten": "Sao Diêm Vương",
+      "ten_en": "Pluto",
+      "ky_hieu": "♇",
+      "tich_cuc": [
+        "Cực đoan, đào sâu, giàu đam mê dục vọng, thích quyền lực & chiếm hữu, bí ẩn quyến rũ"
+      ],
+      "tieu_cuc": [
+        "Thao túng, tham lam, ghen tuông thù hận, thích trải nghiệm đen tối cấm kị"
+      ],
+      "truyen_di": "gây cực đoan hoá, thúc đẩy tham vọng, thao túng - áp đặt quyền lực",
+      "nhan_ve": "bị ảnh hưởng/thay đổi về tham vọng, ý muốn kiểm soát thao túng",
+      "vi_du_tuong_tac": [
+        "Diêm Vương rơi vào nhà 8 người kia => gây cực đoan hóa những khao khát thân mật, các vấn đề tâm lí người kia. Đồng thời gieo tinh thần tham vọng sử dụng nguồn lực người khác.",
+        "Diêm Vương có góc với Kim người kia => khiến người kia thích thú những trải nghiệm cực đoan, phức tạp, giàu đam mê; cũng khiến người kia cực đoan, dám sống chết với những ý thích của mình hơn. Thao túng, điều khiển những ý thích của người kia (dấu hiệu mối quan hệ đen tối phức tạp, ví dụ như làm người thứ ba). Đã thế, ngược lại còn cảm thấy người kia thích thú sự kiểm soát và thao túng của mình!!"
+      ],
+      "ghi_chu_buoi_hoc_2": [
+        "Sex drive lớn (do thích quyền lực, chiếm hữu)"
+      ],
+      "nguon": "CTNC - PHẨM CHẤT CỦA CÁC HÀNH TINH.md:56-60; CTNC - Tương Tác hành tinh Synastry.md:72-77; CTNC - Buổi học 2.md:349-351"
+    }
+  ]
+}

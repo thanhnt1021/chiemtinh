@@ -1,0 +1,187 @@
+{
+  "mo_ta": "9 dạng bản đồ sao (chart shapes) kèm tiêu chí nhận biết bằng số độ để code detect tự động.",
+  "nguon_chinh": "A-CHIÊM TINH - LUẬN/5. Dạng bản đồ + Cấu hình/5.1. Dạng bản đồ sao/CTNC - 5.1 Dạng bản đồ sao.md (82 dòng)",
+  "ghi_chu_thuat_toan": "Trường 'tieu_chi_so' là phần suy trực tiếp ra CON SỐ từ câu 'Nhận biết' của bản gốc (2/3 vòng = 240 độ, 1/2 vòng = 180 độ, 1/3 vòng = 120 độ). Chuỗi 'nhan_biet' giữ nguyên văn để đối chiếu.",
+  "so_ban_ghi": 9,
+  "so_ban_ghi_day_du": 8,
+  "so_ban_ghi_thieu": 1,
+  "du_lieu": [
+    {
+      "so": 1,
+      "ten": "Tỏa đều",
+      "ten_en": "Splash",
+      "nhom": "I. Nhóm phân bố thành một mảng (uniform)",
+      "nhan_biet": "10 hành tinh phân tán đều trên khắp vòng tròn. Không có bất cứ hai hành tinh nào cách nhau quá 90 độ.",
+      "tieu_chi_so": {
+        "so_hanh_tinh": 10,
+        "khoang_cach_toi_da_giua_2_hanh_tinh_ke_nhau_do": 90,
+        "toan_tu": "khoảng cách giữa hai hành tinh liền kề bất kì <= 90 độ"
+      },
+      "dac_diem": [
+        "Hiểu biết rộng, đa tài đa năng nhưng thường không sâu.",
+        "Uyển chuyển, thích ứng với nhiều tình cảnh, đường này không đi được thì qua đường khác.",
+        "Dàn trải năng lượng, khó tập trung, tốn nhiều thời gian để định hướng cuộc đời."
+      ],
+      "nguon": "CTNC - 5.1 Dạng bản đồ sao.md:7-12"
+    },
+    {
+      "so": 2,
+      "ten": "Đoàn tàu",
+      "ten_en": "Locomotive",
+      "nhom": "I. Nhóm phân bố thành một mảng (uniform)",
+      "nhan_biet": "10 hành tinh phân bố đều đặn trên khoảng 2/3 vòng tròn.",
+      "tieu_chi_so": {
+        "so_hanh_tinh": 10,
+        "cung_chua_ty_le": "2/3 vòng tròn",
+        "cung_chua_do": 240,
+        "toan_tu": "10 hành tinh nằm gọn trong cung ~240 độ, phân bố đều"
+      },
+      "dac_diem": [
+        "Nhiều động lực hoàn thiện bản thân, tham vọng, không dễ thỏa mãn.",
+        "Nhạy cảm với tác nhân bên ngoài, bồn chồn, bất an, luôn áp lực phải làm tốt.",
+        "Hành tinh nằm ở mép ngoài cùng tính theo chiều kim đồng hồ đóng vai trò “đầu tàu” – tạo ra động lực hành động để kéo cả bản đồ sao tiến lên. Xem hành tinh đó ở nhà nào, thì lĩnh vực đó sẽ thúc đẩy chủ thể tự hoàn thiện, vươn lên."
+      ],
+      "hanh_tinh_dac_biet": {
+        "ten": "đầu tàu",
+        "xac_dinh": "hành tinh nằm ở mép ngoài cùng tính theo chiều kim đồng hồ"
+      },
+      "nguon": "CTNC - 5.1 Dạng bản đồ sao.md:15-20"
+    },
+    {
+      "so": 3,
+      "ten": "Cái Bát",
+      "ten_en": "Bowl",
+      "nhom": "I. Nhóm phân bố thành một mảng (uniform)",
+      "nhan_biet": "10 hành tinh phân bố đều đặn trên một nửa vòng tròn. Thường hai hành tinh ở mép bát sẽ đối đỉnh nhau.",
+      "tieu_chi_so": {
+        "so_hanh_tinh": 10,
+        "cung_chua_ty_le": "1/2 vòng tròn",
+        "cung_chua_do": 180,
+        "dau_hieu_phu": "hai hành tinh ở mép bát thường đối đỉnh nhau (180 độ)"
+      },
+      "dac_diem": [
+        "Cách nhìn cuộc sống chủ quan, thiếu đa chiều nhưng rất nhất quán.",
+        "Sống vì mình và tin vào mình, không dựa vào người khác, chính kiến rõ ràng.",
+        "Dễ bằng lòng, thỏa mãn, không nhiều động lực học tập người khác để hoàn thiện."
+      ],
+      "nguon": "CTNC - 5.1 Dạng bản đồ sao.md:23-28"
+    },
+    {
+      "so": 4,
+      "ten": "Bó",
+      "ten_en": "Bundle",
+      "nhom": "I. Nhóm phân bố thành một mảng (uniform)",
+      "nhan_biet": "10 hành tinh phân bố dày đặc trên khoảng 1/3 vòng tròn.",
+      "tieu_chi_so": {
+        "so_hanh_tinh": 10,
+        "cung_chua_ty_le": "1/3 vòng tròn",
+        "cung_chua_do": 120
+      },
+      "dac_diem": [
+        "Cực kì tập trung, chuyên sâu, dồn rất nhiều năng lượng vào một hướng nhất định. Bỏ tâm trí vào đâu là quên hết việc khác.",
+        "Cần ít tài nguyên vẫn có thể làm nên thành công lớn.",
+        "Thiếu cân bằng, cực giỏi một số mảng nhưng lại ngơ ngáo các lĩnh vực khác.",
+        "Cực đoan, cố chấp, áp đặt quan điểm lên người khác."
+      ],
+      "nguon": "CTNC - 5.1 Dạng bản đồ sao.md:31-37"
+    },
+    {
+      "so": 5,
+      "ten": "Bập bênh",
+      "ten_en": "Seesaw",
+      "nhom": "II. Nhóm phân bố thành hai mảng (biform)",
+      "nhan_biet": "Các hành tinh chia thành 2 nhóm đối diện nhau, tạo với nhau nhiều góc đối đỉnh. Hai nhóm phải cách nhau ít nhất 65 độ.",
+      "tieu_chi_so": {
+        "so_nhom": 2,
+        "khoang_cach_toi_thieu_giua_2_nhom_do": 65,
+        "dau_hieu_phu": "nhiều góc đối đỉnh giữa hai nhóm"
+      },
+      "dac_diem": [
+        "Nhiều mâu thuẫn nội tâm, phân vân lưỡng lự.",
+        "Giỏi cân nhắc, xem xét đa chiều các khía cạnh đối nghịch.",
+        "Cần sự tương tác trợ giúp của người khác để hoàn thiện mình và tiến lên trong đời.",
+        "Đời thường cứ vừa tiến vừa lùi, có thể lãng phí thời gian và năng lực."
+      ],
+      "nguon": "CTNC - 5.1 Dạng bản đồ sao.md:41-50"
+    },
+    {
+      "so": 6,
+      "ten": "Xô nước",
+      "ten_en": "Bucket",
+      "nhom": "II. Nhóm phân bố thành hai mảng (biform)",
+      "nhan_biet": "9 hành tinh phân bố đều trên một nửa vòng tròn (giống dạng Cái bát), một hành tinh còn lại tách riêng ra đứng ở vị trí đối diện (tạo thành cái “tay cầm” của cái xô). Hành tinh tay cầm phải tách rời khỏi hai mép xô ít nhất là 65 độ.",
+      "tieu_chi_so": {
+        "so_hanh_tinh_trong_bat": 9,
+        "cung_chua_do": 180,
+        "so_hanh_tinh_tay_cam": 1,
+        "khoang_cach_toi_thieu_tay_cam_toi_moi_mep_do": 65,
+        "toi_uu": "hiệu quả nhất khi tay cầm vuông góc (90 độ) với cái xô"
+      },
+      "dac_diem": [
+        "Dám nghĩ dám làm, muốn vươn tới thành công.",
+        "Có chính kiến vững giống dạng Bát, nhưng cách nhìn cuộc sống đa chiều hơn. Sẵn sàng học tập từ người khác để hoàn thiện và vươn lên hơn.",
+        "Hành tinh đơn lẻ - tay cầm là nơi để “xả”, thể hiện các tiềm năng của bản đồ sao ra ngoài với thế giới. Nói cách khác đây là hành tinh định hướng, kêu gọi nguồn lực của phần còn lại của cả bản đồ sao. Sự định hướng này hiệu quả nhất khi tay cầm vuông góc với cái xô. Để ý hành tinh tay cầm nằm ở nhà nào => lĩnh vực đó tạo động lực lớn cho chủ thể."
+      ],
+      "hanh_tinh_dac_biet": {
+        "ten": "tay cầm (handle)",
+        "xac_dinh": "hành tinh đơn lẻ tách khỏi hai mép xô >= 65 độ"
+      },
+      "nguon": "CTNC - 5.1 Dạng bản đồ sao.md:53-60"
+    },
+    {
+      "so": 7,
+      "ten": "Cái quạt",
+      "ten_en": "Fan",
+      "nhom": "II. Nhóm phân bố thành hai mảng (biform)",
+      "nhan_biet": "9 hành tinh phân bố đều trên 1/3 vòng tròn (giống dạng Bó), một hành tinh còn lại tách riêng ra đứng ở vị trí đối diện (tạo thành cái “cán quạt”). Hành tinh cán quạt phải tách rời khỏi hai mép quạt ít nhất là 65 độ.",
+      "tieu_chi_so": {
+        "so_hanh_tinh_trong_quat": 9,
+        "cung_chua_do": 120,
+        "so_hanh_tinh_can_quat": 1,
+        "khoang_cach_toi_thieu_can_quat_toi_moi_mep_do": 65
+      },
+      "dac_diem": [
+        "Có các tính chất tập trung, quyết đoán, cực đoan của dạng Bó, nhưng có khả năng cân nhắc hơn, động lực bền bỉ hơn.",
+        "Cá tính mạnh, đời nhiều điểm nhấn.",
+        "Hành tinh đơn lẻ - cán quạt là nơi tiếp năng lượng, là nguồn lực thúc đẩy, tạo đà tiến lên cho cả bản đồ sao. Xem hành tinh này nằm ở nhà nào => khi gặp thất bại khó khăn, lĩnh vực đó sẽ chính là nơi chủ thể có thể nương vào để lấy năng lượng, tái sinh."
+      ],
+      "hanh_tinh_dac_biet": {
+        "ten": "cán quạt",
+        "xac_dinh": "hành tinh đơn lẻ tách khỏi hai mép quạt >= 65 độ"
+      },
+      "nguon": "CTNC - 5.1 Dạng bản đồ sao.md:64-70"
+    },
+    {
+      "so": 8,
+      "ten": "Xòe",
+      "ten_en": "Tripod hoặc Splay",
+      "nhom": "III. Nhóm phân bố thành ba mảng (triform)",
+      "nhan_biet": "Các hành tinh chia thành 3 nhóm tách rời nhau. Khoảng cách giữa các nhóm cần lớn hơn 65 độ nhưng không vượt quá 120 độ. Dạng này thường chứa cấu hình Grand Trine.",
+      "tieu_chi_so": {
+        "so_nhom": 3,
+        "khoang_cach_giua_cac_nhom_min_do": 65,
+        "khoang_cach_giua_cac_nhom_max_do": 120,
+        "toan_tu": "65 < khoảng cách giữa các nhóm <= 120",
+        "dau_hieu_phu": "thường chứa cấu hình Grand Trine"
+      },
+      "dac_diem": [
+        "Đời nhìn chung thuận lợi, suôn sẻ.",
+        "Chủ nghĩa cá nhân, lập trường vững chắc, không bị gò bó trong khuôn mẫu, giới hạn, luật lệ nào.",
+        "Có mối quan tâm/sở trường trong một vài lĩnh vực, và các sở trường này có thể phối hợp với nhau, tạo nền móng cho sự thành công của chủ thể."
+      ],
+      "nguon": "CTNC - 5.1 Dạng bản đồ sao.md:74-80"
+    },
+    {
+      "so": 9,
+      "ten": "Xe cút kít",
+      "ten_en": "Wheelbarrow",
+      "nhom": "III. Nhóm phân bố thành ba mảng (triform)",
+      "nhan_biet": null,
+      "tieu_chi_so": null,
+      "dac_diem": [],
+      "trang_thai": "thieu",
+      "mo_ta_trang_thai": "Vault chỉ ghi nguyên văn: \"Chưa được công nhận chính thức, ai thích xin tự tìm hiểu :P\" — KHÔNG có tiêu chí nhận biết, không có đặc điểm. Không tự viết bù.",
+      "nguon": "CTNC - 5.1 Dạng bản đồ sao.md:82-83"
+    }
+  ]
+}

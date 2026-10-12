@@ -1,0 +1,718 @@
+{
+  "mo_ta": "12 cung hoàng đạo theo hệ thống luận của thầy oHa, rút nguyên văn từ vault Obsidian.",
+  "nguon_chinh": "A-CHIÊM TINH - LUẬN/1. Cung/CTNC - 1. CUNG.md (323 dòng)",
+  "ghi_chu": "Vault KHÔNG có bảng tường minh cho ký hiệu / nguyên tố / tính chất / chủ tinh của từng cung (chỉ có ảnh minh hoạ Pasted image 20251129201929.png và vài nhắc rải rác). 4 trường này lấy từ code repo /tmp/chiemtinh-repo/app/astro00_lib/const.py và ghi rõ nguồn trong từng bản ghi.",
+  "so_ban_ghi": 12,
+  "du_lieu": [
+    {
+      "so": 1,
+      "ten": "Bạch Dương",
+      "ky_hieu": "♈",
+      "nguyen_to": "Lửa",
+      "tinh_chat": "Tiên Phong",
+      "chu_tinh": "Sao Hỏa (Mars)",
+      "nguon_ky_hieu_nguyen_to_tinh_chat_chu_tinh": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:42 (ZODIAC_SYMBOLS), :47-51 (ZODIAC_MATRIX), :64-77 (RULER_MAP) — vault KHÔNG có bảng tường minh cho 4 trường này",
+      "mo_ta_chung": [
+        "KHẲNG ĐỊNH BẢN THÂN VỚI TAO, chứ không phải KHẲNG ĐỊNH VỚI MÀY",
+        "Chủ động hành động hành động để khẳng định bản thân",
+        "Lôi kéo bằng nhiệt huyệt, nhưng cũng nhanh hết hứng",
+        "Nhanh chơi nhanh chán"
+      ],
+      "su_menh": [
+        "Sống vì mình, sống vì hiện tại"
+      ],
+      "nhu_cau_goc": {
+        "ten": "Ý thức \"MÌNH TỒN TẠI\"",
+        "chi_tiet": [
+          "Sống như mình muốn, làm thứ mình thích",
+          "Sợ đánh mất mình, bị kiểm soát, hòa lẫn với người khác",
+          "Muốn tạo dấu ấn cá nhân => Tiên phong, mở đường"
+        ]
+      },
+      "cac_nhom_bieu_hien": [
+        {
+          "nhom": "NHANH, BỘC PHÁT",
+          "y": [
+            "Hứng là làm, bốc đồng, thiếu kiên nhân",
+            "Cháy mạnh nhưng theo đợt ngắn hạn"
+          ]
+        },
+        {
+          "nhom": "ĐỘC LẬP, TỰ LỰC",
+          "y": [
+            "Không dựa dẫm lệ thuộc",
+            "Ghét bị cản trở, vướng tay bởi bọn yếu kém chậm chạp (?)"
+          ]
+        },
+        {
+          "nhom": "DŨNG CẢM HIẾU CHIẾN",
+          "y": [
+            "Chưa biết sợ",
+            "Thích thử thách, thi đua"
+          ]
+        },
+        {
+          "nhom": "ĐƠN GIẢN, MINH BẠCH",
+          "y": [
+            "Ghét phức tạp mơ hồ dối trá",
+            "Ngây thơ cả tin"
+          ]
+        }
+      ],
+      "nguon": "CTNC - 1. CUNG.md:4-29"
+    },
+    {
+      "so": 2,
+      "ten": "Kim Ngưu",
+      "ky_hieu": "♉",
+      "nguyen_to": "Đất",
+      "tinh_chat": "Kiên Định",
+      "chu_tinh": "Sao Kim (Venus)",
+      "nguon_ky_hieu_nguyen_to_tinh_chat_chu_tinh": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:42,47-51,64-77",
+      "mo_ta_chung": [
+        "Thích hưởng thụ + cứng đầu",
+        "Giữ nguyên cách sống để được an toàn",
+        "Bảo vệ tài sản, giá trị của mình"
+      ],
+      "su_menh": [
+        "SINH TỒN VÀ HƯỞNG THỤ THẾ GIỚI"
+      ],
+      "nhu_cau_goc": {
+        "ten": "AN TOÀN, NO ĐỦ",
+        "chi_tiet": [
+          "Coi trọng vật chất, tiền bạc",
+          "Thích những thứ hữu hình"
+        ]
+      },
+      "cac_nhom_bieu_hien": [
+        {
+          "nhom": "CHẬM MÀ CHẮC",
+          "y": [
+            "Từ tốn, đủng đỉnh, đôi lúc ì",
+            "Cân nhắc kĩ mới làm, nhưng bền"
+          ],
+          "note_to_self": [
+            "đừng thúc ép Kim Ngưu, kệ theo flow.",
+            "Kim Ngưu lười hay chăm phụ thuộc vào nhu cầu gốc đang đáp án được hay chưa."
+          ]
+        },
+        {
+          "nhom": "CỨNG ĐẦU, NGẠI THAY ĐỔI",
+          "y": [
+            "Lập trường kiên định",
+            "Trung thành, \"thủy chung\""
+          ]
+        },
+        {
+          "nhom": "SỞ HỮU",
+          "y": [
+            "Tích trữ, sưu tầm, giữ của",
+            "Không chịu buông bỏ"
+          ]
+        },
+        {
+          "nhom": "HƯỞNG THỤ, TRÂN TRỌNG GIÁ TRỊ",
+          "y": [
+            "Thích an nhàn, thư giãn, khoái lạc, động chạm",
+            "Trân trọng cái ngon, cái đẹp, cái chất lượng",
+            "Khiếu thẩm mĩ nghệ thuật",
+            "Ý thức rõ giá trị bản thân"
+          ]
+        }
+      ],
+      "nguon": "CTNC - 1. CUNG.md:31-59"
+    },
+    {
+      "so": 3,
+      "ten": "Song Tử",
+      "ky_hieu": "♊",
+      "nguyen_to": "Khí",
+      "tinh_chat": "Linh Hoạt",
+      "chu_tinh": "Sao Thủy (Mercury)",
+      "nguon_ky_hieu_nguyen_to_tinh_chat_chu_tinh": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:42,47-51,64-77",
+      "mo_ta_chung": [
+        "Thích nghi, thay đổi theo môi trường để thêm hiểu biết, trải nghiệm",
+        "Chia sẻ suy nghĩ của lời nói của mình => sẽ giỏi giao tiếp"
+      ],
+      "su_menh": [
+        "Coi cuộc đời là một bữa tiệc buffet"
+      ],
+      "nhu_cau_goc": {
+        "ten": "ĐA DẠNG/THAY ĐỔI LIÊN TỤC",
+        "chi_tiet": [
+          "Thích đời phong phú, ghét nhàm chán, hay rẽ ngang",
+          "Ý thích/suy nghĩ biến đổi nhanh, lộn xộn",
+          "Thích phân thân làm nhiều thứ một lúc",
+          "→ Đa tài, đa năng → dễ đi lên, đa ngành đa nghề"
+        ]
+      },
+      "cac_nhom_bieu_hien": [
+        {
+          "nhom": "LINH HOẠT, THÍCH NGHI",
+          "y": [
+            "Nhạc nào cũng nhảy",
+            "Giỏi ứng biến, tìm lối thoát, đường tắt"
+          ]
+        },
+        {
+          "nhom": "HÓNG HỚT, NHANH NHẠY",
+          "y": [
+            "Nhu cầu thông tin cao, dễ phân tâm",
+            "Nắm nhanh điểm trọng yếu, nhưng không sâu",
+            "Học nhanh (mô phỏng, bắt chước)"
+          ]
+        },
+        {
+          "nhom": "GIAO TIẾP",
+          "y": [
+            "Khiếu ngôn ngữ, viết lách",
+            "Trao đổi mọi chủ đề với mọi người"
+          ]
+        },
+        {
+          "nhom": "TÍNH \"HAI MẶT\"",
+          "y": [
+            "Nhìn vấn đề hai mặt không quy kết tốt xấu, đúng sai, cứ thử cho biết và để xem hệ quả",
+            "Điều gì cũng có thể làm"
+          ]
+        }
+      ],
+      "nguon": "CTNC - 1. CUNG.md:60-85"
+    },
+    {
+      "so": 4,
+      "ten": "Cự Giải",
+      "ky_hieu": "♋",
+      "nguyen_to": "Nước",
+      "tinh_chat": "Tiên Phong",
+      "chu_tinh": "Mặt Trăng (Moon)",
+      "nguon_ky_hieu_nguyen_to_tinh_chat_chu_tinh": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:42,47-51,64-77",
+      "mo_ta_chung": [
+        "Khẩn trương, chủ động tạo dựng nền tảng thực tế, an toàn",
+        "Áp đặt quy tắc, cách sống án toàn lên người khác"
+      ],
+      "su_menh": [
+        "TÌM NƠI ĐỂ TRỞ VỀ"
+      ],
+      "nhu_cau_goc": {
+        "ten": "AN TOÀN, ÊM ẤM",
+        "chi_tiet": [
+          "Thích môi trường quen thuộc, gần gũi. Dễ bất an.",
+          "Sợ bơ vơ lạc lõng."
+        ]
+      },
+      "cac_nhom_bieu_hien": [
+        {
+          "nhom": "YÊU GIA ĐÌNH",
+          "y": [
+            "Xây vùng an toàn, môi trường \"như ở nhà\"",
+            "Trách nhiệm với nguồn cội, họ hàng, ý thức gốc gác rõ rệt"
+          ]
+        },
+        {
+          "nhom": "BẢO VỆ, CHĂM SÓC",
+          "y": [
+            "Thích cả chăm sóc người khác và được chăm sóc.",
+            "Nhận ra nhanh sự bất ổn trong cảm xúc",
+            "Thích nuôi nấng, chăm bẵm"
+          ]
+        },
+        {
+          "nhom": "NHẠY CẢM, THẤT THƯỜNG",
+          "y": [
+            "Phản ứng mạnh với môi trường, dễ bồn chồn, khó chịu, dễ dỗi",
+            "Bộ lộ cảm xúc rõ, kích động",
+            "Cảm xúc lên xuống theo chu kì"
+          ]
+        },
+        {
+          "nhom": "HOÀI NIỆM",
+          "y": [
+            "Tìm an toàn trong quá khứ đẹp",
+            "Tình nghĩa khó buông bỏ"
+          ]
+        }
+      ],
+      "nguon": "CTNC - 1. CUNG.md:86-110"
+    },
+    {
+      "so": 5,
+      "ten": "Sư Tử",
+      "ky_hieu": "♌",
+      "nguyen_to": "Lửa",
+      "tinh_chat": "Kiên Định",
+      "chu_tinh": "Mặt Trời (Sun)",
+      "nguon_ky_hieu_nguyen_to_tinh_chat_chu_tinh": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:42,47-51,64-77",
+      "mo_ta_chung": [
+        "Bảo vệ lòng kiêu hành",
+        "Tin tưởng vào cái tôi, cái độc nhất của mình"
+      ],
+      "su_menh": [
+        "THỂ HIỆN HẾT MỌI THỨ MÌNH CÓ",
+        "(ác mộng của Sư Tử là có gì mà không được show ra, con đường đi là để thể hiện bản thân, nên có gì phải show hết, giỏi phải nói phải khoe)"
+      ],
+      "nhu_cau_goc": {
+        "ten": "ĐƯỢC YÊU THƯƠNG/ĐỘC TÔN",
+        "chi_tiet": [
+          "Được quan tâm, ngưỡng mộ, được đối xử đặc biệt, ở vị trí trung tâm",
+          "Tin mình xứng đáng với những tốt đẹp nhất trên đời => tham vọng",
+          "Dù vẫn ở giai đoạn trẻ con, nhưng là cung đầu tiên có tham vọng"
+        ]
+      },
+      "cac_nhom_bieu_hien": [
+        {
+          "nhom": "LÒNG KIÊU HÃNH, TỰ TÔN VÔ ĐỊCH",
+          "giai_thich": "(Vì tôi là duy nhất, tôi là đặc biệt)",
+          "y": [
+            "Chính trực, trung thành",
+            "Hào phóng, chơi đẹp",
+            "Thích làm lãnh đạo"
+          ],
+          "note_to_self": [
+            "nếu làm sếp thì thiên vị những ai làm Sư Tử cảm nhận được nhu cầu gốc"
+          ]
+        },
+        {
+          "nhom": "THỂ HIỆN SÁNG TẠO",
+          "giai_thich": "(Để được yêu thương thì phải thể hiện ra những gì hay ho => bản năng trình diễn)",
+          "y": [
+            "Giỏi trình diễn, thu hút đám đông",
+            "Hợp công việc sáng tạo, nghệ thuật"
+          ],
+          "note_to_self": [
+            "Cung có bản năng sáng tạo rất tốt => công việc liên quan sáng tạo thì sẽ ổn hơn",
+            "CUNG CÓ MÁU NGHỆ THUẬT SAU KIM NGƯU"
+          ]
+        },
+        {
+          "nhom": "HAM VUI",
+          "giai_thich": "(Với Sư Tử, sống là phải vui, không vui sống làm gì)",
+          "y": [
+            "Thích hội hè, tính ái (tình yêu là rất quan trọng, kể cả không có người yêu thì vẫn phải đang chìm đắm trong tình yêu)",
+            "3b"
+          ],
+          "ghi_chu_bien_tap": "Bản gốc dòng 136 viết \"không vui sống làm loz gì\" — đã bỏ từ tục, giữ nguyên nghĩa thành \"không vui sống làm gì\"."
+        },
+        {
+          "nhom": "KỊCH TÍNH HÓA",
+          "giai_thich": "(Bởi thích gây chú ý, mà kịch tính hóa thì dễ gây chú ý, dễ được làm trung tâm)",
+          "y": [
+            "Cách cư xử lẫn cách nhìn đời đều dramatic (hấp thụ và thể hiện ra đều drama để thấy thích)",
+            "Thích chơi liều, làm lớn, đặt cược"
+          ]
+        }
+      ],
+      "nguon": "CTNC - 1. CUNG.md:111-141"
+    },
+    {
+      "so": 6,
+      "ten": "Xử Nữ",
+      "ky_hieu": "♍",
+      "nguyen_to": "Đất",
+      "tinh_chat": "Linh Hoạt",
+      "chu_tinh": "Sao Thủy (Mercury)",
+      "nguon_ky_hieu_nguyen_to_tinh_chat_chu_tinh": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:42,47-51,64-77",
+      "mo_ta_chung": [
+        "Thích nghi với mọi hoàn cảnh để mình luôn tồn tại an toàn",
+        "Tương tác chia sẻ giúp mọi thứ, mọi người trở nên có giá trị"
+      ],
+      "su_menh": [
+        "TỰ TRÂN TRỌNG BẢN THÂN"
+      ],
+      "nhu_cau_goc": {
+        "ten": "HỮU DỤNG/CHỈNH SỬA",
+        "chi_tiet": [
+          "Cần cảm giác có ích, ghét vô tích sự.",
+          "Nhạy cảm với khuyết điểm của mình lên người khác => sữa chữa để tránh lãng phí."
+        ]
+      },
+      "cac_nhom_bieu_hien": [
+        {
+          "nhom": "CẦU TOÀN, SOI XÉT",
+          "giai_thich": "(Vì thích chỉnh sửa)",
+          "y": [
+            "Kĩ tính, tiểu tiết, khó hài lòng",
+            "Dễ lo âu, suy diễn (bố của suy diễn, bởi ám ảnh có gì đó chưa ổn)",
+            "Hay góp ý, phê bình"
+          ]
+        },
+        {
+          "nhom": "TẬN TỤY",
+          "y": [
+            "Chăm chỉ, sẵn lòng giúp đỡ phục vụ",
+            "Cầu tiến, ham học hỏi"
+          ]
+        },
+        {
+          "nhom": "LOGIC, KHOA HỌC",
+          "y": [
+            "Óc phân tích chặt chẽ",
+            "Giỏi lên kế hoạch quy trình",
+            "Điều độ, giữ sức khỏe/lối sống/chất lượng (Ghét sự bừa bãi lộn xộn nên bản thân sẽ tự có ý thức cao về mảng này)"
+          ]
+        },
+        {
+          "nhom": "KHIÊM NHƯỜNG",
+          "y": [
+            "Nghĩ mình không đủ tốt, nghi ngờ bản thân (bởi vì nhìn thấy quá nhiều lỗi)",
+            "Sợ bị chê trách => vì chê nên không thích bị chê, vì chê thì bị thấy không hữu dụng"
+          ],
+          "ghi_chu_bien_tap": "Bản gốc dòng 166 viết \"bị thấy đéo hữu dụng\" — đã bỏ từ tục, giữ nguyên nghĩa thành \"không hữu dụng\"."
+        }
+      ],
+      "nguon": "CTNC - 1. CUNG.md:142-166"
+    },
+    {
+      "so": 7,
+      "ten": "Thiên Bình",
+      "ky_hieu": "♎",
+      "nguyen_to": "Khí",
+      "tinh_chat": "Tiên Phong",
+      "chu_tinh": "Sao Kim (Venus)",
+      "nguon_ky_hieu_nguyen_to_tinh_chat_chu_tinh": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:42,47-51,64-77 — LƯU Ý: vault dòng 183 có nhắc \"vì KHÍ TIÊN PHONG\", khớp với code",
+      "mo_ta_chung": [
+        "Chủ động kết giao (nhất trong các cung KHÍ)",
+        "Chủ động giữ cho mọi thứ hợp lí, logic (làm gì cũng nghĩ hết cho mọi người xem có công bằng cho tất cả mọi người không?)"
+      ],
+      "su_menh": [
+        "NÊN ĐỪNG VÌ NƯỜI MÀ CHỊU BẤT CÔNG"
+      ],
+      "nhu_cau_goc": {
+        "ten": "CÔNG BẰNG/CÂN ĐỐI",
+        "chi_tiet": [
+          "Có qua có lại, ghét bất công",
+          "Ghét sự phiến diện, ích kỷ"
+        ]
+      },
+      "cac_nhom_bieu_hien": [
+        {
+          "nhom": "CÂN NHẮC, LÍ LUẬN",
+          "giai_thich": "(vì công bằng => cân nhắc nhiều chuyện)",
+          "y": [
+            "Cân nhắc lợi hại đa chiều => lưỡng lự",
+            "Giỏi lí luận, đã quyết thì sắt đá.",
+            "Muốn tự quyết (vì KHÍ TIÊN PHONG)."
+          ]
+        },
+        {
+          "nhom": "THÍCH ĐỒNG HÀNH, HỢP TÁC",
+          "giai_thich": "(Vì muốn có thêm góc nhìn khác để bản thân không bị tự lú)",
+          "y": [
+            "Tôn trọng, nghĩ cho người kia",
+            "Thích giao thiệp kết nối",
+            "Lịch thiệp, xã giao"
+          ]
+        },
+        {
+          "nhom": "HÒA BÌNH",
+          "giai_thich": "(Vì hòa bình thì mới hợp tác với nhau được)",
+          "y": [
+            "Sẵn sàng thỏa hiệp, có lợi đôi bên (đôi khi hơi thiệt thòi)",
+            "Ghét xung đột thô bạo",
+            "Hay nhường nhịn, dễ ấm ức"
+          ]
+        },
+        {
+          "nhom": "THẨM MĨ, NGHỆ THUẬT",
+          "giai_thich": "(Thích cân đối => luôn nhìn ra được điểm thiếu/thừa => perfect the product)",
+          "y": [
+            "Ý thức về sự cân đối, hài hòa",
+            "Đẹp để giao thiệp"
+          ]
+        }
+      ],
+      "nguon": "CTNC - 1. CUNG.md:168-194"
+    },
+    {
+      "so": 8,
+      "ten": "Bọ Cạp",
+      "ky_hieu": "♏",
+      "nguyen_to": "Nước",
+      "tinh_chat": "Kiên Định",
+      "chu_tinh": "Sao Diêm Vương (Pluto)",
+      "nguon_ky_hieu_nguyen_to_tinh_chat_chu_tinh": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:42,47-51,64-77",
+      "mo_ta_chung": [
+        "Khao khát gắn kết, chiếm hữu",
+        "Cảm xúc dai dẳng, cố chấp, khó thay đổi",
+        "Hòa mình, gắn kết với ai là bền chặt, sâu nặng",
+        "Bảo vệ cảm xúc của mình"
+      ],
+      "su_menh": [
+        "NÊN CỞI MỞ CÕI LÒNG"
+      ],
+      "nhu_cau_goc": {
+        "ten": "CỰC ĐOAN",
+        "chi_tiet": [
+          "Sống một cuộc đời cực đoan: tất cả hoặc không gì cả",
+          "Muốn đi đến cùng của trải nghiệm",
+          "Đời nhiều thăng trầm => tái sinh lột xác"
+        ]
+      },
+      "ghi_chu_bien_tap": "Bản gốc dòng 205 viết \"tất cả hoặc đéo gì cả\"; dòng 215 viết \"đéo được nông nông\" — đã bỏ từ tục, giữ nguyên nghĩa thành \"không gì cả\" / \"không được nông nông\".",
+      "cac_nhom_bieu_hien": [
+        {
+          "nhom": "BÍ ẨN",
+          "giai_thich": "(vì công bằng => cân nhắc nhiều chuyện)",
+          "y": [
+            "Thích đào sâu những thứ bí mạt, khó tìm hiểu (khó tìm hiểu mới kích thích tính cực đoan đào sâu)",
+            "Che giấu nội tâm, ít bộc lộ cảm xúc"
+          ]
+        },
+        {
+          "nhom": "SẮC SẢO",
+          "giai_thich": "(Khả năng đọc vị, nắm thóp tâm lý người khác cực tốt)",
+          "y": [
+            "Đọc vị nắm thóp người khác tốt",
+            "Thích tâm lý học, huyền học"
+          ]
+        },
+        {
+          "nhom": "CHIẾM HỮU. THAO TÚNG",
+          "giai_thich": "(Thích chiếm cả thứ của người khác, phải dồn mọi thứ cho họ, không được nông nông)",
+          "y": [
+            "Muốn người kia dồn hết cho mình, chỉ thuộc về mình => đòi hỏi, đa nghi, ghen tuông.",
+            "Thích cảm giác \"nắm\" được người kia",
+            "Thích quyền lực ngầm => tham vọng"
+          ]
+        },
+        {
+          "nhom": "KHAO KHÁT THÂN MẬT",
+          "y": [
+            "Muốn có người để cởi mở hoàn toàn, bộc lộ hết nỗi lòng",
+            "Ám ảnh với tình dục"
+          ]
+        }
+      ],
+      "nguon": "CTNC - 1. CUNG.md:195-221"
+    },
+    {
+      "so": 9,
+      "ten": "Nhân Mã",
+      "ky_hieu": "♐",
+      "nguyen_to": "Lửa",
+      "tinh_chat": "Linh Hoạt",
+      "chu_tinh": "Sao Mộc (Jupiter)",
+      "nguon_ky_hieu_nguyen_to_tinh_chat_chu_tinh": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:42,47-51,64-77 — LƯU Ý: vault dòng 224-225 tự ghi \"(LỬA)\" và \"(LINH HOẠT)\", khớp với code",
+      "mo_ta_chung": [
+        "Thích đi xa, tò mò về thế giới",
+        "Chia sẻ đâm mê, cảm hứng đến mọi người (LỬA)",
+        "Hoài bão, mục tiêu đa dạng, dễ thay đổi (LINH HOẠT)",
+        "Khi đạt được rồi thì lại đổi mục tiêu."
+      ],
+      "su_menh": [
+        "KHAI SÁNG & TRUYỀN CẢM HỨNG"
+      ],
+      "nhu_cau_goc": {
+        "ten": "MỞ RỘNG, VƯƠN XA",
+        "chi_tiet": [
+          "Về địa lí: du lịch, khám phá",
+          "Về tri thức: ham kiến thức CAO XA, DIỆN RỘNG (triết học, văn hóa, tín ngưỡng...) chứ không lẻ tẻ rửa bát quét nhà",
+          "Sợ đời tù túng hạn hẹp"
+        ]
+      },
+      "ghi_chu_bien_tap": "Bản gốc dòng 243 viết \"nó éo làm\" và \"việc họ làm éo đẹp\" — đã bỏ từ tục, giữ nguyên nghĩa thành \"nó không làm\" / \"việc họ làm không đẹp\".",
+      "cac_nhom_bieu_hien": [
+        {
+          "nhom": "TRIẾT LÍ",
+          "y": [
+            "Tìm quy luật phổ quát chi phối cuộc sống (đôi khi dễ assume)",
+            "Truyền bá tri thức, tư tưởng"
+          ]
+        },
+        {
+          "nhom": "ĐỨC TIN",
+          "giai_thich": "(Dù là cung linh hoạt nhưng cực kì cố chấp vào đức tin của mình)",
+          "y": [
+            "Tin vào các quy luật siêu hình, đấng tối cao",
+            "Lòng tin => Lạc quan => May mắn"
+          ]
+        },
+        {
+          "nhom": "LÍ TƯỞNG, CAO THƯỢNG",
+          "giai_thich": "(vì tin có các Ngài đang quan sát => sống một cách cao cả)",
+          "y": [
+            "Theo đuổi mục tiêu hoài bão cao đẹp (Không thấy lí tưởng cao đẹp thì nó không làm, Đôi khi việc họ làm không đẹp nhưng họ gán cho một mục đích cao đẹp)",
+            "Cao thượng đạo đức",
+            "Không để tâm chuyện nhỏ nhặt"
+          ]
+        },
+        {
+          "nhom": "TỰ DO, CHINH PHỤC",
+          "y": [
+            "Không thích trách nhiệm (Vì thích tự do, con ngựa)",
+            "Đạt được dễ chán"
+          ]
+        }
+      ],
+      "nguon": "CTNC - 1. CUNG.md:222-248"
+    },
+    {
+      "so": 10,
+      "ten": "Ma Kết",
+      "ky_hieu": "♑",
+      "nguyen_to": "Đất",
+      "tinh_chat": "Tiên Phong",
+      "chu_tinh": "Sao Thổ (Saturn)",
+      "nguon_ky_hieu_nguyen_to_tinh_chat_chu_tinh": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:42,47-51,64-77",
+      "mo_ta_chung": [
+        "Khẩn trương, chủ động tạo dựng nền tảng thực tế, an toàn",
+        "Áp đặt quy tắc, cách sống án toàn lên người khác"
+      ],
+      "su_menh": [
+        "ĐỂ LẠI DI SẢN"
+      ],
+      "nhu_cau_goc": {
+        "ten": "CẦN ĐƯỢC NỂ TRỌNG/ĐÓN NHẬN",
+        "chi_tiet": [
+          "Trọng thể diện, uy tín",
+          "Cần được đón nhận, không cần được chấp nhận",
+          "Note về đón nhận: Ma Kết không tin ai chấp nhận hoàn toàn (cả xấu và tốt), mà chỉ tin người ta đón nhận (thích mình) vì sự tốt."
+        ]
+      },
+      "cac_nhom_bieu_hien": [
+        {
+          "nhom": "TRỌNG ĐỊA VỊ, SỰ NGHIỆP",
+          "y": [
+            "Ám ảnh chỗ đứng trong xã hội và trong lòng người khác (kể cả trong tình yêu: được nể trọng quan trọng ngang được yêu)",
+            "Muốn cải tổ, ảnh hưởng lên xã hội"
+          ]
+        },
+        {
+          "nhom": "BI QUAN, GIÀ DẶN",
+          "y": [
+            "Tài nguyên có hạn, mọi thứ phải nỗ lực đánh đổi",
+            "Sẵn sàng chịu khổ.",
+            "Càng già thì sẽ lại càng trẻ lại và thành công",
+            "Coi trọng những thứ tồn tại qua thời gian."
+          ]
+        },
+        {
+          "nhom": "NGUYÊN TẮC, TRÁCH NHIỆM",
+          "y": [
+            "Đề cao hệ thống, luật lệ, lề lối",
+            "Sẵn sàng nhận trách nhiệm, làm tốt vì uy tín"
+          ]
+        },
+        {
+          "nhom": "ĐÈ NÉN",
+          "y": [
+            "Nhiều ẩn ức, sở thích kì quặc"
+          ]
+        }
+      ],
+      "nguon": "CTNC - 1. CUNG.md:249-273"
+    },
+    {
+      "so": 11,
+      "ten": "Bảo Bình",
+      "ky_hieu": "♒",
+      "nguyen_to": "Khí",
+      "tinh_chat": "Kiên Định",
+      "chu_tinh": "Sao Thiên Vương (Uranus)",
+      "nguon_ky_hieu_nguyen_to_tinh_chat_chu_tinh": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:42,47-51,64-77",
+      "mo_ta_chung": [
+        "Kiên định với lối suy nghĩ của mình, không bị người đời ảnh hưởng,",
+        "Tập trung tư duy tốt,"
+      ],
+      "su_menh": [
+        "KỆ ĐỜI MÀ SỐNG"
+      ],
+      "nhu_cau_goc": {
+        "ten": "ĐỘC LẬP/TÁCH BIỆT",
+        "chi_tiet": [
+          "Cần khoảng tự do, không gian riêng",
+          "Giữ khoảng cách, ít gắn kết mật thiết với ai hay thứ gì"
+        ]
+      },
+      "cac_nhom_bieu_hien": [
+        {
+          "nhom": "LẬP DỊ",
+          "giai_thich": "(Họ không giả vờ khác biệt mà họ khác biệt thật)",
+          "y": [
+            "Cái gì thấy hợp lí thì làm, không theo lề lối",
+            "Sở thích, mối quan tâm khác với số đông"
+          ]
+        },
+        {
+          "nhom": "ĐỘC ĐÁO, TIÊN TIẾN",
+          "y": [
+            "Tư duy đi trước thời đại, trực giác, phát minh",
+            "Thích những thứ hiện đại tiến bộ"
+          ]
+        },
+        {
+          "nhom": "SIÊU LÍ TRÍ",
+          "y": [
+            "Tách mình khỏi các cảm xúc cực đoan",
+            "Thường tạo cảm giác lạnh, xa cách"
+          ]
+        },
+        {
+          "nhom": "NHÂN VĂN, BÌNH ĐẲNG",
+          "y": [
+            "Muốn thúc đẩy xã hội văn minh, bình đẳng, tự do",
+            "Quan tâm vấn đề xã hội, vĩ mô",
+            "Trọng tình bạn, thích nhóm hội"
+          ]
+        }
+      ],
+      "nguon": "CTNC - 1. CUNG.md:275-298"
+    },
+    {
+      "so": 12,
+      "ten": "Song Ngư",
+      "ky_hieu": "♓",
+      "nguyen_to": "Nước",
+      "tinh_chat": "Linh Hoạt",
+      "chu_tinh": "Sao Hải Vương (Neptune)",
+      "nguon_ky_hieu_nguyen_to_tinh_chat_chu_tinh": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:42,47-51,64-77 — LƯU Ý: vault \"CTNC - BỔ TÚC 02\":30 có ghi \"Hải Vương là chủ Song Ngư\", khớp với code",
+      "mo_ta_chung": [
+        "Hòa mình với mọi người, mọi vật,",
+        "Cảm xúc mong manh dễ rung động, biến đổi,"
+      ],
+      "su_menh": [
+        "BIẾN PHÉP MÀU THÀNH SỰ THỰC",
+        "Biến giấc mơ thành hiện thực"
+      ],
+      "nhu_cau_goc": {
+        "ten": "THOÁT TỤC/MƠ MỘNG",
+        "chi_tiet": [
+          "Cần đồng thời sống trong một thế giới nhiệm màu đẹp đẽ",
+          "Luôn nhìn vào mặt tốt đẹp, lương thiện của mọi người"
+        ]
+      },
+      "cac_nhom_bieu_hien": [
+        {
+          "nhom": "TƯỢNG TƯỢNG, TÂM LINH",
+          "y": [
+            "Dễ rung động cảm xúc vì môi trường => Mơ tưởng",
+            "Kết nối với tiềm thức => Trực giác tâm linh"
+          ]
+        },
+        {
+          "nhom": "HUYỄN HOẶC, TRỐN TRÁNH",
+          "y": [
+            "Nhìn đời bằng nửa sự thật, dễ vỡ mộng (mặt sáng)",
+            "Tránh đối diện với hiện thực khắc nghiệt, hay gây hiểu lầm (Tới lúc vỡ mộng thì đổ lỗi, than thân, nạn nhân...",
+            "Cần đều đặn thoát li, biến mất"
+          ]
+        },
+        {
+          "nhom": "CẢM THÔNG, TRẮC ẨN",
+          "y": [
+            "Hấp thụ, đồng hóa cảm xúc (xu hướng bọt biển => dễ bị lây nhiễm cả xấu lẫn tốt => nên chọn môi trường tốt)",
+            "Sợ làm đau người khác, kém từ chối"
+          ]
+        },
+        {
+          "nhom": "HI SINH",
+          "y": [
+            "Cho đi vô điều kiện, giúp người cô thế (không giữ gì cho mình, ưu tiên giúp những người đang đau khổ)",
+            "Dễ quên mất bản thân vì người khác"
+          ]
+        }
+      ],
+      "nguon": "CTNC - 1. CUNG.md:300-324"
+    }
+  ]
+}

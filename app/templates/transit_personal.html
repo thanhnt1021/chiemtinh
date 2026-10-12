@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% from "macros/location_picker.html" import render_location_picker %}
+
+{% block title %}Vận Hạn Riêng (Transits) - Astro System{% endblock %}
+
+{% block head_extra %}
+<style>
+    .app-container { max-width: 1200px; margin: 0 auto; padding: 0 5px; }
+    .natal-text { font-weight: bold; color: #111827; }
+    .narrow-table { width: 100%; max-width: 800px; margin: 0 auto; border-collapse: separate; border-spacing: 0 6px; table-layout: fixed; }
+    .col-1 { width: 22%; } .col-2 { width: 10%; } .col-3 { width: 22%; } .col-4 { width: 14%; } .col-5 { width: 32%; }
+    .narrow-table th { vertical-align: top !important; text-align: center !important; font-weight: 800; text-transform: uppercase; color: #6b7280; line-height: 1.2; padding-bottom: 8px; }
+    .dark th { color: #f3f4f6 !important; }
+    .narrow-table td { text-align: center !important; vertical-align: middle !important; padding: 0 1px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="app-container pt-16">
+    <a href="/vanhan" class="text-blue-500 hover:text-blue-400 mb-4 inline-block hover:underline">&larr; Menu Vận Hạn</a>
+
+    <div class="bg-white dark:bg-gray-800 p-6 rounded shadow mb-8 border border-gray-200 dark:border-gray-700 shadow-xl">
+        <div class="flex justify-between items-center mb-4 border-b border-gray-200 dark:border-gray-600 pb-2">
+            <h2 class="text-xl font-bold text-purple-600 dark:text-purple-400 uppercase tracking-widest">Vận Hạn Riêng (Transits)</h2>
+            {% if selected %}<a href="/edit_profile/{{ selected }}?return_to=vanhan_rieng&day={{t_date.day}}&month={{t_date.month}}&year={{t_date.year}}" class="text-xs bg-blue-100 text-blue-600 hover:bg-blue-200 px-2 py-1 rounded transition font-bold shadow-sm"><i class="fas fa-edit"></i> Edit Natal</a>{% endif %}
+        </div>
+
+        <form action="/vanhan/rieng" id="main-form" method="POST" onsubmit="const btn=document.getElementById('btn-submit'); btn.disabled=true; btn.innerText='ĐANG XỬ LÝ...';">
+            <input type="hidden" name="mode" id="mode-input" value="{{ transit_mode_input if transit_mode_input else 'existing' }}">
+
+            <div class="flex mb-4 bg-gray-200 dark:bg-gray-700 rounded p-1">
+                <button type="button" id="btn-exist" onclick="switchTabMain('existing')" class="flex-1 py-2 rounded {% if not transit_mode_input or transit_mode_input == 'existing' %}bg-blue-600 text-white{% else %}text-gray-700 dark:text-gray-300{% endif %} font-bold transition shadow-sm">Có sẵn</button>
+                <button type="button" id="btn-new" onclick="switchTabMain('new')" class="flex-1 py-2 rounded {% if transit_mode_input == 'new' %}bg-blue-600 text-white{% else %}text-gray-700 dark:text-gray-300{% endif %} font-bold transition shadow-sm">Nhập mới</button>
+            </div>
+
+            <div id="tab-existing" class="{% if transit_mode_input == 'new' %}hidden{% endif %}">
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Chọn hồ sơ gốc (Natal):</label>
+                    <select name="profile" class="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm">
+                        {% for p_item in profiles %}<option value="{{ p_item.name }}" {% if selected == p_item.name %}selected{% endif %}>{{ p_item.name }}</option>{% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div id="tab-new" class="{% if not transit_mode_input or transit_mode_input == 'existing' %}hidden{% endif %} space-y-4 mb-4">
+                <div>
+                    <input type="text" name="new_name" id="new_name" placeholder="Họ tên người mới" class="w-full p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
+                </div>
+                <div class="flex gap-2">
+                    <input type="number" name="new_day" placeholder="Ngày" class="w-1/3 p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <input type="number" name="new_month" placeholder="Tháng" class="w-1/3 p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <input type="number" name="new_year" placeholder="Năm" class="w-1/3 p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                </div>
+                <div class="flex gap-2">
+                    <input type="number" name="new_hour" placeholder="Giờ" class="w-1/2 p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <input type="number" name="new_minute" placeholder="Phút" class="w-1/2 p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white">
+                </div>
+
+                {{ render_location_picker(prefix='new_', profile=p) }}
+
+                <select name="new_gender" class="w-full p-3 border rounded text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600">
+                    <option value="Female">Nữ</option><option value="Male">Nam</option>
+                </select>
+                <div class="flex items-center mt-2">
+                    <input type="checkbox" name="save_to_db" id="save_chk" class="mr-2 w-4 h-4">
+                    <label for="save_chk" class="text-sm cursor-pointer text-gray-700 dark:text-gray-300">Lưu vào danh sách hồ sơ</label>
+                </div>
+            </div>
+
+            <div class="mb-4 border-t pt-4 dark:border-gray-700 border-gray-100">
+                <label class="block mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Chế độ xem Transit:</label>
+                <select id="transit_mode" name="transit_mode" onchange="toggleTransitMode()" class="w-full p-3 border rounded bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-400 font-bold shadow-inner">
+                    <option value="single" {% if transit_mode == 'single' %}selected{% endif %}>Xem Transit Thường</option>
+                    <option value="outer_cycle" {% if transit_mode == 'outer_cycle' %}selected{% endif %}>Xem Đại Hạn Tương Lai</option>
+                </select>
+            </div>
+
+            <div id="block-single-date" class="mb-4 {% if transit_mode == 'outer_cycle' %}hidden{% endif %}">
+                <label class="block mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Ngày/Tháng/Năm muốn xem:</label>
+                <div class="flex gap-2">
+                    <input type="number" name="t_day" value="{{ t_date.day }}" class="w-1/3 p-3 border rounded text-center bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" placeholder="D">
+                    <input type="number" name="t_month" value="{{ t_date.month }}" class="w-1/3 p-3 border rounded text-center bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" placeholder="M">
+                    <input type="number" name="t_year" value="{{ t_date.year }}" class="w-1/3 p-3 border rounded text-center bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white" placeholder="Y">
+                </div>
+            </div>
+
+            <div id="block-cycle-date" class="mb-4 border border-red-200 dark:border-red-900 p-4 rounded bg-red-50 dark:bg-gray-700 {% if transit_mode != 'outer_cycle' %}hidden{% endif %} shadow-inner">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block mb-2 text-[10px] sm:text-sm font-bold text-red-600 dark:text-red-400 uppercase tracking-widest">Ngày Bắt Đầu:</label>
+                        <input type="date" id="start_date" name="start_date" value="{{ start_date_str }}" onchange="validateCycleDate()" class="w-full p-2 border rounded bg-white dark:bg-gray-600 border-gray-300 dark:border-gray-50 text-xs sm:text-sm text-gray-900 dark:text-white shadow-sm">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-[10px] sm:text-sm font-bold text-red-600 dark:text-red-400 uppercase tracking-widest">Ngày Kết Thúc:</label>
+                        <input type="date" id="end_date" name="end_date" value="{{ end_date_str }}" onchange="validateCycleDate()" class="w-full p-2 border rounded bg-white dark:bg-gray-600 border-gray-300 dark:border-gray-50 text-xs sm:text-sm text-gray-900 dark:text-white shadow-sm">
+                    </div>
+                </div>
+                <p id="cycle-error" class="text-[11px] text-red-600 font-bold mt-2 hidden bg-white dark:bg-gray-800 p-2 rounded border border-red-500"></p>
+            </div>
+
+            <button type="submit" id="btn-submit" class="w-full {% if transit_mode == 'outer_cycle' %}bg-red-600{% else %}bg-purple-600{% endif %} text-white font-bold py-3 rounded shadow-lg transition uppercase tracking-widest active:scale-95">
+                {% if transit_mode == 'outer_cycle' %}XEM ĐẠI HẠN TƯƠNG LAI{% else %}XEM TRANSIT RIÊNG{% endif %}
+            </button>
+        </form>
+    </div>
+
+    {% if chart_img %}
+    <div class="space-y-8">
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow text-center flex flex-col items-center border border-gray-200 dark:border-gray-700 shadow-xl">
+            <h3 class="font-bold text-lg text-purple-600 mb-4 uppercase tracking-widest">{{ chart_title }}</h3>
+            <img src="data:image/png;base64,{{ chart_img }}" class="max-w-full h-auto mx-auto rounded shadow-lg border dark:border-gray-600">
+        </div>
+
+        {% if house_report %}
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow border border-gray-200 dark:border-gray-700 text-sm shadow-md">
+            {{ house_report | safe }}
+        </div>
+        {% endif %}
+
+        {% if aspect_report %}
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow border border-gray-200 dark:border-gray-700 text-sm mt-8 shadow-md">
+            {{ aspect_report | safe }}
+        </div>
+        {% endif %}
+
+        {% if transit_mode == 'single' and house_report %}
+        <div class="bg-white dark:bg-gray-800 p-6 rounded shadow border border-gray-200 dark:border-gray-700 mt-8 text-center shadow-lg">
+            <h3 class="font-bold text-lg mb-8 uppercase tracking-widest text-gray-800 dark:text-white">TRA CỨU GIAI ĐOẠN HỒI VỊ</h3>
+            <div class="max-w-md mx-auto flex flex-col sm:flex-row items-center justify-center gap-4">
+                <select id="sel-hoivi" class="w-full sm:w-64 p-3 border rounded font-bold bg-gray-50 dark:bg-gray-700 text-purple-600 border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    {% for p_item in RETURN_PLANET_ORDER %}<option value="{{ p_item }}">{{ p_item }}</option>{% endfor %}
+                </select>
+                <button onclick="openHoiVi()" class="w-full sm:w-32 bg-purple-600 hover:bg-purple-500 text-white font-black py-3 rounded shadow transition uppercase active:scale-95">XEM</button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+{% include 'transit_modals_shared.html' %}
+
+<script>
+    function switchTabMain(mode) {
+        document.getElementById('mode-input').value = mode;
+        const btnE = document.getElementById('btn-exist'), btnN = document.getElementById('btn-new');
+        const tabE = document.getElementById('tab-existing'), tabN = document.getElementById('tab-new');
+        if(mode === 'existing') {
+            tabE.classList.remove('hidden'); tabN.classList.add('hidden');
+            btnE.classList.add('bg-blue-600', 'text-white'); btnE.classList.remove('text-gray-700', 'dark:text-gray-300');
+            btnN.classList.remove('bg-blue-600', 'text-white'); btnN.classList.add('text-gray-700', 'dark:text-gray-300');
+        } else {
+            tabE.classList.add('hidden'); tabN.classList.remove('hidden');
+            btnN.classList.add('bg-blue-600', 'text-white'); btnN.classList.remove('text-gray-700', 'dark:text-gray-300');
+            btnE.classList.remove('bg-blue-600', 'text-white'); btnE.classList.add('text-gray-700', 'dark:text-gray-300');
+        }
+    }
+
+    function toggleTransitMode() {
+        const mode = document.getElementById('transit_mode').value;
+        const btn = document.getElementById('btn-submit');
+        if (mode === 'single') {
+            document.getElementById('block-single-date').classList.remove('hidden');
+            document.getElementById('block-cycle-date').classList.add('hidden');
+            btn.textContent = 'XEM TRANSIT RIÊNG';
+            btn.className = btn.className.replace('bg-red-600', 'bg-purple-600');
+            btn.disabled = false; btn.style.opacity = '1';
+        } else {
+            document.getElementById('block-single-date').classList.add('hidden');
+            document.getElementById('block-cycle-date').classList.remove('hidden');
+            btn.textContent = 'XEM ĐẠI HẠN TƯƠNG LAI';
+            btn.className = btn.className.replace('bg-purple-600', 'bg-red-600');
+            validateCycleDate();
+        }
+    }
+
+    function validateCycleDate() {
+        if(document.getElementById('transit_mode').value === 'single') return;
+        const d1 = new Date(document.getElementById('start_date').value), d2 = new Date(document.getElementById('end_date').value), err = document.getElementById('cycle-error');
+        const btn = document.getElementById('btn-submit');
+        let errMsg = "";
+        if(d2 < d1) errMsg = "⚠️ Ngày không hợp lệ (Bắt đầu phải trước Kết thúc).";
+        else if((d2-d1)/(1000*3600*24*365.25) > 5) errMsg = "⚠️ Thời gian quét tối đa là 5 năm.";
+
+        if(errMsg) { err.textContent = errMsg; err.classList.remove('hidden'); btn.disabled = true; btn.style.opacity = '0.4'; }
+        else { err.classList.add('hidden'); btn.disabled = false; btn.style.opacity = '1'; }
+    }
+
+    function filterAllAspects(maxOrb) {
+        document.querySelectorAll('tr.aspect-row').forEach(row => { 
+            row.style.display = parseFloat(row.getAttribute('data-orb')) <= parseFloat(maxOrb) ? '' : 'none'; 
+        });
+    }
+</script>
+{% endblock %}

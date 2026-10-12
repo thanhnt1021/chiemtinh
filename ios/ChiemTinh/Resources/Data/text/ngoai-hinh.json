@@ -1,0 +1,170 @@
+{
+  "mo_ta": "Nhân tướng học bằng chiêm tinh: đặc điểm ngoại hình theo 12 cung AC (cung Mọc) + 10 hành tinh, kèm quy trình luận ngoại hình.",
+  "nguon_chinh": [
+    "THAM KHẢO/CTNC - Ngoại hình.md (50 dòng)",
+    "BUỔI HỌC/CTNC - Buổi học 4.md:28-94 (quy trình luận + vai trò của CR)"
+  ],
+  "quy_trinh_luan_ngoai_hinh": {
+    "buoc": [
+      {
+        "thu_tu": 1,
+        "ten": "Tổng quan: CUNG LÕI / Nguyên tố, tính chất",
+        "ghi_chu": "Vì xem phẩm chất thì mới biết ảnh hưởng, mối quan tâm không ảnh hưởng nhiều lên ngoại hình.",
+        "vi_du": "Lõi + nguyên tố tính chất: Hoạt bát, năng động, tò mò + tí dịu dàng."
+      },
+      {
+        "thu_tu": 2,
+        "ten": "AC (cung Mọc)",
+        "vi_du": "Song Tử"
+      },
+      {
+        "thu_tu": 3,
+        "ten": "Hành tinh trong H1",
+        "vi_du": "Thổ"
+      },
+      {
+        "thu_tu": 4,
+        "ten": "Các hành tinh tạo góc với cung Mọc",
+        "quy_tac": [
+          "Ưu tiên tìm góc trùng, tới mềm, tới cứng: vì góc trùng mạnh nhất, tới mềm. Cứng thì không hiện.",
+          "Góc trùng còn gần AC -> ảnh hưởng ngoại hình.",
+          "Nếu chỉ có cứng -> có thể bỏ qua",
+          "Nếu nhiều góc mềm -> chọn góc mềm chặt nhất"
+        ],
+        "vi_du": "Hải Vương"
+      },
+      {
+        "thu_tu": 5,
+        "ten": "CR (Chart Ruler) ở nhà nào",
+        "quy_tac": [
+          "CR nhà nào thì lai thêm tính chất của nhà đấy",
+          "CR nhà 3 thì lai tí hoạt bát",
+          "Chìa khóa để đẹp lên: làm tốt lĩnh vực nhà mà CR đang nằm"
+        ],
+        "vi_du": "CR H7 -> lai tí của Thiên Bình"
+      }
+    ],
+    "meo_lam_dep": "Làm thế nào để đẹp lên? Làm tốt Kim.",
+    "ghi_chu_AC": "AC trong lõi không ngang hàng với Sun Moon -> muốn đứng ngang hàng -> xét chủ tinh AC (aka chủ tinh H1 = Chart Ruler).",
+    "nguon": "CTNC - Buổi học 4.md:28-94"
+  },
+  "so_ban_ghi": {
+    "cung_AC": 12,
+    "hanh_tinh": 10
+  },
+  "theo_cung_AC": [
+    {
+      "cung": "Bạch Dương",
+      "dac_diem": "Mặt trẻ con ngây thơ. Vibe khoẻ khoắn nhiều sức sống. Thích mặc đồ đơn giản dễ vận động. Con gái thường người nhỏ.",
+      "nguon": "CTNC - Ngoại hình.md:7"
+    },
+    {
+      "cung": "Kim Ngưu",
+      "dac_diem": "Đường nét cơ thể đẹp, đầy đặn. Mặt đẹp nhưng đơ đơ, chuyển trạng thái chậm. Vibe rất tĩnh, ăn ảnh. Mặc đồ không khoa trương xịn.",
+      "nguon": "CTNC - Ngoại hình.md:9"
+    },
+    {
+      "cung": "Song Tử",
+      "dac_diem": "Mắt đảo nhanh. Tay chân hay hí hoáy gì đó. Vibe kiểu luôn ở trạng thái “động”. Thời trang thay đổi lung tung, thích thử nghiệm.",
+      "nguon": "CTNC - Ngoại hình.md:11"
+    },
+    {
+      "cung": "Cự Giải",
+      "dac_diem": "Đường nét tròn mềm mại, hiền. Dễ béo. Vibe kiểu shy, hơi phòng thủ. Mặc đồ kiểu truyền thống hoài cổ.",
+      "nguon": "CTNC - Ngoại hình.md:13"
+    },
+    {
+      "cung": "Sư Tử",
+      "dac_diem": "Vibe kiêu, lạnh, không khoa trương ố dề như lí thuyết. Trọng ngoại hình. Thường rất tự hào và chăm chút kĩ cho 1 bộ phận nào đó trên cơ thể: điển hình là tóc.",
+      "nguon": "CTNC - Ngoại hình.md:15"
+    },
+    {
+      "cung": "Xử Nữ",
+      "dac_diem": "Vibe tiểu thư, e lệ. Thường gầy. Mặc đồ đẹp kiểu tinh tế, hoạ tiết nhỏ, thích mix match các chi tiết/phụ kiện nhỏ với nhau.",
+      "nguon": "CTNC - Ngoại hình.md:17"
+    },
+    {
+      "cung": "Thiên Bình",
+      "dac_diem": "Vibe lịch thiệp duyên dáng. Cười công nghiệp. Đường nét mặt hài hoà. Ăn mặc có gu, lịch sự dễ chịu.",
+      "nguon": "CTNC - Ngoại hình.md:19"
+    },
+    {
+      "cung": "Bọ Cạp",
+      "dac_diem": "Mắt sắc và ánh nhìn tạo áp lực (khi dòm con mồi). Thường gầy. Mặc đồ tối màu.",
+      "nguon": "CTNC - Ngoại hình.md:21"
+    },
+    {
+      "cung": "Nhân Mã",
+      "dac_diem": "Vibe phóng khoáng lạc quan. Dễ béo. Thường có 1 bộ phận to hẳn không đều so với tổng thể, vd trán, đùi… Mặc đồ rộng thoải mái.",
+      "nguon": "CTNC - Ngoại hình.md:23"
+    },
+    {
+      "cung": "Ma Kết",
+      "dac_diem": "Vibe trầm, già dặn, nghiêm túc. Khung xương hiện rõ, ví dụ xương hàm. Mặc đồ cổ điển đẳng cấp.",
+      "nguon": "CTNC - Ngoại hình.md:25"
+    },
+    {
+      "cung": "Bảo Bình",
+      "dac_diem": "Vibe lạnh kiêu giống Sư Tử, nhưng thân thiện dễ bắt chuyện hơn. Mặc style gì cũng được (nhưng không thay đổi thường xuyên bằng Song Tử)",
+      "nguon": "CTNC - Ngoại hình.md:27"
+    },
+    {
+      "cung": "Song Ngư",
+      "dac_diem": "Vibe mơ màng, mắt lờ đờ, đôi khi ướt át. Có vẻ ẩn mình đi. Thỉnh thoảng mất tập trung rồi giật mình tỉnh lại. Cử động nhẹ nhàng. Mặc đồ tha thướt.",
+      "nguon": "CTNC - Ngoại hình.md:29"
+    }
+  ],
+  "theo_hanh_tinh": [
+    {
+      "hanh_tinh": "Mặt trời",
+      "dac_diem": "Sáng, kiêu hãnh",
+      "nguon": "CTNC - Ngoại hình.md:33"
+    },
+    {
+      "hanh_tinh": "Mặt trăng",
+      "dac_diem": "Biểu cảm, truyền thống",
+      "nguon": "CTNC - Ngoại hình.md:35"
+    },
+    {
+      "hanh_tinh": "Thuỷ",
+      "dac_diem": "Thông minh, hiếu động",
+      "nguon": "CTNC - Ngoại hình.md:37"
+    },
+    {
+      "hanh_tinh": "Kim",
+      "dac_diem": "Ngọt ngào, điệu",
+      "nguon": "CTNC - Ngoại hình.md:39"
+    },
+    {
+      "hanh_tinh": "Hoả",
+      "dac_diem": "Sexy khoẻ khoắn",
+      "nguon": "CTNC - Ngoại hình.md:41"
+    },
+    {
+      "hanh_tinh": "Mộc",
+      "dac_diem": "Lạc quan, phúc hậu",
+      "nguon": "CTNC - Ngoại hình.md:43"
+    },
+    {
+      "hanh_tinh": "Thổ",
+      "dac_diem": "Già dặn, khó tính",
+      "nguon": "CTNC - Ngoại hình.md:45"
+    },
+    {
+      "hanh_tinh": "Thiên Vương",
+      "dac_diem": "Lạnh, phớt đời",
+      "nguon": "CTNC - Ngoại hình.md:47"
+    },
+    {
+      "hanh_tinh": "Hải Vương",
+      "dac_diem": "Mơ mộng, thoát tục",
+      "nguon": "CTNC - Ngoại hình.md:49"
+    },
+    {
+      "hanh_tinh": "Diêm Vương",
+      "dac_diem": "Tối, bí ẩn, quyền lực",
+      "nguon": "CTNC - Ngoại hình.md:51"
+    }
+  ],
+  "ghi_chu": "Phần 'theo hành tinh' của file Ngoại hình chỉ là từ khoá ngắn, KHÔNG nói rõ hành tinh đó phải ở vị trí nào (H1? trùng AC?). Buổi học 4 làm rõ: xét hành tinh trong H1 và hành tinh tạo góc trùng/mềm với cung Mọc."
+}

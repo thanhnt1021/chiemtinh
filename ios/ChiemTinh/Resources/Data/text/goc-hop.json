@@ -1,0 +1,455 @@
+{
+  "mo_ta": "Phương pháp luận góc hợp 'Trao đổi năng lượng' của thầy oHa: quy trình 2 bước + bảng so sánh góc Mềm/Cứng/Trùng + ví dụ Sun-Mars hai chiều.",
+  "nguon_chinh": [
+    "THAM KHẢO/CTNC - BỔ TÚC 01 - Full quy tắc góc hợp-Trao đổi năng lượng.md (76 dòng)",
+    "BUỔI HỌC/CTNC - Buổi học 2.md dòng 353-546 (NGOÀI dải dòng cấm 14-290)"
+  ],
+  "canh_bao_thieu_du_lieu": {
+    "trang_thai": "thieu",
+    "mo_ta_trang_thai": "Thư mục A-CHIÊM TINH - LUẬN/4. Góc hợp/ RỖNG HOÀN TOÀN (0 file). Vault KHÔNG có phần lý thuyết góc hợp nền tảng: không có định nghĩa chuẩn 6 loại góc (0/30/60/90/120/150/180 độ) kèm orb mặc định cho natal. Chỉ có orb rời rạc rải rác: synastry 10 độ, transit dưới 3 độ, điểm tâm linh dưới 1 độ. Không tự viết bù.",
+    "orb_lay_tu_code_repo": {
+      "nguon": "/tmp/chiemtinh-repo/app/astro00_lib/const.py:53-61 (KHÔNG phải từ vault)",
+      "bang": [
+        {
+          "ten_en": "Conjunction",
+          "ten_vi": "Trùng",
+          "do": 0,
+          "orb": 10,
+          "loai": "Hard",
+          "ky_hieu": "☌"
+        },
+        {
+          "ten_en": "Semisextile",
+          "ten_vi": "Bán Lục Hợp",
+          "do": 30,
+          "orb": 3.0,
+          "loai": "Minor",
+          "ky_hieu": "⚺"
+        },
+        {
+          "ten_en": "Sextile",
+          "ten_vi": "Lục Hợp",
+          "do": 60,
+          "orb": 6,
+          "loai": "Soft",
+          "ky_hieu": "⚹"
+        },
+        {
+          "ten_en": "Square",
+          "ten_vi": "Vuông Góc",
+          "do": 90,
+          "orb": 10,
+          "loai": "Hard",
+          "ky_hieu": "□"
+        },
+        {
+          "ten_en": "Trine",
+          "ten_vi": "Tam Hợp",
+          "do": 120,
+          "orb": 10,
+          "loai": "Soft",
+          "ky_hieu": "△"
+        },
+        {
+          "ten_en": "Quincunx",
+          "ten_vi": "Ngũ Chiếu",
+          "do": 150,
+          "orb": 3.0,
+          "loai": "Minor",
+          "ky_hieu": "⚻"
+        },
+        {
+          "ten_en": "Opposition",
+          "ten_vi": "Đối Đỉnh",
+          "do": 180,
+          "orb": 10,
+          "loai": "Hard",
+          "ky_hieu": "☍"
+        }
+      ]
+    }
+  },
+  "ban_chat_goc_hop": [
+    "Là một dòng cho - nhận năng lượng giữa hai hành tinh.",
+    "Chúng trao đổi/kết hợp các phẩm chất với nhau để tạo nên một số tài năng nào đó cho chủ thể.",
+    "Dù biểu hiện tốt hay tệ thì vẫn là tài năng -> Cứ có góc hợp là có tài năng"
+  ],
+  "quy_trinh_2_buoc": [
+    {
+      "buoc": 1,
+      "ten": "Xác định xem những tài năng tốt đẹp nhất có thể được tạo nên từ sự kết hợp hai hành tinh đó là gì",
+      "cach_xac_dinh": [
+        "a/ Sự cho - nhận phẩm chất giữa hai hành tinh (cách bản chất nhất)",
+        "b/ Điểm chung của hai hành tinh (nếu có — không phải hành tinh nào cũng có điểm chung)"
+      ],
+      "quy_tac_doc_bang": "Nói chung là A truyền sang B, thì A xem cột 'Truyền đi', còn B xem cột 'Nhận ảnh hưởng lên'.",
+      "nguon": "CTNC - BỔ TÚC 01 - Full quy tắc góc hợp-Trao đổi năng lượng.md:10-13; CTNC - Buổi học 2.md:370-373"
+    },
+    {
+      "buoc": 2,
+      "ten": "Xét bản chất góc (mềm/cứng) để biết hai hành tinh cụ thể truyền nhau phẩm chất tích cực hay tiêu cực",
+      "cho_biet": [
+        "hai hành tinh truyền nhau phẩm chất tích cực/tiêu cực (mềm thì tích cực, cứng thì tiêu cực)",
+        "Biểu hiện",
+        "Tài năng dễ hay khó có được",
+        "Tài năng lớn đến đâu",
+        "Cảm giác nội tâm của chủ thể"
+      ],
+      "nguon": "CTNC - BỔ TÚC 01 - Full quy tắc góc hợp-Trao đổi năng lượng.md:45; CTNC - Buổi học 2.md:374-378"
+    }
+  ],
+  "bang_so_sanh_mem_cung_trung": {
+    "cot": [
+      "Mềm",
+      "Cứng",
+      "Trùng"
+    ],
+    "hang": [
+      {
+        "tieu_chi": "Truyền nhau",
+        "mem": "Phẩm chất tích cực",
+        "cung": "Phẩm chất tiêu cực",
+        "trung": "Tương tự mềm"
+      },
+      {
+        "tieu_chi": "Biểu hiện",
+        "mem": "Tích cực (tiết chế cảm xúc tốt)",
+        "cung": "Tiêu cực (đè nén quá cảm xúc của bản thân)",
+        "trung": "Tương tự mềm"
+      },
+      {
+        "tieu_chi": "Biên độ",
+        "mem": "0 -> Tốt (Có tài tự nhiên nhưng lười phát triển, ít động lực)",
+        "cung": "Hoặc: Tệ -> 0; Hoặc: Tốt -> Rất Tốt (Kém hoặc là giàu động lực, điều đó tùy thuộc vào hành động của bạn)",
+        "trung": "Tệ -> Rất tốt"
+      },
+      {
+        "tieu_chi": "Cảm giác nội tâm",
+        "mem": "Dễ chịu, hài lòng về đặc điểm tài năng mà góc này mang lại",
+        "cung": "Khó chịu, không hài lòng, cảm thấy mình kém, không kiểm soát được đặc điểm đó.",
+        "trung": "Không thấy gì"
+      }
+    ],
+    "ghi_chu_bien_tap": "Ô 'Trùng / Cảm giác nội tâm' bản gốc Buổi học 2 dòng 385 viết \"Đéo thấy gì\" — đã bỏ từ tục, giữ nguyên nghĩa thành \"Không thấy gì\".",
+    "nguon": "CTNC - Buổi học 2.md:380-385"
+  },
+  "dien_giai_ba_loai_goc": [
+    {
+      "loai": "Mềm",
+      "dien_giai": "Hai hành tinh vui vẻ nên truyền cho nhau những phẩm chất tích cực => biểu hiện tốt, tài năng dễ có nhưng thường lười rèn luyện do dễ hài lòng => chưa chắc xuất sắc.",
+      "nguon": "CTNC - BỔ TÚC 01 - Full quy tắc góc hợp-Trao đổi năng lượng.md:47"
+    },
+    {
+      "loai": "Cứng",
+      "dien_giai": "Hai hành tinh khó ở nên truyền cho nhau những phẩm chất tiêu cực => biểu hiện tệ, tài năng khó có, chủ thể hay thấy mình fail, không hài lòng nhưng bởi thế nhiều động lực cải thiện => có thể rất xuất sắc.",
+      "nguon": "CTNC - BỔ TÚC 01 - Full quy tắc góc hợp-Trao đổi năng lượng.md:51"
+    },
+    {
+      "loai": "Trùng tụ",
+      "dien_giai": "Góc này đặc biệt nhất. Cách luận giống như góc mềm, khác ở chỗ tiềm năng có thể từ mức tệ đến rất tốt. Ngoài ra, các phẩm chất của hai hành tinh mix với nhau tự nhiên đến mức chủ thể không có cảm giác gì. Sun góc mềm Mars là hài lòng với sự quyết đoán của mình. Sun góc cứng Mars là khó chịu với sự quyết đoán của mình (do dễ bốc đồng). Còn Sun trùng Mars là còn chả nhận ra mình quyết đoán.",
+      "nguon": "CTNC - BỔ TÚC 01 - Full quy tắc góc hợp-Trao đổi năng lượng.md:67"
+    }
+  ],
+  "vi_du_day_du_Sun_Mars": {
+    "buoc_1a_cho_nhan_pham_chat": [
+      {
+        "chieu": "Sun cho – Mars nhận",
+        "mars_thay_doi_ve": [
+          "Cách hành động đấu tranh",
+          "Dục vọng ham muốn",
+          "Sức lực thể chất"
+        ],
+        "pham_chat_tich_cuc_Sun_trao": [
+          "Giàu năng lượng",
+          "Tinh thần vì mình",
+          "Tính sáng tạo"
+        ],
+        "tai_nang_tich_cuc": [
+          "Dồi dào năng lượng để hành động và đấu tranh. Ưu tiên hành động đấu tranh cho bản thân. Hành động một cách sáng tạo",
+          "Dồi dào dục vọng ham muốn. Thích thoả mãn dục vọng của bản thân",
+          "Giàu năng lượng thể chất"
+        ],
+        "bieu_hien_te_khi_goc_cung": [
+          "Hành động đấu tranh một cách ích kỉ đạp lên người khác",
+          "Chỉ muốn thoả mãn dục vọng bản thân. Tình dục quá độ",
+          "Dễ kiệt sức do hoạt động quá mức"
+        ]
+      },
+      {
+        "chieu": "Mars cho – Sun nhận",
+        "sun_thay_doi_ve": [
+          "Định hướng sống",
+          "Các phẩm chất để khẳng định bản thân và lead người khác",
+          "Mức năng lượng chung"
+        ],
+        "pham_chat_tich_cuc_Mars_trao": [
+          "Thôi thúc hành động",
+          "Sự dũng cảm",
+          "Tinh thần cạnh tranh",
+          "Dục vọng"
+        ],
+        "tai_nang_tich_cuc": [
+          "Có định hướng mục tiêu nào là dũng cảm hành động ngay, không ngại cạnh tranh",
+          "Khẳng định bản thân và lead người khác bằng sự quyết đoán, dũng cảm, sẵn sàng đấu tranh",
+          "Năng lượng hành động và cạnh tranh cao. Dục vọng cao"
+        ],
+        "bieu_hien_te_khi_goc_cung": [
+          "Vì muốn đạt định hướng/mục tiêu bản thân mà dễ hung bạo gây hấn xung đột với người khác. Có định hướng/mục tiêu là quyết đoán hành động nhưng dễ bốc đồng sai sót",
+          "Khi muốn khẳng định mình và dẫn dắt người khác thì dễ hung bạo nóng nảy, bốc đồng",
+          "Mức năng lượng quá mạnh, bốc đồng khó kiểm soát"
+        ]
+      }
+    ],
+    "buoc_1b_diem_chung_Sun_Mars": [
+      "Nam tính",
+      "Mạnh mẽ, giàu năng lượng",
+      "Hiếu thắng",
+      "Tham vọng"
+    ],
+    "ket_luan_goc_cung": "Nhưng chính bởi nhận ra những sự nóng nảy quá đà và xu hướng gây hấn ấy mà chủ thể có nhiều động lực rèn luyện sao cho làm chủ được sức nóng của mình, để đạt được các tài năng tốt nhất đã nêu ở bước 1, tài năng có thể rất tốt.",
+    "nguon": "CTNC - BỔ TÚC 01 - Full quy tắc góc hợp-Trao đổi năng lượng.md:16-65"
+  },
+  "luu_y_quan_trong": [
+    "Với bản đồ sao cá nhân, chỉ quan tâm các góc hợp mà trong đó có ít nhất 1 hành tinh cá nhân.",
+    "Nếu trong góc có hành tinh xã hội/thế hệ, thì chỉ cần phân tích chiều hành tinh xã hội/thế hệ truyền đi - hành tinh cá nhân nhận về thôi. Vì sự thay đổi chức năng của hành tinh cá nhân mới rõ rệt đối với chủ thể.",
+    "Khi lắp ghép từ khoá, không nhất định mọi từ khoá bên cho sẽ khớp được với mọi từ khoá bên nhận. Hãy nêu ra tối đa tài năng có thể có nhưng đừng gượng ép.",
+    "Hành tinh không tạo góc là Unaspect: Hoang dã, lạ thường -> lâu tìm ra hướng phát triển, nhưng có thể phát triển độc đáo và siêu việt",
+    "Thông thạo tương tác cho nhận năng lượng giữa các hành tinh thì đến khi luận cặp đôi và vận hạn sẽ dễ dàng."
+  ],
+  "vi_du_le_tu_buoi_hoc_2": [
+    {
+      "cap": "Mặt Trời mềm Sao Hỏa",
+      "chieu": "Mặt Trời truyền đi",
+      "y": [
+        "Truyền sự dồi dào năng lượng cho cách hành động, đấu tranh, dục vọng ham muốn, sức lực thể chất",
+        "Truyền tinh thần vì mình cho cách hành động, đấu tranh, dục vọng ham muốn, sức lực thể chất",
+        "Truyền đi sự sáng tạo cho cách hành động, đấu tranh, dục vọng ham muốn, sức lực thể chất"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:397-400"
+    },
+    {
+      "cap": "Mặt Trời cứng Sao Hỏa",
+      "chieu": "Mặt Trời truyền đi",
+      "y": [
+        "Vắt kiệt cách hành động, đấu tranh, dục vọng ham muốn, sức lực thể chất",
+        "Ích kỉ trong cách hành động, đấu tranh, dục vọng ham muốn, sức lực thể chất"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:401-403"
+    },
+    {
+      "cap": "Moon mềm Thủy",
+      "chieu": "Truyền đi",
+      "y": [
+        "Ăn nói + tư duy mềm mại nhạy cảm hơn"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:409"
+    },
+    {
+      "cap": "Moon cứng Thủy",
+      "chieu": "Truyền đi",
+      "y": [
+        "suy nghĩ thất thường",
+        "ăn nói thất thường",
+        "nhiễu loạn (tư duy, lời nói loạn xạ, khó biểu hiện cảm xúc qua lời nói)"
+      ],
+      "ghi_chu_bien_tap": "Bản gốc dòng 410 có 2 cụm chửi thề minh hoạ (\"chán vkl\", \"nói như loz\") — đã lược bỏ, giữ nguyên nghĩa.",
+      "nguon": "CTNC - Buổi học 2.md:410"
+    },
+    {
+      "cap": "Moon cứng Thổ",
+      "chieu": "Nhận về",
+      "y": [
+        "Cảm xúc: Tiết chế cảm xúc; Có trách nhiệm với cảm xúc",
+        "Nhu cầu: Có nhu cầu chín chắn, quy củ",
+        "Cách quan tâm chăm sóc: Yêu cho roi cho vọt"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:413-420"
+    },
+    {
+      "cap": "Thủy trùng Sun",
+      "chieu": "Truyền đi",
+      "y": [
+        "Thủy truyền đi ý tưởng -> người có nhiều định hướng sống",
+        "định hướng sống theo hướng giao tiếp",
+        "định hướng sống trải nghiệm"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:424-428"
+    },
+    {
+      "cap": "Thủy cứng Moon",
+      "chieu": "Truyền đi",
+      "y": [
+        "Cảm xúc phân tán khó tập trung",
+        "Cảm xúc bị quá đà"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:430-432"
+    },
+    {
+      "cap": "Thủy - Thiên Vương",
+      "chieu": "Nhận về",
+      "y": [
+        "Tư duy độc đáo sáng tạo",
+        "Lối ăn nói khó hiểu"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:435-437"
+    },
+    {
+      "cap": "Kim mềm Sun",
+      "chieu": "Truyền đi",
+      "y": [
+        "Định hướng sống đẹp lên",
+        "Định hướng sống hưởng thụ",
+        "Khẳng định mình và dẫn dắt người khác bởi sự ôn hòa của tôi"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:441-444"
+    },
+    {
+      "cap": "Kim cứng Moon",
+      "chieu": "Truyền đi",
+      "y": [
+        "Nuông chiều cảm xúc, nhu cầu quá mức"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:445-446"
+    },
+    {
+      "cap": "Kim - Hỏa",
+      "chieu": "Nhận về",
+      "y": [
+        "Thích là làm",
+        "Hấp dẫn tình dục tự nhiên, gu thích người mạnh mẽ",
+        "Gu thẩm mỹ là mạnh mẽ?",
+        "Đề cao giá trị quyết đoán, dũng cảm",
+        "Thích là tiêu (cách quản lý tiền bạc)"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:449-454"
+    },
+    {
+      "cap": "Hỏa - Moon",
+      "chieu": "Truyền đi",
+      "y": [
+        "Cảm xúc nhu cầu gì thì làm",
+        "Nhu cầu tranh đấu",
+        "Nhu cầu về dục vọng"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:458-461"
+    },
+    {
+      "cap": "Hỏa - Kim",
+      "chieu": "Nhận về",
+      "y": [
+        "Hành động đẹp lên, sexy",
+        "Dục vọng cũng thể hiện kiểu đẹp lên (chinh phục đẹp)"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:464-466"
+    },
+    {
+      "cap": "Mộc - Kim",
+      "chieu": "Truyền đi",
+      "y": [
+        "Khuếch đại sở thích, chi tiêu nhiều",
+        "Đề cao lòng tốt, lí tưởng",
+        "Thích người tốt, lí tưởng lớn, rộng lượng"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:470-473"
+    },
+    {
+      "cap": "Thổ - Thủy mềm",
+      "chieu": "Truyền đi",
+      "y": [
+        "Ăn nói tiết chế, trách nhiệm với lời nói của mình, tư duy quy củ."
+      ],
+      "nguon": "CTNC - Buổi học 2.md:477-478"
+    },
+    {
+      "cap": "Thổ - Thủy cứng",
+      "chieu": "Truyền đi",
+      "y": [],
+      "trang_thai": "thieu",
+      "mo_ta_trang_thai": "Bản gốc dòng 480 chỉ có chuỗi gõ bừa vô nghĩa (không phải nội dung). Không tự viết bù.",
+      "nguon": "CTNC - Buổi học 2.md:479-480"
+    },
+    {
+      "cap": "Thiên Vương",
+      "chieu": "Truyền đi",
+      "y": [
+        "Sáng tạo, ngẫu hứng, khác thường"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:483-484"
+    },
+    {
+      "cap": "Hải Vương - Sun",
+      "chieu": "Truyền đi",
+      "y": [
+        "Định hướng sống khác thường",
+        "Thương người, từ thiện, giúp đỡ",
+        "Nghệ thuật"
+      ],
+      "nguon": "CTNC - Buổi học 2.md:488-491"
+    },
+    {
+      "cap": "Diêm Vương - Thủy",
+      "chieu": "Truyền đi",
+      "y": [],
+      "trang_thai": "thieu",
+      "mo_ta_trang_thai": "Bản gốc dòng 494-495 chỉ có tiêu đề \"Diêm Vương - Thủy\", phần nội dung BỎ TRỐNG. Không tự viết bù.",
+      "nguon": "CTNC - Buổi học 2.md:493-495"
+    }
+  ],
+  "ung_dung_xac_dinh_nang_khieu": {
+    "mo_ta": "Ứng dụng góc hợp để xác định năng khiếu -> dùng cho HƯỚNG NGHIỆP và xem cho TRẺ CON.",
+    "cach_cham_diem": [
+      "Hành tinh tạo nhiều góc nhất là hành tinh truyền đi và nhận về (xét hành tinh nhiều góc thì cứ góc nhỏ nhất, xét cả các góc không cá nhân)",
+      "Góc chặt nhất: PHẢI LUẬN GÓC CÓ HÀNH TINH CÁ NHÂN THÔI",
+      "Năng khiếu một mặt nhất định: Muốn xem năng khiếu trong ăn nói -> xem sao Thủy có các góc chiếu như thế nào với các hành tinh khác",
+      "Truy ngược năng khiếu: ví dụ Luật sư, tranh cãi -> Thủy Hỏa"
+    ],
+    "vi_du_bang_diem_case_lop": [
+      {
+        "hanh_tinh": "Sun",
+        "cach_dem": "7 dọc",
+        "diem": 7
+      },
+      {
+        "hanh_tinh": "Moon",
+        "cach_dem": "6 dọc 1 ngang",
+        "diem": 7
+      },
+      {
+        "hanh_tinh": "Thủy",
+        "cach_dem": "5 dọc 2 ngang",
+        "diem": 7
+      },
+      {
+        "hanh_tinh": "Hải Vương",
+        "cach_dem": "2 dọc 5 ngang",
+        "diem": 7
+      },
+      {
+        "hanh_tinh": "Kim",
+        "cach_dem": "3 dọc 3 ngang",
+        "diem": 6
+      },
+      {
+        "hanh_tinh": "Hỏa",
+        "cach_dem": "2 dọc 4 ngang",
+        "diem": 6
+      },
+      {
+        "hanh_tinh": "Thiên Vương",
+        "cach_dem": "6 ngang",
+        "diem": 6
+      },
+      {
+        "hanh_tinh": "Diêm Vương",
+        "cach_dem": "5 ngang",
+        "diem": 5
+      },
+      {
+        "hanh_tinh": "Mộc",
+        "cach_dem": "1 dọc",
+        "diem": 1
+      }
+    ],
+    "nguon": "CTNC - Buổi học 2.md:499-546"
+  }
+}

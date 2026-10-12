@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Astro System{% endblock %}
+
+{% block content %}
+    <!-- MACRO: CHỈNH 1 NƠI ĂN CẢ 6 NÚT - GIỮ ĐÚNG MÀU SẮC GỐC -->
+    {% macro nav_card(url, icon, title, desc, border_color, bg_icon_color, text_icon_color) %}
+    <a href="{{ url }}" class="bg-white dark:bg-gray-800 p-3 md:p-6 rounded-lg shadow-md hover:shadow-xl dark:shadow-none hover:bg-gray-50 dark:hover:bg-gray-700 transition flex flex-col md:flex-row items-center text-center md:text-left space-y-3 md:space-y-0 md:space-x-4 border {{ border_color }} group">
+        <!-- Khôi phục đúng màu sắc icon để không bị mất hình trong darkmode -->
+        <div class="{{ bg_icon_color }} p-3 md:p-4 rounded-full {{ text_icon_color }} dark:text-white group-hover:scale-110 transition-transform">
+            <i class="fas {{ icon }} text-xl md:text-2xl"></i>
+        </div>
+        <div>
+            <h3 class="text-xs md:text-xl font-bold text-gray-800 dark:text-white leading-tight">{{ title }}</h3>
+            <!-- Paragraph: Giữ nguyên nội dung, tự động xuống hàng ở dấu ngoặc trên phone -->
+            <p class="text-[9px] md:text-sm text-gray-500 dark:text-gray-400 leading-tight mt-1">
+                {{ desc.replace(' (', '<br class="md:hidden"> (') | safe }}
+            </p>
+        </div>
+    </a>
+    {% endmacro %}
+
+    <div class="container mx-auto px-4 py-8 pt-16">
+        <header class="flex justify-between items-center mb-12 border-b border-gray-300 dark:border-gray-700 pb-4">
+            <div class="flex items-center space-x-4">
+                <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-400">Chào, {{ username }}!</h1>
+                {% if username != 'nguydev' %}
+                <a href="/user" class="text-sm bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded text-gray-800 dark:text-white transition">
+                    <i class="fas fa-user-circle mr-1"></i> My Profile
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="flex items-center space-x-4">
+                {% if username == 'nguydev' %}
+                <a href="/admin" class="text-yellow-600 hover:text-yellow-500 dark:text-yellow-500 dark:hover:text-yellow-400 text-sm font-bold border border-yellow-500 px-3 py-1 rounded hover:bg-yellow-100 dark:hover:bg-yellow-900 transition">
+                    <i class="fas fa-tools mr-1"></i> Admin
+                </a>
+                {% endif %}
+                <a href="/logout" class="text-red-500 hover:text-red-400 dark:text-red-400 dark:hover:text-red-300 font-medium">
+                    Đăng xuất <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- GRID 2 CỘT CHO CẢ MOBILE VÀ PC -->
+        <div class="grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-8 max-w-4xl mx-auto">
+            {{ nav_card('/input', 'fa-user-plus', 'Nhập Dữ Liệu', 'Thêm, sửa, xóa hồ sơ sinh.', 'border-blue-500', 'bg-blue-100 dark:bg-blue-600', 'text-blue-600') }}
+            {{ nav_card('/natal', 'fa-star', 'Bản Đồ Sao (Natal)', 'Xem lá số cá nhân & phân tích.', 'border-purple-500', 'bg-purple-100 dark:bg-purple-600', 'text-purple-600') }}
+            {{ nav_card('/synastry', 'fa-heart', 'Cặp Đôi (Synastry)', 'Xem tương hợp giữa 2 người.', 'border-pink-500', 'bg-pink-100 dark:bg-pink-600', 'text-pink-600') }}
+            {{ nav_card('/composite', 'fa-yin-yang', 'Composite Chart', 'Chiêm tinh kết hợp (Midpoint).', 'border-orange-500', 'bg-orange-100 dark:bg-orange-600', 'text-orange-600') }}
+            {{ nav_card('/planet-connect', 'fa-meteor', 'Trao Đổi Năng Lượng', 'Công cụ Planet Connect.', 'border-green-500', 'bg-green-100 dark:bg-green-600', 'text-green-600') }}
+            {{ nav_card('/vanhan', 'fa-clock', 'Xem Vận Hạn', 'Vận hạn chung & riêng.', 'border-yellow-500', 'bg-yellow-100 dark:bg-yellow-600', 'text-yellow-600') }}
+        </div>
+
+        <footer class="mt-12 text-center border-t border-gray-300 dark:border-gray-700 pt-6 pb-8">
+            <a href="https://forms.gle/VhjiQdgXCRFQNoHbA" target="_blank" class="inline-flex items-center space-x-2 bg-gray-200 dark:bg-gray-800 border border-gray-400 dark:border-gray-600 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white px-5 py-2 rounded-full transition text-sm font-medium">
+                <i class="fas fa-comment-dots"></i>
+                <span>Ý kiến ý cò</span>
+            </a>
+        </footer>
+    </div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{
+  "mo_ta": "4 điểm tâm linh: La Hầu, Kế Đô, Chiron, Vertex — kèm luật chung khi sử dụng (có quy tắc KHÔNG xem cho người dưới 30 tuổi).",
+  "nguon_chinh": [
+    "BUỔI HỌC/CTNC - Buổi học 3.md:157-224",
+    "THAM KHẢO/CTNC - BỔ TÚC 05 - Full quy trình luận Synastry.md:199-209 (cách dùng trong Synastry)",
+    "BUỔI HỌC/CTNC - Buổi học 5&6:265-277 (cách check góc)"
+  ],
+  "disclaimer": "Phải cẩn thận, vì các câu hỏi tâm linh thường có thể giải thích được bằng yếu tố tâm lý.",
+  "luat_chung": [
+    "Tâm linh ảnh hưởng mờ nhạt lên cá nhân (ít hơn Tâm lý).",
+    "Các điểm tâm linh chủ yếu được kích hoạt, được bộc lộ rõ khi được tác động vào bản đồ sao cặp đôi (Synastry) hoặc vận hạn (Transit).",
+    "Khi xem các điểm tâm linh (trong bản đồ sao cá nhân) KHÔNG được xét góc chiếu, KHÔNG được xét tương tác với hành tinh.",
+    "KHÔNG xem những điểm này cho người dưới 30 tuổi (bản đồ sao cá nhân).",
+    "Nếu mở bản đồ sao mà phán dựa trên các điểm tâm linh mà không xem trước tổng quan thì là sai phương pháp."
+  ],
+  "ghi_chu_bien_tap": "Luật cuối cùng: bản gốc Buổi học 3 dòng 177 kết thúc bằng một câu chửi (\"thì ăn cứt đi\") — đã thay bằng cách diễn đạt trung tính \"thì là sai phương pháp\", giữ nguyên ý phê phán.",
+  "nguon_luat_chung": "CTNC - Buổi học 3.md:171-177",
+  "orb": {
+    "trong_natal": "không xét góc chiếu",
+    "trong_synastry": "chỉ tính hành tinh cá nhân tạo góc trùng, lệch dưới 3 độ",
+    "trong_transit": "orb phải cực nhỏ, dưới 1 độ, và chủ yếu tính góc trùng",
+    "nguon": "CTNC - BỔ TÚC 05 - Full quy trình luận Synastry.md:199; CTNC - BỔ TÚC 07 - vận hạn Transits.md:106"
+  },
+  "so_ban_ghi": 4,
+  "du_lieu": [
+    {
+      "ten": "La Hầu",
+      "ten_khac": [
+        "North Node",
+        "Long Thủ",
+        "True Node"
+      ],
+      "chu_de": "Bài học kiếp này",
+      "mo_ta": [
+        "Thầy coi La hầu như mặt trời tâm linh, kiểu mục đích sống tâm linh.",
+        "La hầu ở đâu thì Kế đô ở ngược lại.",
+        "La hầu Kế đô có thể xem cả nhà cả cung, nhưng thầy recommend chỉ xem nhà, vì nó quay chậm.",
+        "La hầu ở đâu -> hào hứng, sung sướng, thích trải nghiệm điều đấy.",
+        "Bảng: Kiếp này | Trẻ trâu - hào hứng - sung sướng - thích trải nghiệm nó."
+      ],
+      "trong_synastry": "cảm giác có duyên, luôn hành xử ngây thơ, rất muốn thử nghiệm với người đó (người dạy mình bài học kiếp này); ngây thơ háo hức mới lạ",
+      "cach_check_synastry": "check góc TRÙNG La Hầu",
+      "nguon": "CTNC - Buổi học 3.md:185-204; CTNC - BỔ TÚC 05 - Full quy trình luận Synastry.md:203; CTNC - Buổi học 5&6 - Chiêm tinh quan hệ.md:270-274"
+    },
+    {
+      "ten": "Kế Đô",
+      "ten_khac": [
+        "South Node",
+        "Long Vĩ"
+      ],
+      "chu_de": "Bài học kiếp trước",
+      "mo_ta": [
+        "Kế đô ở đâu -> chán do kiếp trước làm nhiều rồi, nên chán.",
+        "Bảng: Kiếp trước | Già chán đời - kiếp trước làm nhiều rồi nên chán."
+      ],
+      "trong_synastry": "thấy quen thuộc nhưng có thể hờ hững với người đó (cảm giác kiếp trước đã trải qua nhiều thứ với người này rồi)",
+      "cach_check_synastry": "check góc ĐỐI ĐỈNH La Hầu",
+      "nguon": "CTNC - Buổi học 3.md:185-204; CTNC - BỔ TÚC 05 - Full quy trình luận Synastry.md:205; CTNC - Buổi học 5&6 - Chiêm tinh quan hệ.md:270-275"
+    },
+    {
+      "ten": "Chiron",
+      "ten_khac": [],
+      "chu_de": "Vết thương",
+      "mo_ta": [
+        "Chiron ở đâu, thì có vết thương ở đây, tổn thương, nhạy cảm.",
+        "Thấy chán ghét phiền toái khi phải động đến chuyện đấy.",
+        "Nơi nào có Chiron là nơi bạn gây lỗi lầm quá khứ mà chưa bị phạt nên phải bị châm chích.",
+        "Ví dụ: Chiron H12: khi nghỉ ngơi thấy mình có lỗi."
+      ],
+      "trong_synastry": "người kia dễ chạm vào tổn thương/trigger mình, nhưng cũng có thể chữa lành được cho mình",
+      "cach_check_synastry": "check góc TRÙNG Chiron",
+      "chu_ky_hoi_vi": "~50 tuổi (Chiron hồi vị là mốc đại hạn 'Ngũ thập chi thiên mệnh')",
+      "nguon": "CTNC - Buổi học 3.md:205-212; CTNC - BỔ TÚC 05 - Full quy trình luận Synastry.md:207; CTNC - Buổi học 5&6 - Chiêm tinh quan hệ.md:270-276"
+    },
+    {
+      "ten": "Vertex",
+      "ten_khac": [],
+      "chu_de": "Duyên nợ",
+      "mo_ta": [
+        "Tạo ra cảm giác mắc nợ đối với người khác.",
+        "Cảm giác chỉ được kích hoạt thông qua các mối quan hệ cặp đôi hoặc vận hạn đặc biệt.",
+        "Vertex chỉ xuất hiện ở nửa bên phải: H4-5-6-7-8-9 -> luôn liên quan các mối quan hệ."
+      ],
+      "vertex_theo_nha": [
+        {
+          "nha": "H4",
+          "luan": "kiếp trước nợ sinh thành -> kiếp này gặp lại bố mẹ kiếp trước."
+        },
+        {
+          "nha": "H5",
+          "luan": "kiếp trước nợ tình, sinh con mà không chăm con -> kiếp này muốn làm họ độc tôn vui vẻ, cưng chiều như trẻ con."
+        },
+        {
+          "nha": "H6",
+          "luan": "kiếp trước nợ nghĩa vụ, người hầu mà không làm -> kiếp này muốn làm người chăm sóc."
+        },
+        {
+          "nha": "H7",
+          "luan": null,
+          "trang_thai": "thieu",
+          "mo_ta_trang_thai": "Bản gốc Buổi học 3 dòng 222 chỉ có \"H7:\" rồi BỎ TRỐNG. Không tự viết bù."
+        },
+        {
+          "nha": "H8",
+          "luan": "kiếp trước nợ tài sản -> kiếp này gặp ai đó mà mình muốn lấy của cải hoặc lấy thân đền đáp."
+        },
+        {
+          "nha": "H9",
+          "luan": "kiếp trước nợ tri thức, phản thầy giết trò đốt chùa -> kiếp này sẽ gặp ai đó muốn dạy dỗ họ, hoặc được họ dạy dỗ."
+        }
+      ],
+      "trong_synastry": "cảm giác có vướng mắc, có nợ phải trả (nợ gì tùy thuộc Vertex mình ở nhà nào); chủ nợ của bạn. Riêng Vertex tính thêm góc đối đỉnh!",
+      "cach_check_synastry": "check góc TRÙNG hoặc ĐỐI ĐỈNH Vertex",
+      "trang_thai": "thieu_mot_phan",
+      "mo_ta_trang_thai": "File Buổi học 3 kết thúc ở dòng 224 (H9) — bảng Vertex chỉ có 6 nhà (H4-H9) và ô H7 bỏ trống.",
+      "nguon": "CTNC - Buổi học 3.md:214-224; CTNC - BỔ TÚC 05 - Full quy trình luận Synastry.md:209; CTNC - Buổi học 5&6 - Chiêm tinh quan hệ.md:270-277"
+    }
+  ],
+  "diem_lien_quan_khac": {
+    "duong_xanh_la_cay_nga_chieu": {
+      "mo_ta": "Ngũ chiếu (đường xanh lá cây dài): 150 độ (quincunx), hình chữ K nằm ngang úp xuống. Phụ trợ yếu, bình thường không liên quan, nhưng ĐÔI KHI tự dưng có trải nghiệm đồng nhất => CẢM GIÁC ĐỊNH MỆNH, TÌNH CỜ. Những cái trên mà không có nữa thì check các điểm tâm linh.",
+      "nguon": "CTNC - Buổi học 3.md:166-169"
+    },
+    "tam_linh_h12_SN_hai_vuong": {
+      "mo_ta": "Bộ ba dấu hiệu 'cửa tâm linh': H12 - Song Ngư - Hải Vương. Ví dụ: AC Song Ngư -> nhìn đời ảo giác, bay bổng thoát tục; Mộc nhà 12: ảo giác nhiều, hoặc được giúp về tâm linh; H12 nhiều đường xanh -> sáng cửa tâm linh.",
+      "nguon": "CTNC - Buổi học 3.md:159-165"
+    }
+  }
+}

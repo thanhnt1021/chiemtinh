@@ -1,0 +1,114 @@
+{
+  "mo_ta": "4 nguyên tố + 3 tính chất, mỗi mục có mục tiêu/cách sống + đặc điểm.",
+  "nguon_chinh": "A-CHIÊM TINH - LUẬN/2. Nguyên tố tính chất/CTNC - 2. Nguyên tố tính chất.md (77 dòng)",
+  "ghi_chu": "Mục nguyên tố dùng trường 'muc_tieu'; mục tính chất bản gốc dùng nhãn 'CÁCH SỐNG' nên giữ trường 'cach_song'. Hai ảnh minh hoạ (dòng 44, 78) không rút được nội dung.",
+  "so_ban_ghi": 7,
+  "nguyen_to": [
+    {
+      "loai": "nguyen_to",
+      "ten": "Lửa",
+      "muc_tieu": [
+        "Khẳng định, chứng minh bản thân"
+      ],
+      "dac_diem": [
+        "Nồng nhiệt, hết mình",
+        "Quyết đoán, hành động",
+        "Cái tôi lớn",
+        "Dũng cảm, lạc quan",
+        "Ngay thẳng"
+      ],
+      "nguon": "CTNC - 2. Nguyên tố tính chất.md:4-12"
+    },
+    {
+      "loai": "nguyen_to",
+      "ten": "Đất",
+      "muc_tieu": [
+        "An toàn, duy trì tồn tạI"
+      ],
+      "dac_diem": [
+        "An toàn, thận trọng",
+        "Chậm rãi, bền bì",
+        "Thực tế",
+        "Trọng vật chất",
+        "Hưởng thụ"
+      ],
+      "nguon": "CTNC - 2. Nguyên tố tính chất.md:14-22"
+    },
+    {
+      "loai": "nguyen_to",
+      "ten": "Khí",
+      "muc_tieu": [
+        "Kết nối, mở rộng trải nghiệm"
+      ],
+      "dac_diem": [
+        "Tò mò, ham hiểu biết",
+        "Tự do, thích trải nghiệm",
+        "Quảng giao, giỏi giao tiếp",
+        "Khách quan, tỉnh táo"
+      ],
+      "nguon": "CTNC - 2. Nguyên tố tính chất.md:24-31"
+    },
+    {
+      "loai": "nguyen_to",
+      "ten": "Nước",
+      "muc_tieu": [
+        "Hòa mình, tìm nơi thuộc về"
+      ],
+      "dac_diem": [
+        "Giàu cảm xúc",
+        "Nhạy cảm, thấu hiểu",
+        "Dễ chi phối và bị chi phối",
+        "Sâu sắc, bí ẩn",
+        "Giàu tưởng tượng, tâm linh"
+      ],
+      "nguon": "CTNC - 2. Nguyên tố tính chất.md:33-41"
+    }
+  ],
+  "tinh_chat": [
+    {
+      "loai": "tinh_chat",
+      "ten": "Tiên Phong",
+      "cach_song": [
+        "LÀM CHỦ HOÀN CẢNH",
+        "Chủ động tìm giải pháp",
+        "Khởi xướng, lôi kéo người khác"
+      ],
+      "dac_diem": [
+        "Dám nghĩ dám làm",
+        "Giỏi dẫn dắt định hướng",
+        "Khẩn trương, bồn chồn"
+      ],
+      "nguon": "CTNC - 2. Nguyên tố tính chất.md:47-55"
+    },
+    {
+      "loai": "tinh_chat",
+      "ten": "Kiên Định",
+      "cach_song": [
+        "MẶC KỆ/KHÁNG CỰ HOÀN CẢNH",
+        "Giữ vững nguyên tắc, hướng đi của mình",
+        "Tin tưởng, bảo vệ chứ mình có"
+      ],
+      "dac_diem": [
+        "Chính kiến vững, tin tưởng bản chất",
+        "Tập trung, nguyên tắc",
+        "Nghị lực, bền bỉ"
+      ],
+      "nguon": "CTNC - 2. Nguyên tố tính chất.md:57-65"
+    },
+    {
+      "loai": "tinh_chat",
+      "ten": "Linh Hoạt",
+      "cach_song": [
+        "NƯƠNG THEO HOÀN CẢNH",
+        "Đón nhận và thích nghi với thay đổi",
+        "Tương tác, học hỏi, chia sẻ với mọi người xung quanh"
+      ],
+      "dac_diem": [
+        "Giỏi thích nghi ứng biến",
+        "Sẵn sàng thay đổi, ghét nhàm chán",
+        "Hiếu kì, thích giao thiệp, học hỏi nhanh"
+      ],
+      "nguon": "CTNC - 2. Nguyên tố tính chất.md:67-75"
+    }
+  ]
+}

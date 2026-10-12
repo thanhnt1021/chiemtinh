@@ -1,0 +1,1466 @@
+{
+  "mo_ta": "Quy trình hướng nghiệp 10 bước có thang điểm + ma trận nghề theo cung/nhà/hành tinh + các combo 'bộ số' (cặp 2 nhà -> nghề).",
+  "nguon_chinh": [
+    "A-CHIÊM TINH - LUẬN/z. other/CTNC - CAREER - QUY TRÌNH FULL.md (94 dòng)",
+    "A-CHIÊM TINH - LUẬN/z. other/CTNC - CAREER - Ngành nghề.md (189 dòng)",
+    "BUỔI HỌC/CTNC - Buổi học 4.md:97-264 (bản giảng có ví dụ, case Donald Trump)"
+  ],
+  "thang_diem": {
+    "Phần 1 - Phác thảo (Tổng quan)": "x2",
+    "Phần 2 - Vẽ nét (H10)": "x1",
+    "Phần 3 - Tô màu (năng khiếu)": "x0.5",
+    "ngoai_le": "Trong Phần 1, các mục hành trình Mặt trời / La Hầu / CR và mỗi key Dạng-Cấu hình chỉ tính x1"
+  },
+  "so_ban_ghi": {
+    "buoc_quy_trinh": 12,
+    "o_ma_tran_cung_nha_hanh_tinh": 12,
+    "combo_bo_so": 67,
+    "combo_co_du_lieu": 66
+  },
+  "quy_trinh": [
+    {
+      "phan": "Phần 0 - Lưu ý ngoài lề",
+      "he_so_diem": null,
+      "buoc": null,
+      "ten": "Lưu ý ngoài lề",
+      "noi_dung": [
+        "Nghề nghiệp là một thứ bị chi phối bởi rất nhiều thứ bên ngoài, không chỉ bản đồ sao.",
+        "Môi trường: quốc gia, thời đại, gia đình, chế độ.",
+        "Nghiệm lý: 1986-1998 sẽ có Thiên Vương + Hải Vương ở cung Ma Kết -> hướng tới nghề nghiệp có tính Ma Kết (địa vị, trọng vọng -> Tài chính, Kinh tế...)",
+        "Tính chất nghề nghiệp luôn biến đổi liên tục, phụ thuộc vào dòng chảy thời gian.",
+        "Việc hướng nghiệp không phải vạch ra hướng đi chính xác cho chủ thể đi theo.",
+        "Mà việc hướng nghiệp là để cho khách hiểu tính chất, bộ kĩ năng nghề nghiệp để đi theo.",
+        "Cần nói chuyện để biết background -> ra định hướng thực tế nhất."
+      ],
+      "nguon": "CTNC - CAREER - QUY TRÌNH FULL.md:4-11"
+    },
+    {
+      "phan": "Phần 1 - Phác thảo (luận Tổng Quan)",
+      "he_so_diem": "x2",
+      "buoc": 1,
+      "ten": "Lõi",
+      "noi_dung": [
+        "Sun - Moon - AC",
+        "Lõi mà không được dùng thì sẽ trở thành hạt giống hỏng -> phát ra những cái xấu",
+        "Dù ở trong mục x2 điểm thì mấy ý sau chỉ điểm x1:",
+        "Cần phân tích thêm hành trình mặt trời xem mặt trời đang đi đến nhà nào",
+        "Ngoài mặt trời tâm lý (Sun) thì còn luận thêm mặt trời tâm linh (La Hầu)",
+        "CR nhà nào (đụng chuyện gì cũng sẽ nghĩ tới theo cách của nhà đó)"
+      ],
+      "he_so_diem_muc_con": "x1",
+      "nguon": "CTNC - CAREER - QUY TRÌNH FULL.md:12-19"
+    },
+    {
+      "phan": "Phần 1 - Phác thảo",
+      "he_so_diem": "x2",
+      "buoc": 2,
+      "ten": "Nguyên tố / tính chất",
+      "noi_dung": [
+        "Có thể skip, bổ sung 1 xíu nếu nổi trội rõ ràng"
+      ],
+      "nguon": "CTNC - CAREER - QUY TRÌNH FULL.md:20"
+    },
+    {
+      "phan": "Phần 1 - Phác thảo",
+      "he_so_diem": "x2",
+      "buoc": 3,
+      "ten": "Nhà trội",
+      "noi_dung": [
+        "Vẫn trong mục x2 nhưng nhà nào siêu trội thì nhân nhiều lên",
+        "Ví dụ (Buổi học 4): H11 x 3, H10 x 3, H4 x 2, H12 x 2",
+        "Nghiệm lý: H4-H12 có thể làm lưu trú nhưng lõi phải phù hợp làm sale"
+      ],
+      "ghi_chu_bien_tap": "Bản gốc QUY TRÌNH FULL dòng 21 viết \"nhân nhiều vcl lên\" — đã bỏ từ tục, giữ nguyên nghĩa thành \"nhân nhiều lên\".",
+      "nguon": "CTNC - CAREER - QUY TRÌNH FULL.md:21; CTNC - Buổi học 4.md:126-132"
+    },
+    {
+      "phan": "Phần 1 - Phác thảo",
+      "he_so_diem": "x2",
+      "buoc": 4,
+      "ten": "Góc",
+      "noi_dung": [
+        "Skip, có thể múa thêm vào 1 xíu thôi nếu nổi bật"
+      ],
+      "nguon": "CTNC - CAREER - QUY TRÌNH FULL.md:22"
+    },
+    {
+      "phan": "Phần 1 - Phác thảo",
+      "he_so_diem": "x1 mỗi key",
+      "buoc": 5,
+      "ten": "Dạng bản đồ + Cấu hình",
+      "noi_dung": [
+        "Ghi nhận chìa khóa ở bản đồ sao.",
+        "Mỗi key sẽ điểm x1"
+      ],
+      "ket_luan_phan_1": "=> Từ đây ra được vài gạch đầu dòng về tính chất nghề, yếu tố nào điểm cao nhất thì gạch mạnh.",
+      "nguon": "CTNC - CAREER - QUY TRÌNH FULL.md:23-26"
+    },
+    {
+      "phan": "Phần 2 - Vẽ nét",
+      "he_so_diem": "x1",
+      "buoc": 6,
+      "ten": "Đỉnh H10 (MC)",
+      "noi_dung": [
+        "Đỉnh MC cung nào thì thái độ kiểu cung đấy + tính chất nghề nghiệp kiểu cung đấy"
+      ],
+      "trong_so_nha": {
+        "H10 (sự nghiệp)": "70%",
+        "H6 (cách lao động, thói quen lao động, xem môi trường phù hợp làm việc)": "20%",
+        "H2 (tiền)": "10%",
+        "ghi_chu": "Nhưng luận nhà 10 thôi."
+      },
+      "nguon": "CTNC - CAREER - QUY TRÌNH FULL.md:27-34"
+    },
+    {
+      "phan": "Phần 2 - Vẽ nét",
+      "he_so_diem": "x1",
+      "buoc": 7,
+      "ten": "Hành tinh trong H10",
+      "noi_dung": [
+        "Nếu thích thì để ý hành tinh gần đỉnh H10 thì ảnh hưởng nhiều hơn, nhưng không cần thiết.",
+        "Xem các thông tin có thêm sẽ tăng gì tương đồng trong lõi.",
+        "Nếu không có hành tinh trong H10 => dùng KHÁI NIỆM ELEVATED PLANET: là hành tinh cao nhất trong bản đồ sao, cái này chỉ dưới hành tinh trong nhà, không lẫn lộn."
+      ],
+      "luan_nghiem_ly_hanh_tinh_H10_hoac_elevated_planet": [
+        {
+          "hanh_tinh": "Sun",
+          "y": [
+            "Có khả năng lãnh đạo"
+          ]
+        },
+        {
+          "hanh_tinh": "Moon",
+          "y": [
+            "Khả năng chi phối cảm xúc công chúng, chiếm thiện cảm số đông, dễ nổi tiếng",
+            "Khó bộc lộ cảm xúc thật nên thường cố gắng bộc lộ cảm xúc thông qua thành tựu xã hội",
+            "Hợp làm công việc chăm sóc vỗ về người khác"
+          ]
+        },
+        {
+          "hanh_tinh": "Thủy",
+          "y": [
+            "Giao tiếp công chúng nhiều"
+          ]
+        },
+        {
+          "hanh_tinh": "Kim",
+          "y": [
+            "Thân thiện, biết giao tiếp với công chúng",
+            "Làm việc hưởng thụ (người khác dùng dịch vụ để hưởng thụ, kiểu nhà hàng ăn mát xa các thứ à?)"
+          ]
+        },
+        {
+          "hanh_tinh": "Hỏa",
+          "y": [
+            "Rất tham vọng nhưng dễ bị scandal"
+          ]
+        },
+        {
+          "hanh_tinh": "Mộc",
+          "y": [
+            "May mắn, dễ tiến thân, dễ nổi tiếng, dễ tai tiếng (nghiệm lý là Mộc H10 thì đừng làm chuyện xấu vì dễ đi tù)",
+            "Truyền cảm hứng, lòng tốt, chi tiết"
+          ]
+        },
+        {
+          "hanh_tinh": "Thổ",
+          "y": [
+            "Kỉ luật, trách nhiệm, có tính nghiêm khắc (thành công muộn do Thổ thì khổ trước sướng sau)",
+            "Nghiệm lý là bất an về địa vị của mình trong lòng người khác"
+          ]
+        },
+        {
+          "hanh_tinh": "Thiên Vương",
+          "y": [
+            "Sự nghiệp độc đáo, tiên tiến, dám đi con đường riêng, dám nổi loạn nhưng cũng dễ dính scandal từ trên trời rơi xuống."
+          ]
+        },
+        {
+          "hanh_tinh": "Hải Vương",
+          "y": [
+            "Sự nghiệp liên quan nghệ thuật, tâm linh.",
+            "Nghiệm lý: Dễ bị lẫn lộn giữa bản thân mình với danh tiếng của mình. Nhiều nghệ sĩ bị chết chìm trong danh tiếng -> vỡ mộng vì người ta chỉ thích tài năng danh tiếng của mình chứ không thích mình."
+          ]
+        },
+        {
+          "hanh_tinh": "Diêm Vương",
+          "y": [
+            "Vấp ngã và tái sinh nhiều lần trên con đường sự nghiệp.",
+            "Nghị lực trong sự nghiệp cực mạnh.",
+            "Thường có quyền lực hoặc quan hệ ngầm trong sự nghiệp."
+          ]
+        }
+      ],
+      "nguon": "CTNC - CAREER - QUY TRÌNH FULL.md:35-69"
+    },
+    {
+      "phan": "Phần 2 - Vẽ nét",
+      "he_so_diem": "x1",
+      "buoc": 8,
+      "ten": "Chủ tinh H10",
+      "noi_dung": [
+        "Xem chủ tinh H10 rơi vào nhà nào => nhà đó được cộng thêm sức nặng.",
+        "Ví dụ (QUY TRÌNH FULL): Chủ tinh là Kim -> H11 (lại mạnh thêm H11 -> tích thêm khoa học công nghệ)",
+        "Ví dụ (BTVN 3): Chủ tinh là Thổ -> H11"
+      ],
+      "nguon": "CTNC - CAREER - QUY TRÌNH FULL.md:70-71; CTNC - BTVN 3.md:393-394"
+    },
+    {
+      "phan": "Phần 2 - Vẽ nét",
+      "he_so_diem": "x1",
+      "buoc": 9,
+      "ten": "Quan hệ H10 với các nhà khác",
+      "noi_dung": [
+        "Có thể skip, vì không cho thấy thông tin sự nghiệp phù hợp mà chỉ nói về cản trở -> thuận lợi",
+        "Dành riêng cho người có hành tinh H10 (dễ có góc chiếu)"
+      ],
+      "nghich_goc_cung": [
+        {
+          "quan_he": "H10 đối đỉnh H4",
+          "y": "Sự nghiệp mâu thuẫn tự nhiên với gia đình, có thì mạnh nhưng không có thì quy luật tự nhiên"
+        },
+        {
+          "quan_he": "H10 vuông góc H1 và H7",
+          "y": "Đánh đổi cái tôi cá nhân (H1)"
+        }
+      ],
+      "thuan_goc_mem": [
+        {
+          "quan_he": "H10 tam hợp H2 và H6",
+          "y": "Tài chính bổ trợ H10, ngược lại -> H2. Lao động, sức khỏe H6"
+        },
+        {
+          "quan_he": "H10 lục hợp H8 và H12",
+          "y": "H8: nguồn lực, tâm lý con người, tình dục, mqh ngầm. H12: tâm linh, cầu khấn, từ thiện."
+        }
+      ],
+      "nguon": "CTNC - CAREER - QUY TRÌNH FULL.md:72-87"
+    },
+    {
+      "phan": "Phần 2 - Vẽ nét",
+      "he_so_diem": "x1",
+      "buoc": 10,
+      "ten": "Thổ nhà nào",
+      "noi_dung": [
+        "Thổ nhà nào -> Sự nghiệp liên quan đến nhà đấy",
+        "Thổ ở đâu thì chịu khổ vì nhà đấy."
+      ],
+      "nguon": "CTNC - CAREER - QUY TRÌNH FULL.md:88-89"
+    },
+    {
+      "phan": "Phần 3 - Tô màu (năng khiếu)",
+      "he_so_diem": "x0.5",
+      "buoc": null,
+      "ten": "Năng khiếu",
+      "noi_dung": [
+        "(không cần luận kĩ đâu mà chỉ quan tâm hành tinh nào xuất hiện nhiều)",
+        "Nhặt các góc chặt nhất ở bản đồ sao (cứ khoảng 1-2 góc chặt nhất là tối đa, còn không thì cứ 1)",
+        "Chỉ ghi ra các góc chặt nhất (không cần số góc)",
+        "Hành tinh nhiều góc nhất",
+        "Chỉ cần đếm số để xem sự xuất hiện nhiều (trong case ví dụ nó tủn mủn quá thì coi như bỏ cũng được)"
+      ],
+      "ghi_chu_bien_tap": "Bản gốc dòng 92 viết \"là tối con mẹ đa\" — đã sửa thành \"là tối đa\" (lỗi chèn từ tục vào giữa chữ).",
+      "nguon": "CTNC - CAREER - QUY TRÌNH FULL.md:90-95"
+    }
+  ],
+  "ma_tran_nghe_theo_cung_nha_hanh_tinh": [
+    {
+      "so": 1,
+      "cung": "Bạch Dương",
+      "nha": "nhà 1",
+      "hanh_tinh": "sao Hỏa",
+      "tinh_chat": "cạnh tranh, độc lập, thử thách, mở đường",
+      "nghe": [
+        "vận động viên",
+        "quân đội",
+        "an ninh",
+        "công tố",
+        "cơ khí",
+        "lao động tay chân",
+        "tự doanh",
+        "làm thương hiệu cá nhân"
+      ],
+      "nguon": "CTNC - CAREER - Ngành nghề.md:8"
+    },
+    {
+      "so": 2,
+      "cung": "Kim Ngưu",
+      "nha": "nhà 2",
+      "hanh_tinh": "sao Kim",
+      "tinh_chat": "hưởng thụ, tạo tác, vật chất",
+      "nghe": [
+        "tài chính",
+        "ẩm thực",
+        "nhà hàng",
+        "kiến trúc/xây dựng",
+        "trồng trọt",
+        "thiết kế",
+        "thẩm mĩ",
+        "nghệ thuật"
+      ],
+      "nguon": "CTNC - CAREER - Ngành nghề.md:10"
+    },
+    {
+      "so": 3,
+      "cung": "Song Tử",
+      "nha": "nhà 3",
+      "hanh_tinh": "sao Thủy",
+      "tinh_chat": "xê dịch, sử dụng thông tin, giao tiếp, đa năng",
+      "nghe": [
+        "truyền thông",
+        "báo chí",
+        "viết lách",
+        "ngôn ngữ",
+        "dịch thuật",
+        "bán hàng",
+        "tư vấn",
+        "an ninh"
+      ],
+      "nguon": "CTNC - CAREER - Ngành nghề.md:12"
+    },
+    {
+      "so": 4,
+      "cung": "Cự Giải",
+      "nha": "nhà 4",
+      "hanh_tinh": "Mặt trăng",
+      "tinh_chat": "chăm lo nuôi dưỡng, tạo sự an toàn",
+      "nghe": [
+        "bất động sản",
+        "nội thất",
+        "nông nghiệp",
+        "chăm sóc",
+        "nhi khoa",
+        "ẩm thực",
+        "dịch vụ",
+        "kinh doanh gia đình"
+      ],
+      "nguon": "CTNC - CAREER - Ngành nghề.md:14"
+    },
+    {
+      "so": 5,
+      "cung": "Sư Tử",
+      "nha": "nhà 5",
+      "hanh_tinh": "Mặt trời",
+      "tinh_chat": "thể hiện bản thân, tạo niềm vui",
+      "nghe": [
+        "giải trí",
+        "nghệ thuật",
+        "sáng tạo",
+        "trình diễn",
+        "tổ chức sự kiện",
+        "diễn thuyết",
+        "trẻ em",
+        "cờ bạc"
+      ],
+      "nguon": "CTNC - CAREER - Ngành nghề.md:16"
+    },
+    {
+      "so": 6,
+      "cung": "Xử Nữ",
+      "nha": "nhà 6",
+      "hanh_tinh": "sao Thủy",
+      "tinh_chat": "phục vụ, tỉ mỉ",
+      "nghe": [
+        "dịch vụ",
+        "sức khỏe",
+        "nghiên cứu",
+        "phân tích dữ liệu",
+        "kế toán",
+        "kĩ thuật",
+        "vận hành",
+        "trợ lí",
+        "tư vấn",
+        "luật"
+      ],
+      "nguon": "CTNC - CAREER - Ngành nghề.md:18"
+    },
+    {
+      "so": 7,
+      "cung": "Thiên Bình",
+      "nha": "nhà 7",
+      "hanh_tinh": "sao Kim",
+      "tinh_chat": "hợp tác, vì công lí, cái đẹp",
+      "nghe": [
+        "ngoại giao",
+        "bán hàng",
+        "quan hệ khách hàng",
+        "nhân sự",
+        "chính trị",
+        "luật",
+        "hôn nhân",
+        "thẩm mĩ",
+        "thời trang",
+        "nghệ thuật"
+      ],
+      "nguon": "CTNC - CAREER - Ngành nghề.md:20"
+    },
+    {
+      "so": 8,
+      "cung": "Bọ Cạp",
+      "nha": "nhà 8",
+      "hanh_tinh": "Diêm Vương",
+      "tinh_chat": "sử dụng nguồn lực chung, đào sâu",
+      "nghe": [
+        "tài chính",
+        "ngân hàng",
+        "bảo hiểm",
+        "đầu tư",
+        "hóa chất",
+        "giải phẫu",
+        "tình dục",
+        "điều tra",
+        "tâm lí",
+        "huyền học"
+      ],
+      "nguon": "CTNC - CAREER - Ngành nghề.md:22"
+    },
+    {
+      "so": 9,
+      "cung": "Nhân Mã",
+      "nha": "nhà 9",
+      "hanh_tinh": "sao Mộc",
+      "tinh_chat": "mở rộng, truyền bá tư tưởng",
+      "nghe": [
+        "du lịch",
+        "giáo dục",
+        "xuất bản",
+        "ngoại ngữ",
+        "triết học",
+        "văn hóa tư tưởng",
+        "tôn giáo",
+        "luật"
+      ],
+      "nguon": "CTNC - CAREER - Ngành nghề.md:24"
+    },
+    {
+      "so": 10,
+      "cung": "Ma Kết",
+      "nha": "nhà 10",
+      "hanh_tinh": "sao Thổ",
+      "tinh_chat": "địa vị/học vị cao, tác động lớn lên xã hội",
+      "nghe": [
+        "chính phủ",
+        "chính trị",
+        "công chức",
+        "tài chính",
+        "kinh doanh",
+        "kiến trúc/xây dựng",
+        "giáo sư tiến sĩ",
+        "giáo dục",
+        "khảo cổ"
+      ],
+      "nguon": "CTNC - CAREER - Ngành nghề.md:26"
+    },
+    {
+      "so": 11,
+      "cung": "Bảo Bình",
+      "nha": "nhà 11",
+      "hanh_tinh": "Thiên Vương",
+      "tinh_chat": "tiên tiến, đón xu thế, thúc đẩy xã hội",
+      "nghe": [
+        "công nghệ",
+        "khoa học",
+        "sáng chế",
+        "hoạt động xã hội/nhân văn",
+        "môi trường",
+        "tổ chức phi chính phủ",
+        "chiêm tinh",
+        "thiên văn"
+      ],
+      "nguon": "CTNC - CAREER - Ngành nghề.md:28"
+    },
+    {
+      "so": 12,
+      "cung": "Song Ngư",
+      "nha": "nhà 12",
+      "hanh_tinh": "Hải Vương",
+      "tinh_chat": "trắc ẩn, thoát li, bí mật",
+      "nghe": [
+        "từ thiện",
+        "chữa lành",
+        "y tế",
+        "nghỉ ngơi thư giãn",
+        "tâm linh",
+        "nhiếp ảnh",
+        "điện ảnh",
+        "nghệ thuật",
+        "hàng hải"
+      ],
+      "nguon": "CTNC - CAREER - Ngành nghề.md:30"
+    }
+  ],
+  "combo_bo_so": [
+    {
+      "bo_so": "Bộ số 1",
+      "y_nghia_bo_so": "Tự doanh, vlogger về chủ đề của bộ số kết hợp",
+      "cap_nha": "1-2",
+      "nha_1": 1,
+      "nha_2": 2,
+      "nghe": [
+        "Tự doanh",
+        "làm đẹp",
+        "diễn viên người mẫu",
+        "cơ khí"
+      ],
+      "nghe_nguyen_van": "Tự doanh, làm đẹp, diễn viên người mẫu, cơ khí",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:36"
+    },
+    {
+      "bo_so": "Bộ số 1",
+      "y_nghia_bo_so": "Tự doanh, vlogger về chủ đề của bộ số kết hợp",
+      "cap_nha": "1-3",
+      "nha_1": 1,
+      "nha_2": 3,
+      "nghe": [
+        "Sale",
+        "blogger",
+        "vlogger",
+        "MC",
+        "an ninh"
+      ],
+      "nghe_nguyen_van": "Sale, blogger, vlogger, MC, an ninh",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:38"
+    },
+    {
+      "bo_so": "Bộ số 1",
+      "y_nghia_bo_so": "Tự doanh, vlogger về chủ đề của bộ số kết hợp",
+      "cap_nha": "1-4",
+      "nha_1": 1,
+      "nha_2": 4,
+      "nghe": [
+        "Tự doanh bds",
+        "kinh doanh gia đình"
+      ],
+      "nghe_nguyen_van": "Tự doanh bds, kinh doanh gia đình",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:40"
+    },
+    {
+      "bo_so": "Bộ số 1",
+      "y_nghia_bo_so": "Tự doanh, vlogger về chủ đề của bộ số kết hợp",
+      "cap_nha": "1-5",
+      "nha_1": 1,
+      "nha_2": 5,
+      "nghe": [
+        "Nghệ sĩ trình diễn",
+        "vận động viên",
+        "làm đẹp"
+      ],
+      "nghe_nguyen_van": "Nghệ sĩ trình diễn, vận động viên, làm đẹp",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:42"
+    },
+    {
+      "bo_so": "Bộ số 1",
+      "y_nghia_bo_so": "Tự doanh, vlogger về chủ đề của bộ số kết hợp",
+      "cap_nha": "1-6",
+      "nha_1": 1,
+      "nha_2": 6,
+      "nghe": [
+        "Thể chất",
+        "vlogger về lối sống",
+        "cơ khí kĩ thuật"
+      ],
+      "nghe_nguyen_van": "Thể chất, vlogger về lối sống, cơ khí kĩ thuật",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:44"
+    },
+    {
+      "bo_so": "Bộ số 1",
+      "y_nghia_bo_so": "Tự doanh, vlogger về chủ đề của bộ số kết hợp",
+      "cap_nha": "1-7",
+      "nha_1": 1,
+      "nha_2": 7,
+      "nghe": [
+        "Con người/cặp đôi/mối quan hệ"
+      ],
+      "nghe_nguyen_van": "Con người/cặp đôi/mối quan hệ",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:46"
+    },
+    {
+      "bo_so": "Bộ số 1",
+      "y_nghia_bo_so": "Tự doanh, vlogger về chủ đề của bộ số kết hợp",
+      "cap_nha": "1-8",
+      "nha_1": 1,
+      "nha_2": 8,
+      "nghe": [
+        "Tự doanh",
+        "giải phẫu thẩm mĩ"
+      ],
+      "nghe_nguyen_van": "Tự doanh, giải phẫu thẩm mĩ",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:48"
+    },
+    {
+      "bo_so": "Bộ số 1",
+      "y_nghia_bo_so": "Tự doanh, vlogger về chủ đề của bộ số kết hợp",
+      "cap_nha": "1-9",
+      "nha_1": 1,
+      "nha_2": 9,
+      "nghe": [
+        "Giáo viên tự do",
+        "nhà truyền giáo/nhà tư tưởng",
+        "tự doanh về giáo dục du lịch"
+      ],
+      "nghe_nguyen_van": "Giáo viên tự do, nhà truyền giáo/nhà tư tưởng, tự doanh về giáo dục du lịch",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:50"
+    },
+    {
+      "bo_so": "Bộ số 1",
+      "y_nghia_bo_so": "Tự doanh, vlogger về chủ đề của bộ số kết hợp",
+      "cap_nha": "1-10",
+      "nha_1": 1,
+      "nha_2": 10,
+      "nghe": [
+        "Giáo viên tự do",
+        "tự doanh khởi nghiệp"
+      ],
+      "nghe_nguyen_van": "Giáo viên tự do, tự doanh khởi nghiệp",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:52"
+    },
+    {
+      "bo_so": "Bộ số 1",
+      "y_nghia_bo_so": "Tự doanh, vlogger về chủ đề của bộ số kết hợp",
+      "cap_nha": "1-11",
+      "nha_1": 1,
+      "nha_2": 11,
+      "nghe": [
+        "Vlogger",
+        "phát minh",
+        "tự doanh về công nghệ",
+        "lead cộng đồng"
+      ],
+      "nghe_nguyen_van": "Vlogger, phát minh, tự doanh về công nghệ, lead cộng đồng",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:54"
+    },
+    {
+      "bo_so": "Bộ số 1",
+      "y_nghia_bo_so": "Tự doanh, vlogger về chủ đề của bộ số kết hợp",
+      "cap_nha": "1-12",
+      "nha_1": 1,
+      "nha_2": 12,
+      "nghe": [
+        "Tự doanh nghỉ dưỡng spa",
+        "vlogger về chữa lành/sống thật với bản thân",
+        "làm tâm linh tự do"
+      ],
+      "nghe_nguyen_van": "Tự doanh nghỉ dưỡng spa, vlogger về chữa lành/sống thật với bản thân, làm tâm linh tự do",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:56"
+    },
+    {
+      "bo_so": "Bộ số 2",
+      "y_nghia_bo_so": "Kiếm ra tiền từ bộ số kết hợp - bán bộ số kết hợp",
+      "cap_nha": "2-3",
+      "nha_1": 2,
+      "nha_2": 3,
+      "nghe": [
+        "Sale",
+        "tư vấn tài chính",
+        "review sản phẩm hưởng thụ"
+      ],
+      "nghe_nguyen_van": "Sale, tư vấn tài chính, review sản phẩm hưởng thụ",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:60"
+    },
+    {
+      "bo_so": "Bộ số 2",
+      "y_nghia_bo_so": "Kiếm ra tiền từ bộ số kết hợp - bán bộ số kết hợp",
+      "cap_nha": "2-4",
+      "nha_1": 2,
+      "nha_2": 4,
+      "nghe": [
+        "Ẩm thực",
+        "nghỉ dưỡng",
+        "lưu trú",
+        "làm đẹp nhà cửa",
+        "trồng trọt"
+      ],
+      "nghe_nguyen_van": "Ẩm thực, nghỉ dưỡng, lưu trú, làm đẹp nhà cửa, trồng trọt",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:62"
+    },
+    {
+      "bo_so": "Bộ số 2",
+      "y_nghia_bo_so": "Kiếm ra tiền từ bộ số kết hợp - bán bộ số kết hợp",
+      "cap_nha": "2-5",
+      "nha_1": 2,
+      "nha_2": 5,
+      "nghe": [
+        "Nghệ thuật",
+        "cờ bạc",
+        "nhà hàng tiệc cưới"
+      ],
+      "nghe_nguyen_van": "Nghệ thuật, cờ bạc, nhà hàng tiệc cưới",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:64"
+    },
+    {
+      "bo_so": "Bộ số 2",
+      "y_nghia_bo_so": "Kiếm ra tiền từ bộ số kết hợp - bán bộ số kết hợp",
+      "cap_nha": "2-6",
+      "nha_1": 2,
+      "nha_2": 6,
+      "nghe": [
+        "Dịch vụ về hưởng thụ",
+        "kế toán kiểm toán",
+        "tư vấn tài chính",
+        "dinh dưỡng"
+      ],
+      "nghe_nguyen_van": "Dịch vụ về hưởng thụ, kế toán kiểm toán, tư vấn tài chính, dinh dưỡng",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:66"
+    },
+    {
+      "bo_so": "Bộ số 2",
+      "y_nghia_bo_so": "Kiếm ra tiền từ bộ số kết hợp - bán bộ số kết hợp",
+      "cap_nha": "2-7",
+      "nha_1": 2,
+      "nha_2": 7,
+      "nghe": [
+        "Nghệ thuật",
+        "sale"
+      ],
+      "nghe_nguyen_van": "Nghệ thuật, sale",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:68"
+    },
+    {
+      "bo_so": "Bộ số 2",
+      "y_nghia_bo_so": "Kiếm ra tiền từ bộ số kết hợp - bán bộ số kết hợp",
+      "cap_nha": "2-8",
+      "nha_1": 2,
+      "nha_2": 8,
+      "nghe": [
+        "Tài chính",
+        "kinh doanh"
+      ],
+      "nghe_nguyen_van": "Tài chính, kinh doanh",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:70"
+    },
+    {
+      "bo_so": "Bộ số 2",
+      "y_nghia_bo_so": "Kiếm ra tiền từ bộ số kết hợp - bán bộ số kết hợp",
+      "cap_nha": "2-9",
+      "nha_1": 2,
+      "nha_2": 9,
+      "nghe": [
+        "Kinh doanh giáo dục",
+        "giảng dạy về tài chính"
+      ],
+      "nghe_nguyen_van": "Kinh doanh giáo dục, giảng dạy về tài chính",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:72"
+    },
+    {
+      "bo_so": "Bộ số 2",
+      "y_nghia_bo_so": "Kiếm ra tiền từ bộ số kết hợp - bán bộ số kết hợp",
+      "cap_nha": "2-10",
+      "nha_1": 2,
+      "nha_2": 10,
+      "nghe": [
+        "Kinh doanh",
+        "bán danh tiếng uy tín"
+      ],
+      "nghe_nguyen_van": "Kinh doanh, bán danh tiếng uy tín",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:74"
+    },
+    {
+      "bo_so": "Bộ số 2",
+      "y_nghia_bo_so": "Kiếm ra tiền từ bộ số kết hợp - bán bộ số kết hợp",
+      "cap_nha": "2-11",
+      "nha_1": 2,
+      "nha_2": 11,
+      "nghe": [
+        "Tạo tác đồ công nghệ",
+        "hưởng thụ tiên tiến",
+        "bán trend bán cộng đồng"
+      ],
+      "nghe_nguyen_van": "Tạo tác đồ công nghệ, hưởng thụ tiên tiến, bán trend bán cộng đồng",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:76"
+    },
+    {
+      "bo_so": "Bộ số 2",
+      "y_nghia_bo_so": "Kiếm ra tiền từ bộ số kết hợp - bán bộ số kết hợp",
+      "cap_nha": "2-12",
+      "nha_1": 2,
+      "nha_2": 12,
+      "nghe": [
+        "Nghệ thuật",
+        "nghỉ dưỡng",
+        "spa",
+        "bar pub",
+        "đồ đạc chất kích thích"
+      ],
+      "nghe_nguyen_van": "Nghệ thuật, nghỉ dưỡng, spa, bar pub, đồ đạc chất kích thích",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:78"
+    },
+    {
+      "bo_so": "Bộ số 3",
+      "y_nghia_bo_so": "Nói/viết về bộ số kết hợp",
+      "cap_nha": "3-4",
+      "nha_1": 3,
+      "nha_2": 4,
+      "nghe": [
+        "Chăm sóc bằng lời nói",
+        "tư vấn",
+        "sale bds"
+      ],
+      "nghe_nguyen_van": "Chăm sóc bằng lời nói, tư vấn, sale bds",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:82"
+    },
+    {
+      "bo_so": "Bộ số 3",
+      "y_nghia_bo_so": "Nói/viết về bộ số kết hợp",
+      "cap_nha": "3-5",
+      "nha_1": 3,
+      "nha_2": 5,
+      "nghe": [
+        "Sáng tạo nội dung",
+        "ca nhạc sĩ",
+        "nhà văn",
+        "diễn giả"
+      ],
+      "nghe_nguyen_van": "Sáng tạo nội dung, ca nhạc sĩ, nhà văn, diễn giả",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:84"
+    },
+    {
+      "bo_so": "Bộ số 3",
+      "y_nghia_bo_so": "Nói/viết về bộ số kết hợp",
+      "cap_nha": "3-6",
+      "nha_1": 3,
+      "nha_2": 6,
+      "nghe": [
+        "Reviewer",
+        "biên tập",
+        "truyền thông nội bộ"
+      ],
+      "nghe_nguyen_van": "Reviewer, biên tập, truyền thông nội bộ",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:86"
+    },
+    {
+      "bo_so": "Bộ số 3",
+      "y_nghia_bo_so": "Nói/viết về bộ số kết hợp",
+      "cap_nha": "3-7",
+      "nha_1": 3,
+      "nha_2": 7,
+      "nghe": [
+        "Sale"
+      ],
+      "nghe_nguyen_van": "Sale",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:88"
+    },
+    {
+      "bo_so": "Bộ số 3",
+      "y_nghia_bo_so": "Nói/viết về bộ số kết hợp",
+      "cap_nha": "3-8",
+      "nha_1": 3,
+      "nha_2": 8,
+      "nghe": [
+        "Sale",
+        "tham vấn tâm lý",
+        "tư vấn tài chính"
+      ],
+      "nghe_nguyen_van": "Sale, tham vấn tâm lý, tư vấn tài chính",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:90"
+    },
+    {
+      "bo_so": "Bộ số 3",
+      "y_nghia_bo_so": "Nói/viết về bộ số kết hợp",
+      "cap_nha": "3-9",
+      "nha_1": 3,
+      "nha_2": 9,
+      "nghe": [
+        "Giáo viên",
+        "xuất bản",
+        "travel blogger"
+      ],
+      "nghe_nguyen_van": "Giáo viên, xuất bản, travel blogger",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:92"
+    },
+    {
+      "bo_so": "Bộ số 3",
+      "y_nghia_bo_so": "Nói/viết về bộ số kết hợp",
+      "cap_nha": "3-10",
+      "nha_1": 3,
+      "nha_2": 10,
+      "nghe": [
+        "Kinh doanh"
+      ],
+      "nghe_nguyen_van": "Kinh doanh",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:94"
+    },
+    {
+      "bo_so": "Bộ số 3",
+      "y_nghia_bo_so": "Nói/viết về bộ số kết hợp",
+      "cap_nha": "3-11",
+      "nha_1": 3,
+      "nha_2": 11,
+      "nghe": [
+        "Truyền thông xã hội",
+        "marketing",
+        "lập trình"
+      ],
+      "nghe_nguyen_van": "Truyền thông xã hội, marketing, lập trình",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:96"
+    },
+    {
+      "bo_so": "Bộ số 3",
+      "y_nghia_bo_so": "Nói/viết về bộ số kết hợp",
+      "cap_nha": "3-12",
+      "nha_1": 3,
+      "nha_2": 12,
+      "nghe": [
+        "Trò chuyện chữa lành",
+        "tư vấn tâm linh"
+      ],
+      "nghe_nguyen_van": "Trò chuyện chữa lành, tư vấn tâm linh",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:98"
+    },
+    {
+      "bo_so": "Bộ số 4",
+      "y_nghia_bo_so": "Chăm sóc bằng bộ số kết hợp",
+      "cap_nha": "4-5",
+      "nha_1": 4,
+      "nha_2": 5,
+      "nghe": [
+        "Trẻ em",
+        "thú nuôi",
+        "trang trí thiết kế nhà cửa nội thất"
+      ],
+      "nghe_nguyen_van": "Trẻ em, thú nuôi, trang trí thiết kế nhà cửa nội thất",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:102"
+    },
+    {
+      "bo_so": "Bộ số 4",
+      "y_nghia_bo_so": "Chăm sóc bằng bộ số kết hợp",
+      "cap_nha": "4-6",
+      "nha_1": 4,
+      "nha_2": 6,
+      "nghe": [
+        "Dịch vụ",
+        "điều dưỡng"
+      ],
+      "nghe_nguyen_van": "Dịch vụ, điều dưỡng",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:104"
+    },
+    {
+      "bo_so": "Bộ số 4",
+      "y_nghia_bo_so": "Chăm sóc bằng bộ số kết hợp",
+      "cap_nha": "4-7",
+      "nha_1": 4,
+      "nha_2": 7,
+      "nghe": [
+        "Nhân sự",
+        "chăm sóc khách hàng"
+      ],
+      "nghe_nguyen_van": "Nhân sự, chăm sóc khách hàng",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:106"
+    },
+    {
+      "bo_so": "Bộ số 4",
+      "y_nghia_bo_so": "Chăm sóc bằng bộ số kết hợp",
+      "cap_nha": "4-8",
+      "nha_1": 4,
+      "nha_2": 8,
+      "nghe": [
+        "Tham vấn tâm lý",
+        "đầu tư bds",
+        "kế nghiệp"
+      ],
+      "nghe_nguyen_van": "Tham vấn tâm lý, đầu tư bds, kế nghiệp",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:108"
+    },
+    {
+      "bo_so": "Bộ số 4",
+      "y_nghia_bo_so": "Chăm sóc bằng bộ số kết hợp",
+      "cap_nha": "4-9",
+      "nha_1": 4,
+      "nha_2": 9,
+      "nghe": [
+        "Chăm sóc bằng đạo lý",
+        "lưu trú cho khách du lịch",
+        "xuất khẩu đồ nội địa/truyền thống"
+      ],
+      "nghe_nguyen_van": "Chăm sóc bằng đạo lý, lưu trú cho khách du lịch, xuất khẩu đồ nội địa/truyền thống",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:110"
+    },
+    {
+      "bo_so": "Bộ số 4",
+      "y_nghia_bo_so": "Chăm sóc bằng bộ số kết hợp",
+      "cap_nha": "4-10",
+      "nha_1": 4,
+      "nha_2": 10,
+      "nghe": [
+        "Kinh doanh gia đình",
+        "nhà nước",
+        "đồ cổ"
+      ],
+      "nghe_nguyen_van": "Kinh doanh gia đình, nhà nước, đồ cổ",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:112"
+    },
+    {
+      "bo_so": "Bộ số 4",
+      "y_nghia_bo_so": "Chăm sóc bằng bộ số kết hợp",
+      "cap_nha": "4-11",
+      "nha_1": 4,
+      "nha_2": 11,
+      "nghe": [
+        "Y tế",
+        "chăm sóc cộng đồng"
+      ],
+      "nghe_nguyen_van": "Y tế, chăm sóc cộng đồng",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:114"
+    },
+    {
+      "bo_so": "Bộ số 4",
+      "y_nghia_bo_so": "Chăm sóc bằng bộ số kết hợp",
+      "cap_nha": "4-12",
+      "nha_1": 4,
+      "nha_2": 12,
+      "nghe": [
+        "Chữa lành (gia đình",
+        "tuổi thơ)",
+        "điều dưỡng",
+        "lưu trú nghỉ dưỡng",
+        "phong thuỷ"
+      ],
+      "nghe_nguyen_van": "Chữa lành (gia đình, tuổi thơ), điều dưỡng, lưu trú nghỉ dưỡng, phong thuỷ",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:116"
+    },
+    {
+      "bo_so": "Bộ số 5",
+      "y_nghia_bo_so": "Sáng tạo trình diễn liên quan đến bộ số kết hợp",
+      "cap_nha": "5-6",
+      "nha_1": 5,
+      "nha_2": 6,
+      "nghe": [
+        "Thể thao",
+        "sáng tạo thủ công",
+        "dịch vụ giải trí/trẻ em/thú nuôi"
+      ],
+      "nghe_nguyen_van": "Thể thao, sáng tạo thủ công, dịch vụ giải trí/trẻ em/thú nuôi",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:120"
+    },
+    {
+      "bo_so": "Bộ số 5",
+      "y_nghia_bo_so": "Sáng tạo trình diễn liên quan đến bộ số kết hợp",
+      "cap_nha": "5-7",
+      "nha_1": 5,
+      "nha_2": 7,
+      "nghe": [
+        "Nghệ thuật",
+        "đám cưới"
+      ],
+      "nghe_nguyen_van": "Nghệ thuật, đám cưới",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:122"
+    },
+    {
+      "bo_so": "Bộ số 5",
+      "y_nghia_bo_so": "Sáng tạo trình diễn liên quan đến bộ số kết hợp",
+      "cap_nha": "5-8",
+      "nha_1": 5,
+      "nha_2": 8,
+      "nghe": [
+        "Đầu tư chứng khoán",
+        "nghệ thuật khắc hoạ tâm lý"
+      ],
+      "nghe_nguyen_van": "Đầu tư chứng khoán, nghệ thuật khắc hoạ tâm lý",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:124"
+    },
+    {
+      "bo_so": "Bộ số 5",
+      "y_nghia_bo_so": "Sáng tạo trình diễn liên quan đến bộ số kết hợp",
+      "cap_nha": "5-9",
+      "nha_1": 5,
+      "nha_2": 9,
+      "nghe": [
+        "Diễn giả truyền cảm hứng đạo lý",
+        "giáo viên dạy trẻ",
+        "sáng tạo khoá học"
+      ],
+      "nghe_nguyen_van": "Diễn giả truyền cảm hứng đạo lý, giáo viên dạy trẻ, sáng tạo khoá học",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:126"
+    },
+    {
+      "bo_so": "Bộ số 5",
+      "y_nghia_bo_so": "Sáng tạo trình diễn liên quan đến bộ số kết hợp",
+      "cap_nha": "5-10",
+      "nha_1": 5,
+      "nha_2": 10,
+      "nghe": [
+        "Kinh doanh lĩnh vực giải trí",
+        "giáo viên dạy trẻ",
+        "kiến trúc"
+      ],
+      "nghe_nguyen_van": "Kinh doanh lĩnh vực giải trí, giáo viên dạy trẻ, kiến trúc",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:128"
+    },
+    {
+      "bo_so": "Bộ số 5",
+      "y_nghia_bo_so": "Sáng tạo trình diễn liên quan đến bộ số kết hợp",
+      "cap_nha": "5-11",
+      "nha_1": 5,
+      "nha_2": 11,
+      "nghe": [
+        "Siêu sáng tạo",
+        "nghệ thuật số - digital art",
+        "tổ chức sự kiện cho nhóm hội cộng đồng"
+      ],
+      "nghe_nguyen_van": "Siêu sáng tạo, nghệ thuật số - digital art, tổ chức sự kiện cho nhóm hội cộng đồng",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:130"
+    },
+    {
+      "bo_so": "Bộ số 5",
+      "y_nghia_bo_so": "Sáng tạo trình diễn liên quan đến bộ số kết hợp",
+      "cap_nha": "5-12",
+      "nha_1": 5,
+      "nha_2": 12,
+      "nghe": [
+        "Sáng tạo nghệ thuật",
+        "chơi đồ",
+        "bar pub",
+        "cứu trợ trẻ em động vật"
+      ],
+      "nghe_nguyen_van": "Sáng tạo nghệ thuật, chơi đồ, bar pub, cứu trợ trẻ em động vật",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:132"
+    },
+    {
+      "bo_so": "Bộ số 6",
+      "y_nghia_bo_so": "Dịch vụ liên quan đến bộ số kết hợp",
+      "cap_nha": "6-7",
+      "nha_1": 6,
+      "nha_2": 7,
+      "nghe": [
+        "Tư vấn viên consultant",
+        "dịch vụ khách hàng",
+        "luật"
+      ],
+      "nghe_nguyen_van": "Tư vấn viên consultant, dịch vụ khách hàng, luật",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:136"
+    },
+    {
+      "bo_so": "Bộ số 6",
+      "y_nghia_bo_so": "Dịch vụ liên quan đến bộ số kết hợp",
+      "cap_nha": "6-8",
+      "nha_1": 6,
+      "nha_2": 8,
+      "nghe": [
+        "Dịch vụ tài chính: ngân hàng bảo hiểm môi giới chứng khoán",
+        "kinh doanh về sức khoẻ",
+        "thể dục thể chất chuyển hoá",
+        "y dược"
+      ],
+      "nghe_nguyen_van": "Dịch vụ tài chính: ngân hàng bảo hiểm môi giới chứng khoán, kinh doanh về sức khoẻ, thể dục thể chất chuyển hoá, y dược",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:138"
+    },
+    {
+      "bo_so": "Bộ số 6",
+      "y_nghia_bo_so": "Dịch vụ liên quan đến bộ số kết hợp",
+      "cap_nha": "6-9",
+      "nha_1": 6,
+      "nha_2": 9,
+      "nghe": [
+        "Dịch vụ giáo dục/du học/du lịch",
+        "giáo dục thể chất",
+        "kĩ sư hàng không",
+        "luật"
+      ],
+      "nghe_nguyen_van": "Dịch vụ giáo dục/du học/du lịch, giáo dục thể chất, kĩ sư hàng không, luật",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:142"
+    },
+    {
+      "bo_so": "Bộ số 6",
+      "y_nghia_bo_so": "Dịch vụ liên quan đến bộ số kết hợp",
+      "cap_nha": "6-10",
+      "nha_1": 6,
+      "nha_2": 10,
+      "nghe": [
+        "Bác sĩ",
+        "kinh doanh về sức khoẻ"
+      ],
+      "nghe_nguyen_van": "Bác sĩ, kinh doanh về sức khoẻ",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:144"
+    },
+    {
+      "bo_so": "Bộ số 6",
+      "y_nghia_bo_so": "Dịch vụ liên quan đến bộ số kết hợp",
+      "cap_nha": "6-11",
+      "nha_1": 6,
+      "nha_2": 11,
+      "nghe": [
+        "Dịch vụ về công nghệ",
+        "y tế công cộng"
+      ],
+      "nghe_nguyen_van": "Dịch vụ về công nghệ, y tế công cộng",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:146"
+    },
+    {
+      "bo_so": "Bộ số 6",
+      "y_nghia_bo_so": "Dịch vụ liên quan đến bộ số kết hợp",
+      "cap_nha": "6-12",
+      "nha_1": 6,
+      "nha_2": 12,
+      "nghe": [
+        "Y tế",
+        "trị liệu",
+        "chữa lành"
+      ],
+      "nghe_nguyen_van": "Y tế, trị liệu, chữa lành",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:148"
+    },
+    {
+      "bo_so": "Bộ số 7",
+      "y_nghia_bo_so": "Ngoại giao tìm đối tác cùng thực hiện bộ số kết hợp",
+      "cap_nha": "7-8",
+      "nha_1": 7,
+      "nha_2": 8,
+      "nghe": [
+        "Nhân sự",
+        "môi giới",
+        "kinh doanh",
+        "trị liệu cặp đôi/hôn nhân"
+      ],
+      "nghe_nguyen_van": "Nhân sự, môi giới, kinh doanh, trị liệu cặp đôi/hôn nhân",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:152"
+    },
+    {
+      "bo_so": "Bộ số 7",
+      "y_nghia_bo_so": "Ngoại giao tìm đối tác cùng thực hiện bộ số kết hợp",
+      "cap_nha": "7-9",
+      "nha_1": 7,
+      "nha_2": 9,
+      "nghe": [
+        "Luật",
+        "xuất nhập khẩu",
+        "ngoại giao"
+      ],
+      "nghe_nguyen_van": "Luật, xuất nhập khẩu, ngoại giao",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:154"
+    },
+    {
+      "bo_so": "Bộ số 7",
+      "y_nghia_bo_so": "Ngoại giao tìm đối tác cùng thực hiện bộ số kết hợp",
+      "cap_nha": "7-10",
+      "nha_1": 7,
+      "nha_2": 10,
+      "nghe": [
+        "Chính trị",
+        "kinh doanh"
+      ],
+      "nghe_nguyen_van": "Chính trị, kinh doanh",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:156"
+    },
+    {
+      "bo_so": "Bộ số 7",
+      "y_nghia_bo_so": "Ngoại giao tìm đối tác cùng thực hiện bộ số kết hợp",
+      "cap_nha": "7-11",
+      "nha_1": 7,
+      "nha_2": 11,
+      "nghe": [
+        "Marketing"
+      ],
+      "nghe_nguyen_van": "Marketing",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:158"
+    },
+    {
+      "bo_so": "Bộ số 7",
+      "y_nghia_bo_so": "Ngoại giao tìm đối tác cùng thực hiện bộ số kết hợp",
+      "cap_nha": "7-12",
+      "nha_1": 7,
+      "nha_2": 12,
+      "nghe": [
+        "Nghệ thuật"
+      ],
+      "nghe_nguyen_van": "Nghệ thuật",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:160"
+    },
+    {
+      "bo_so": "Bộ số 8",
+      "y_nghia_bo_so": "Đào sâu về bộ số kết hợp",
+      "cap_nha": "8-9",
+      "nha_1": 8,
+      "nha_2": 9,
+      "nghe": [
+        "Học giả",
+        "nhà nghiên cứu",
+        "nhà tư tưởng",
+        "giảng dạy về tâm lý/tài chính kinh doanh"
+      ],
+      "nghe_nguyen_van": "Học giả, nhà nghiên cứu, nhà tư tưởng, giảng dạy về tâm lý/tài chính kinh doanh",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:164"
+    },
+    {
+      "bo_so": "Bộ số 8",
+      "y_nghia_bo_so": "Đào sâu về bộ số kết hợp",
+      "cap_nha": "8-10",
+      "nha_1": 8,
+      "nha_2": 10,
+      "nghe": [
+        "Tài chính",
+        "kinh doanh"
+      ],
+      "nghe_nguyen_van": "Tài chính, kinh doanh",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:166"
+    },
+    {
+      "bo_so": "Bộ số 8",
+      "y_nghia_bo_so": "Đào sâu về bộ số kết hợp",
+      "cap_nha": "8-11",
+      "nha_1": 8,
+      "nha_2": 11,
+      "nghe": [
+        "Huyền học",
+        "hoá dược",
+        "hoá trị liệu"
+      ],
+      "nghe_nguyen_van": "Huyền học, hoá dược, hoá trị liệu",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:168"
+    },
+    {
+      "bo_so": "Bộ số 8",
+      "y_nghia_bo_so": "Đào sâu về bộ số kết hợp",
+      "cap_nha": "8-12",
+      "nha_1": 8,
+      "nha_2": 12,
+      "nghe": [
+        "Tâm lý",
+        "chữa lành",
+        "huyền học tâm linh."
+      ],
+      "nghe_nguyen_van": "Tâm lý, chữa lành, huyền học tâm linh.",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:170"
+    },
+    {
+      "bo_so": "Bộ số 9",
+      "y_nghia_bo_so": "Học tập giảng dạy về bộ số kết hợp",
+      "cap_nha": "9-10",
+      "nha_1": 9,
+      "nha_2": 10,
+      "nghe": [
+        "Giáo dục",
+        "học giả",
+        "diễn giả"
+      ],
+      "nghe_nguyen_van": "Giáo dục, học giả, diễn giả",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:174"
+    },
+    {
+      "bo_so": "Bộ số 9",
+      "y_nghia_bo_so": "Học tập giảng dạy về bộ số kết hợp",
+      "cap_nha": "9-11",
+      "nha_1": 9,
+      "nha_2": 11,
+      "nghe": [
+        "Giáo dục cộng đồng",
+        "nhà hoạt động đấu tranh cho xã hội",
+        "đào tạo về công nghệ"
+      ],
+      "nghe_nguyen_van": "Giáo dục cộng đồng, nhà hoạt động đấu tranh cho xã hội, đào tạo về công nghệ",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:176"
+    },
+    {
+      "bo_so": "Bộ số 9",
+      "y_nghia_bo_so": "Học tập giảng dạy về bộ số kết hợp",
+      "cap_nha": "9-12",
+      "nha_1": 9,
+      "nha_2": 12,
+      "nghe": [
+        "Dùng kiến thức giúp người",
+        "thiện nguyện",
+        "tâm linh"
+      ],
+      "nghe_nguyen_van": "Dùng kiến thức giúp người, thiện nguyện, tâm linh",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:178"
+    },
+    {
+      "bo_so": "Bộ số 10",
+      "y_nghia_bo_so": "Quản lý, tạo ra di sản liên quan đến bộ số kết hợp",
+      "cap_nha": "10-11",
+      "nha_1": 10,
+      "nha_2": 11,
+      "nghe": [
+        "Chính trị",
+        "quản lý mảng công nghệ",
+        "doanh nghiệp xã hội"
+      ],
+      "nghe_nguyen_van": "Chính trị, quản lý mảng công nghệ, doanh nghiệp xã hội",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:182"
+    },
+    {
+      "bo_so": "Bộ số 10",
+      "y_nghia_bo_so": "Quản lý, tạo ra di sản liên quan đến bộ số kết hợp",
+      "cap_nha": "10-12",
+      "nha_1": 10,
+      "nha_2": 12,
+      "nghe": [
+        "Kinh doanh (thường có yếu tố thiện nguyện/nghỉ dưỡng/tâm linh)",
+        "quản lý quỹ từ thiện"
+      ],
+      "nghe_nguyen_van": "Kinh doanh (thường có yếu tố thiện nguyện/nghỉ dưỡng/tâm linh), quản lý quỹ từ thiện",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:184"
+    },
+    {
+      "bo_so": "Bộ số 11",
+      "y_nghia_bo_so": "Cách tân về bộ số kết hợp và hướng đến xã hội",
+      "cap_nha": "11-12",
+      "nha_1": 11,
+      "nha_2": 12,
+      "nghe": [
+        "Thiện nguyện",
+        "hoạt động xã hội",
+        "đấu tranh cho cộng đồng người yếu thế",
+        "tâm linh"
+      ],
+      "nghe_nguyen_van": "Thiện nguyện, hoạt động xã hội, đấu tranh cho cộng đồng người yếu thế, tâm linh",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:188"
+    },
+    {
+      "bo_so": "Bộ số 12",
+      "y_nghia_bo_so": "Dùng bộ số kết hợp để giúp người khó khăn, hoặc để thoát li",
+      "cap_nha": null,
+      "nha_1": 12,
+      "nha_2": null,
+      "nghe": [],
+      "trang_thai": "thieu",
+      "mo_ta_trang_thai": "Bản gốc chỉ có tiêu đề \"Bộ số 12\" ở dòng cuối file (dòng 190), KHÔNG có cặp nhà nào bên dưới. Không tự viết bù.",
+      "nguon": "CTNC - CAREER - Ngành nghề.md:190"
+    }
+  ],
+  "noi_them_ve_tien_bac": {
+    "nguyen_ly": [
+      "Nhà 2 là nhà trước 1, vì nhà 1 là nhà cái tôi thì nhà 2 là giá trị của tôi",
+      "Nhà 8 là nhà trước 7, vì nhà 7 là nhà mqh thì nhà 8 là giá trị của tôi trong mqh?",
+      "Nhà 11 là giá trị của tôi từ sự nghiệp (h10)"
+    ],
+    "bang_thuan_loi_tien_bac": {
+      "nha": "h2 - h8 - h11",
+      "dau_hieu_thuan_loi": [
+        "Mộc, Kim",
+        "góc mềm",
+        "chủ tinh h2-h8 có ăn góc mềm",
+        "chủ tinh H2-H8 có góc với Kim, Mộc không? Thứ tự góc tốt là trùng -> mềm -> cứng. Càng chặt càng tốt"
+      ],
+      "ghi_chu": "Bảng này kẻ thế thôi chứ không phải h2 là Mộc, Kim, H8 là góc..., mà cả 3 nhà đều có"
+    },
+    "may_man_thuan_loi": [
+      "Cứ có Kim Mộc trong các nhà kia.",
+      "xem thêm là Kim Mộc nhà nào thì tiền từ nhà đó về (ví dụ Mộc nhà 9 thì từ tri thức)"
+    ],
+    "dau_hieu_quan_ly_tai_chinh_tot": {
+      "xem": [
+        "Đỉnh H2 cung nào",
+        "Các hành tinh H2",
+        "Hành tinh chi tiêu (2 hành tinh tính Âm, mà tính Âm là tính hưởng thụ): Kim (chi tiêu), Moon (thỏa mãn cảm xúc)"
+      ],
+      "hanh_tinh_chi_tieu_theo_nguyen_to": [
+        {
+          "nguyen_to": "Đất",
+          "y": "cẩn thận"
+        },
+        {
+          "nguyen_to": "Nước",
+          "y": "tính âm nhưng trực giác tốt"
+        },
+        {
+          "nguyen_to": "Khí",
+          "y": "tính dương nhưng fomo nên tăng trải nghiệm"
+        },
+        {
+          "nguyen_to": "Lửa",
+          "y": "ngáo nhất"
+        }
+      ]
+    },
+    "nguon": "CTNC - Buổi học 4.md:235-264"
+  }
+}

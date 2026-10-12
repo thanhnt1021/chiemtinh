@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Chiêm Tinh Vui{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-16 max-w-5xl">
+
+    <!-- Header -->
+    <header class="mb-12 text-center">
+        <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">Chiêm Tinh Vui</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400">Khám phá các công cụ chiêm tinh học.</p>
+    </header>
+
+    <main>
+        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-8 text-center">Công cụ nổi bật</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:max-w-xs md:mx-auto lg:max-w-none lg:mx-0">
+            <!-- Card Planet Connect -->
+            <a href="/planet-connect" class="block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex flex-col items-center text-center transition transform hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-gray-700/30">
+                <i class="fas fa-meteor fa-3x mb-4 text-transparent bg-clip-text bg-gradient-to-br from-green-400 to-blue-500"></i>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Planet Connect</h3>
+                <p class="text-gray-600 dark:text-gray-400">Khám phá kết nối năng lượng giữa các hành tinh.</p>
+            </a>
+            
+            <!-- Bạn có thể thêm các card khác ở đây nếu muốn public -->
+            <a href="/login" class="block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 flex flex-col items-center text-center transition transform hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-gray-700/30">
+                <i class="fas fa-sign-in-alt fa-3x mb-4 text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-purple-500"></i>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Đăng Nhập Hệ Thống</h3>
+                <p class="text-gray-600 dark:text-gray-400">Truy cập đầy đủ các công cụ chuyên sâu.</p>
+            </a>
+        </div>
+    </main>
+
+    <footer class="text-center mt-16">
+        <p class="text-gray-500 dark:text-gray-500">&copy; 2025 Chiêm Tinh Vui</p>
+    </footer>
+
+</div>
+{% endblock %}
