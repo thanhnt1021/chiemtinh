@@ -71,7 +71,8 @@ def goi(act, body=None, canh=False):
     data = json.dumps(body, ensure_ascii=False).encode() if body is not None else None
     req = urllib.request.Request(url, data=data, headers=h, method="POST" if data is not None else "GET")
     try:
-        with urllib.request.urlopen(req, timeout=40) as r:
+        # Tệp đính kèm (PDF vài MB) đi qua máy chủ rồi mới tới Telegram — 40 giây không đủ.
+        with urllib.request.urlopen(req, timeout=180 if body and body.get("tep") else 40) as r:
             return json.loads(r.read().decode())
     except urllib.error.HTTPError as e:
         try:
@@ -304,6 +305,16 @@ def cmd_gui(a):
     for i, p in enumerate(anh):
         raw = nhan_anh(p, nhan[i]) if nhan else open(p, "rb").read()
         b64.append(base64.b64encode(raw).decode())
+    tep = None
+    duong_tep, chu_tep = getattr(a, "tep", None), getattr(a, "chu_tep", None)  # lối dl_ns_hoi dựng Namespace không có 2 trường này
+    if duong_tep:
+        if anh:
+            sys.exit("--tep không đi cùng --anh (Telegram gửi tài liệu và ảnh là hai loại tin khác nhau)")
+        if not os.path.isfile(duong_tep):
+            sys.exit(f"Không có tệp {duong_tep}")
+        tep = {"ten": chu_tep or os.path.basename(duong_tep), "b64": base64.b64encode(open(duong_tep, "rb").read()).decode()}
+    elif chu_tep:
+        sys.exit("--chu-tep chỉ dùng cùng --tep")
     tt = a.tt or ("cho-sep-tra-loi" if a.hoi else "xong" if a.xac_nhan else None)
     a.ma = doi_ma(a.ma)
     body = {"chu": dung_tin(a), "html": True, "tieu_de": a.tieu_de, "anh": b64, "thu": a.thu}
@@ -312,11 +323,14 @@ def cmd_gui(a):
             body[k] = v
     if a.rieng:
         body["rieng"] = True
+    if tep:
+        body["tep"] = tep
     r = goi("gui", body)
     if getattr(a, "tra_ve", False):
         return r
     if a.thu and r.get("ok"):
-        print(f"[THỬ — chưa gửi] tới: {r['chat']} · mã: {r['ma']} · thân {r['than_dong']} dòng / {r['than_ky_tu']} ký tự · {len(b64)} ảnh")
+        print(f"[THỬ — chưa gửi] tới: {r['chat']} · mã: {r['ma']} · thân {r['than_dong']} dòng / {r['than_ky_tu']} ký tự · {len(b64)} ảnh"
+              + (f" · tệp «{r['tep']['ten']}» {r['tep']['kb']} KB" if r.get("tep") else ""))
         print(r["chu"])
         return
     print(json.dumps({k: v for k, v in r.items() if k != "chu"}, ensure_ascii=False))
@@ -775,6 +789,8 @@ def main():
     x.add_argument("--cuoi", help="dòng cuối tự viết, bắt đầu 👉")
     x.add_argument("--anh", action="append")
     x.add_argument("--nhan-anh", action="append")
+    x.add_argument("--tep", help="gửi kèm 1 tài liệu (PDF…) bằng sendDocument; chữ tin thành chú thích tệp")
+    x.add_argument("--chu-tep", help="tên tệp người nhận thấy (mặc định = tên tệp gốc)")
     x.add_argument("--mo-ta", help="mô tả 4 mục ghi lên thẻ khi cấp mã mới")
     x.add_argument("--tt", choices=TRANG_THAI)
     x.add_argument("--nhom")

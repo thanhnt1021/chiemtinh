@@ -835,6 +835,8 @@ async function guiTin(env, b) {
   }
   if (!b.chu) return json({ ok: false, loi: 'thiếu chu' }, 400);
   const anh = Array.isArray(b.anh) ? b.anh : [];
+  // Tài liệu (PDF hướng dẫn…) gửi bằng sendDocument; chữ tin thành chú thích tệp, Reply vào tệp vẫn về đúng thẻ.
+  const tep = b.tep && typeof b.tep.b64 === 'string' ? { ten: String(b.tep.ten || 'tai-lieu.pdf').replace(/[\\/\r\n]/g, '_').slice(0, 120), b64: b.tep.b64 } : null;
   let ma = b.ma ? doiMa(b.ma) : null;
   if (ma && !b.thu) {
     const v = await env.DB.prepare('SELECT ma FROM bnv_viec WHERE ma=?').bind(ma).first();
@@ -860,10 +862,13 @@ async function guiTin(env, b) {
   if (soKy > 600) loi.push(`thân ${soKy} ký tự > 600`);
   if ((html.match(/https?:\/\//g) || []).length > 1) loi.push('quá 1 link');
   if (anh.length > 3) loi.push('quá 3 ảnh');
+  if (tep && anh.length) loi.push('không gửi cùng lúc ảnh và tệp');
+  if (tep && tep.b64.length > 66_000_000) loi.push('tệp quá 49 MB (giới hạn Telegram 50 MB)');
   if (!than.length || !than[than.length - 1].trim().startsWith('👉')) loi.push('dòng cuối phải là dòng «👉 …» xin trả lời');
   if (ch.ngoai.includes(chatId) && CHU_TAI_CHINH.test(boThe(html))) loi.push('nhóm có người ngoài: chặn chữ tài chính nội bộ');
   if (loi.length) return json({ ok: false, loi: loi.join('; ') }, 422);
-  if (b.thu) return json({ ok: true, thu: true, chat: chatId === ch.chu ? 'rieng' : chatId === ch.chatSep ? 'nhom-chinh' : 'nhom-khac', ma: ma || '(sẽ cấp khi gửi)', chu: html, than_dong: than.length, than_ky_tu: soKy });
+  if (b.thu) return json({ ok: true, thu: true, chat: chatId === ch.chu ? 'rieng' : chatId === ch.chatSep ? 'nhom-chinh' : 'nhom-khac', ma: ma || '(sẽ cấp khi gửi)', chu: html, than_dong: than.length, than_ky_tu: soKy,
+    ...(tep ? { tep: { ten: tep.ten, kb: Math.round((tep.b64.length * 3) / 4 / 1024) } } : {}) });
 
   if (!ma) {
     const dong1 = boThe(html).split('\n')[0].replace(/^\[[^\]]+\]\s*/, '').trim();
@@ -873,7 +878,16 @@ async function guiTin(env, b) {
   const chu = html.replaceAll('{MA}', ma);
   const rp = b.reply_to ? { reply_parameters: { message_id: Number(b.reply_to), allow_sending_without_reply: true } } : {};
   let kq;
-  if (!anh.length) kq = await tg(env, 'sendMessage', { chat_id: chatId, text: chu, parse_mode: 'HTML', link_preview_options: { is_disabled: true }, ...rp });
+  if (tep) {
+    const fd = new FormData();
+    fd.append('chat_id', chatId);
+    if (rp.reply_parameters) fd.append('reply_parameters', JSON.stringify(rp.reply_parameters));
+    const loai = /\.pdf$/i.test(tep.ten) ? 'application/pdf' : 'application/octet-stream';
+    fd.append('document', new Blob([Uint8Array.from(atob(tep.b64), (c) => c.charCodeAt(0))], { type: loai }), tep.ten);
+    fd.append('caption', chu);
+    fd.append('parse_mode', 'HTML');
+    kq = await tg(env, 'sendDocument', fd);
+  } else if (!anh.length) kq = await tg(env, 'sendMessage', { chat_id: chatId, text: chu, parse_mode: 'HTML', link_preview_options: { is_disabled: true }, ...rp });
   else {
     const fd = new FormData();
     fd.append('chat_id', chatId);
@@ -894,7 +908,7 @@ async function guiTin(env, b) {
   const ds_ = Array.isArray(kq.result) ? kq.result : [kq.result];
   const st = ds_.map((r) => sqlTin(env, {
     chat_id: chatId, message_id: r.message_id, luc: r.date, tu_id: String(r.from?.id || ''), tu_ten: 'bot', la_bot: 1,
-    noi_dung: boThe(chu), media_group: r.media_group_id ?? null, anh: r.photo?.length ? r.photo[r.photo.length - 1].file_id : null,
+    noi_dung: boThe(chu), media_group: r.media_group_id ?? null, anh: tepCua(r),
     ma_viec: ma, can_bao: 0, reply_to: b.reply_to ?? null,
   }));
   st.push(b.trang_thai && TRANG_THAI.includes(b.trang_thai)
