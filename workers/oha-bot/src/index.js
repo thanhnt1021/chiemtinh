@@ -510,6 +510,12 @@ async function xuLy(env, ctx, m, opt = {}) {
   // 7d — Reply tiếp vào tin bot của luồng CLI (không gõ lệnh) = lời mới, chỉ chủ nhà qua cổng chung.
   // Người khác Reply tin luồng này không phải lời CLI → để luồng sau xử như cũ (7d.1).
   if (repBot && chuDuoc && DAU_CLI.some((d) => repChu.startsWith(d))) {
+    // Lệnh anh Thành 15/10: thả tim chỉ để đánh dấu — không phải lời mới cho phiên CLI.
+    if (chiDau(m)) {
+      await ghiThuong(0);
+      phu(tha(env, chat, m.message_id, '✍'));
+      return {};
+    }
     await cliLoi(text);
     return dap(await cauCli());
   }
@@ -568,6 +574,12 @@ async function xuLy(env, ctx, m, opt = {}) {
   if (repBot) {
     // ForceReply của /viec trần → tạo thẻ.
     if (repChu.startsWith(DAU_FORCE) && (laSep || laChu)) {
+      // Lệnh anh Thành 15/10: thả tim không phải nội dung việc; chiDau đã loại tin kèm ảnh/tệp nên những tin đó vẫn lên thẻ.
+      if (chiDau(m)) {
+        await ghiThuong(0);
+        phu(tha(env, chat, m.message_id, '✍'));
+        return {};
+      }
       return taoViecTuTin(env, ctx, m, coChu ? text : '[tin không có chữ]', tep, nguon, laSep, tat, up, dung);
     }
     // 4.1 Reply vào tin bot → tra mã theo message_id trong kho, không có thì đọc mã trong chữ; tin máy không mã → thẻ con canh trưởng.
@@ -611,8 +623,8 @@ async function xuLy(env, ctx, m, opt = {}) {
     }
   }
 
-  // 4.5 Tin thường KHÔNG thành việc: chỉ lưu + cờ chưa đọc (tin sếp có nội dung).
-  await ghiThuong(laSep && noiDung ? 1 : 0);
+  // 4.5 Tin thường KHÔNG thành việc: chỉ lưu + cờ chưa đọc (tin sếp có nội dung; thả tim không tính — lệnh anh Thành 15/10).
+  await ghiThuong(laSep && noiDung && !chiDau(m) ? 1 : 0);
   return {};
 }
 
@@ -647,7 +659,8 @@ async function ghiVaoThe(env, ctx, m, v, o) {
     st.push(env.DB.prepare('UPDATE bnv_viec SET cap_nhat=? WHERE ma=?').bind(t, v.ma));
   }
   let cauMacDinh = false;
-  if (o.tat) {
+  // Thả tim không phải người giục (lệnh anh Thành 15/10) → không câu máy tắt, không tiêu mốc giãn cách.
+  if (o.tat && !chiDau(m)) {
     const k = 'mac_dinh:' + v.ma;
     const truoc = await docMoc(env, k);
     if (!truoc || t - truoc >= MAC_DINH_CACH_GIAY) {
