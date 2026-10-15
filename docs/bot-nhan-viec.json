@@ -6,5 +6,20 @@
   "ghi_chu": "Tệp dấu của sync uni (skill bot-nhan-viec). Không ghi khoá / mã nhóm vào đây.",
   "clitell": "da-co",
   "clitell_ghi_luc": "2026-10-12",
-  "cli": "scripts/sep-viec/sep_viec.py"
+  "cli": "scripts/sep-viec/sep_viec.py",
+  "lenh_chung": [
+    "viec",
+    "clitell",
+    "lam",
+    "lamdi",
+    "khac",
+    "cho",
+    "tatmay",
+    "momay",
+    "pause",
+    "khoidong",
+    "xoa",
+    "help"
+  ],
+  "lenh_chung_ghi_luc": "2026-10-15"
 }
