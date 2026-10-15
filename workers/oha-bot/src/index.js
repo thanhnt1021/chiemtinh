@@ -550,11 +550,20 @@ async function xuLy(env, ctx, m, opt = {}) {
       }
       if (!ma) {
         await ghiThuong(0);
+        // Lệnh anh Thành 15/10: thả tim chỉ để đánh dấu → ✍, không nhắc cách gõ.
+        if (chiDau(m)) {
+          phu(tha(env, chat, m.message_id, '✍'));
+          return {};
+        }
         return dap('ℹ Gõ <b>#số lời</b> (vd #2 cứ làm theo 1A) — số theo danh sách, hoặc Reply thẳng tin của thẻ.');
       }
       const v = await db.prepare('SELECT ma, trang_thai, nguon, chuyen_sang FROM bnv_viec WHERE ma=?').bind(ma).first();
       if (!v) {
         await ghiThuong(0);
+        if (chiDau(m)) {
+          phu(tha(env, chat, m.message_id, '✍'));
+          return {};
+        }
         return dap(`Chưa ghi được vào thẻ — không tìm thấy thẻ ${esc(ma)}.`);
       }
       return ghiVaoThe(env, ctx, m, v, { coChu, laSep, laChu, tat: giuc, up, noiDung: loi, canBao: 1, quyetHo: true });
@@ -589,6 +598,11 @@ async function xuLy(env, ctx, m, opt = {}) {
     // 7e: việc phụ đã gộp → Reply tin cũ của nó vào việc chính.
     if (v?.chuyen_sang) v = (await db.prepare('SELECT ma, trang_thai, nguon, chuyen_sang FROM bnv_viec WHERE ma=?').bind(v.chuyen_sang).first()) || v;
     if (!v) {
+      if (chiDau(m)) {
+        await ghiThuong(0);
+        phu(tha(env, chat, m.message_id, '✍'));
+        return {};
+      }
       await ghiThuong(laSep ? 1 : 0);
       return { traLoi: traLoi(chat, m.message_id, `Chưa ghi được vào thẻ — không tìm thấy thẻ ${esc(ma)}, em đã lưu tin để xử lý tay.`) };
     }
@@ -672,7 +686,8 @@ async function ghiVaoThe(env, ctx, m, v, o) {
   // 4.9: tin có chữ mang mã lựa chọn → ❤; còn lại ✍. Tin không chữ không bao giờ là câu trả lời.
   const chon = o.coChu && /\b\d[A-Da-d]\b/.test(String(m.text ?? m.caption ?? ''));
   ctx.waitUntil(tha(env, chat, m.message_id, chon ? '❤' : '✍'));
-  if (o.imLang) return {};
+  // Thả tim chỉ để đánh dấu (lệnh anh Thành 15/10): dòng vẫn lên thẻ với cờ 0, chỉ ✍, không câu «Đã nhận».
+  if (o.imLang || chiDau(m)) return {};
   if (o.tat) return cauMacDinh ? { traLoi: traLoi(chat, m.message_id, CAU_MAY_TAT) } : {};
   return { traLoi: traLoi(chat, m.message_id, `✍ Đã nhận · ${v.ma} · Đã ghi vào thẻ`) };
 }
