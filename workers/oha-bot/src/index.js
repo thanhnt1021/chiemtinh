@@ -61,6 +61,11 @@ const LENH_RE = new RegExp(`^\\/(${TEN_LENH.join('|')})(?:@(\\w+))?(?:\\s+([\\s\
 const CHU_TAI_CHINH = /(lãi|lỗ|doanh thu|lợi nhuận|profit|revenue|\d[\d.,]*\s*(đ|vnđ|vnd|usd|\$)|\$\s*\d)/i;
 
 const nowS = () => Math.floor(Date.now() / 1000);
+// Lệnh anh Thành 15/10: thả tim chỉ để đánh dấu — tin chỉ có emoji/dấu câu cũng vậy, không phải câu trả lời hay góp ý.
+const KHONG_PHAI_CHU_RE = /[\s\p{P}\p{S}\p{Extended_Pictographic}\p{Emoji_Presentation}\u200D\uFE0E\uFE0F\u20E3]/gu;
+const coChuThat = (s) => String(s ?? '').replace(KHONG_PHAI_CHU_RE, '') !== '';
+// Tin chỉ gồm emoji/dấu câu, không tệp/thoại → lưu + ✍, không đổi trạng thái, không bật cờ chưa đọc.
+const chiDau = (m) => { const s = String(m.text ?? m.caption ?? ''); return s.trim() !== '' && !coChuThat(s) && !tepCua(m); };
 const ds = (s) => String(s ?? '').split(',').map((x) => x.trim()).filter(Boolean);
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const boThe = (s) => String(s ?? '').replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
@@ -319,7 +324,7 @@ async function xuLy(env, ctx, m, opt = {}) {
   const laChu = tuId === ch.chu;
   const laBot = !!m.from.is_bot;
   const text = String(m.text ?? m.caption ?? '');
-  const coChu = text.trim() !== '' && !m._thoai_hong;
+  const coChu = coChuThat(text) && !m._thoai_hong;
   const tep = tepCua(m);
   const t = nowS();
   const thoai = thoaiCua(m);
@@ -513,6 +518,11 @@ async function xuLy(env, ctx, m, opt = {}) {
   if (rieng && laChu && repBot) {
     const dlt = await db.prepare('SELECT * FROM bnv_duyet_luot_tin WHERE chat_id=? AND message_id=?').bind(chat, rep.message_id).first();
     if (dlt) {
+      if (chiDau(m)) {
+        await ghiThuong(0);
+        phu(tha(env, chat, m.message_id, '✍'));
+        return {};
+      }
       const x = await dlTraLoi(env, m, dlt, m._thoai_hong);
       await run([sqlTin(env, coTin(m, noiDung, 0), up), ...x.st]);
       return { traLoi: traLoi(chat, m.message_id, x.text) };
@@ -627,7 +637,8 @@ async function taoViecTuTin(env, ctx, m, nd, tep, nguon, laSep, tat, up, dung = 
 async function ghiVaoThe(env, ctx, m, v, o) {
   const chat = String(m.chat.id);
   const t = nowS();
-  const st = [sqlTin(env, coTin(m, o.noiDung, o.canBao ?? (o.laSep || !o.laChu ? 1 : 0), { ma_viec: v.ma }), o.up)];
+  const canBao = chiDau(m) ? 0 : o.canBao ?? (o.laSep || !o.laChu ? 1 : 0);
+  const st = [sqlTin(env, coTin(m, o.noiDung, canBao, { ma_viec: v.ma }), o.up)];
   // Chỉ người (không phải chủ nhà thuần) trả lời mới đổi trạng thái chờ → đã trả lời; thẻ đã Xong thì mở lại.
   if (o.doiTrangThai !== false && (o.laSep || !o.laChu || o.quyetHo) && o.coChu && v.nguon !== 'he-thong' && ['cho-sep-tra-loi', 'xong', 'cho-xac-nhan'].includes(v.trang_thai)) {
     const moi = v.trang_thai === 'cho-xac-nhan' ? 'cho-xac-nhan' : 'sep-da-tra-loi';
