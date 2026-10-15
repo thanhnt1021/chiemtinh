@@ -1914,6 +1914,7 @@ HOW_TO = """LUẬT ĐIỀU PHỐI (rules/AGENTS-ORCH.md §Trần-worker):
      **CẤM tắt con vừa gọi lệnh trong 5 phút gần đây**, dù nó có trả ra thứ trông như báo
      cáo: worker vừa nói vừa làm (29/8: W11 bị tắt lúc cách lệnh cuối 18 giây, đang gửi ảnh
      cho founder). Hook tự tách hai nhóm và chỉ khuyên tắt nhóm đã im — cứ đọc lời hook.
+     Thợ mà harness ĐÃ báo kết thúc thì CLI đã tự đóng — KHÔNG cần `TaskStop` (P143 1A).
   6. **Cấm mỗi worker tự dựng một vòng `until ... sleep` canh cùng một tài nguyên, và CẤM
      dò chữ trong output khoá** — chờ khoá bằng ĐÚNG MỘT DÒNG:
      `bash ~/.claude/universal-hooks/wlock.sh wait deploy --owner=<slug> --pid=$$ || exit 75`
@@ -2342,6 +2343,10 @@ def main() -> int:
                     pass
             if chau.strip():
                 txt = chau.strip() + "\n\n" + txt
+            if san and WQ is not None:
+                # P143 1C: main SẮP đọc «➜ THẢ NGAY» cho các vé này -> canh hàng chờ khỏi
+                # đánh thức thêm một lần cho đúng chúng (xem `worker_queue.ghi_main_thay_tha`).
+                WQ.ghi_main_thay_tha(cwd0, [v.get("ma") for v in san])
             json.dump({"hookSpecificOutput": {"hookEventName": key,
                                               "additionalContext": txt}},
                       sys.stdout, ensure_ascii=False)
@@ -2759,10 +2764,15 @@ def main() -> int:
                 nhac_q += ("\n\n⏳ Hàng chờ còn %d việc:\n%s" % (len(con), WQ.bang(con)))
         # CẤM KHUYÊN TẮT CON CÒN ĐANG GỌI LỆNH (ca W11, 29/08 — xem NGUONG_NHUC_NHICH_PHUT).
         # "Trông như đã trả báo cáo" KHÔNG đủ để kết luận đã xong: worker vừa nói vừa làm.
-        xac_tat = [w for w in xac
+        # P143 1A (W195 13/10/2026): `pl == -1.0` = harness ĐÃ báo kết thúc -> CLI đã tự đóng
+        # thợ, `TaskStop` trả «No task found» (đo 24 giờ: 94% lần bấm là thừa; nhắc này in 145
+        # lần). Chỉ còn khuyên tắt con mà harness CHƯA báo kết thúc. Lùi: `UNIV3_P143_1A_TAT=1`.
+        xac_xet = xac if os.environ.get("UNIV3_P143_1A_TAT") == "1" else [
+            w for w in xac if _im_lenh(w) != -1.0]
+        xac_tat = [w for w in xac_xet
                    if _im_lenh(w) is None or _im_lenh(w) < 0
                    or _im_lenh(w) >= NGUONG_NHUC_NHICH_PHUT]
-        xac_dong = [w for w in xac if w not in xac_tat]
+        xac_dong = [w for w in xac_xet if w not in xac_tat]
         nhac_xac = ""
         if xac_tat:
             nhac_xac = (

@@ -144,6 +144,9 @@ def ghi_ket_qua_soat(cwd: str, ds, boi: str = ""):
         m = NT.doc_muc(cwd, so)
         if not m:
             continue
+        cu = m.get("soat") or {}
+        if (cu.get("kq"), cu.get("ly_do"), int(cu.get("luot") or 0)) == (kq, ly, int(m.get("luot") or 1)):
+            continue        # W301: đã ghi đúng kết quả này cho lượt này -> khỏi ghi + log lại mỗi lượt quét
         m["soat"] = {"kq": kq, "ly_do": ly, "boi": boi, "luc": time.time(),
                      "luot": int(m.get("luot") or 1)}
         NT.ghi_muc(cwd, m)
@@ -347,6 +350,14 @@ def _danh_dau_gui(cwd: str, kh: str, message_id, tin: str, nguon: str = "cong"):
 
 
 # ── GỬI QUA LỐI CHUNG (tách riêng để ca thử tiêm hàm giả, KHÔNG đụng mạng) ─────────────
+def _ma_the_re(cwd=""):
+    """Vé 515118e1e9 (W301): mẫu mã thẻ theo khuôn dự án (Task-… · ANHTAN-…); hỏng -> Task-…."""
+    try:
+        return _khuon().ma_trong_chu_re(cwd)
+    except Exception:
+        return r"Task-\d{8}-\d{2,3}"
+
+
 def _chay_cli(args, cwd: str = ""):
     """Chạy `node scripts/task-dev.mjs <args>` ở gốc dự án, nhắm bản thật. Trả (mã thoát, chữ ra)."""
     goc = NT.goc_du_an(cwd or os.getcwd())
@@ -358,8 +369,8 @@ def _chay_cli(args, cwd: str = ""):
 def _mo_ta_the(m: dict, o: dict, khai) -> str:
     ai = "Máy (Claude) chờ anh Thành xác nhận"
     if khai and khai.get("muc") != "da-thu-ban-that":
-        ai = "%s vào web thử rồi trả lời tin nhóm" % (khai.get("nho") or "người dùng đúng vai")
-    return ("Chuyện gì: việc %s vừa xong, máy tự báo nhóm Hệ thống\nCần gì: %s\n"
+        ai = "%s vào web thử rồi phản hồi trên thẻ" % (khai.get("nho") or "người dùng đúng vai")
+    return ("Chuyện gì: việc %s vừa xong, máy tự báo anh Thành (tin riêng)\nCần gì: %s\n"
             "Đã làm tới đâu: %s\nAi cần làm gì tiếp: %s"
             % (m.get("so") or "?", o["da_lam"], o["da_lam"], ai))
 
@@ -421,7 +432,7 @@ def gui(cwd: str, m: dict, that: bool = True, chat_id: str = CHAT_ID_MAC_DINH, n
                 rc, out = goi(["tao", "--tieu-de", tin["tieu_de"], "--mo-ta", _mo_ta_the(m, tin, khai),
                                "--nguon", "tự tạo lúc báo nhóm việc %s" % (m.get("so") or "?"),
                                "--w", m.get("so") or ""] + cot)
-                mt = re.search(r"Task-\d{8}-\d{2,3}", out or "")
+                mt = re.search(_ma_the_re(cwd), out or "")
                 if rc != 0 or not mt:
                     raise RuntimeError("không tạo được thẻ: %s" % (out or "")[-300:])
                 the = mt.group(0)
@@ -435,6 +446,11 @@ def gui(cwd: str, m: dict, that: bool = True, chat_id: str = CHAT_ID_MAC_DINH, n
             goi(["ghi", "--ma", the, "--noi-dung", day_du])
         args = ["tin", "--ma", the, "--loai", "xong", "--tieu-de", o["tieu_de"], "--da-lam", o["da_lam"],
                 "--xem-o", o["xem_o"], "--can-lam", o["can_lam"]]
+        # Vé e7c1eac966 điểm 2 (W301): sau P137 (anh Thành 11/10 «không tin việc nào vào nhóm nữa») máy
+        # chủ trả 403 cho mọi tin không phải chat riêng anh -> lối duy nhất còn mở là `--rieng`.
+        # Lùi (gửi nhóm như cũ): `UNIV3_BK_RIENG_TAT=1`.
+        if os.environ.get("UNIV3_BK_RIENG_TAT") != "1":
+            args.append("--rieng")
         if o.get("phu"):
             args += ["--phu", o["phu"]]
         for a in anh:
@@ -475,6 +491,58 @@ def quet(cwd: str, that: bool = True, chat_id: str = CHAT_ID_MAC_DINH, nguoi_gui
 #     + đã khai mà lượt trước gửi hụt vì mạng). KHÔNG bóc gì thêm: câu của điều phối không
 #     gắn với MỘT mã việc nào, bóc là đoán.
 # Mọi nhánh đều fail-safe: hỏng gì cũng trả 0 — cổng báo tin TUYỆT ĐỐI không được chặn ai.
+# Vé e7c1eac966 điểm 4 (W301 15/10, nợ W171): lời khai của thợ VỪA KẾT THÚC được ghi vào mục sổ CÙNG
+# SỐ W của ngày làm việc đang mở mà không so việc — số thợ được cấp lại, con «W149 SOÁT Mango…» đè
+# lời khai lên mục W149 «nút copy che mã đơn»; W143 «máy soát báo cáo ngày» đè mục W143 «soát design
+# rà kỹ số liệu». Nay trước khi ghi so NGÀY (sổ số thợ quy ngày của số đó theo lúc con bắt đầu — lệch là
+# KHÔNG ghi) và TÊN (từ khoá chung sau khi bỏ dấu + bỏ chữ thường gặp — lệch tên chỉ chặn khi mục ĐÃ có
+# lời khai, tức sắp ĐÈ; mục trống thì vẫn ghi như cũ vì tên mục có thể do main đặt khác chữ).
+# Hỏng gì khi so -> coi như khớp (giữ hành vi cũ). Lùi: `UNIV3_BK_SO_TEN_TAT=1`.
+TU_THUONG_TEN = set("""soat sua viec cho cua va the lam lai them mot cac nhung khi de tu ra vao
+    trong ngoai moi cu la co khong duoc da dang can phai tin nut man trang w""".split())
+
+
+def _tu_khoa_ten(s):
+    t = re.sub(r"\bw\d{1,4}\b", " ", NT._khong_dau(str(s or "")).lower())
+    return {w for w in re.findall(r"[a-z0-9]{2,}", t) if w not in TU_THUONG_TEN}
+
+
+def _luc_bat_dau(jl):
+    try:
+        with open(jl, encoding="utf-8") as f:
+            for dong in f:
+                ts = (json.loads(dong) or {}).get("timestamp")
+                if ts:
+                    from datetime import datetime
+                    return datetime.fromisoformat(str(ts).replace("Z", "+00:00")).timestamp()
+    except Exception:
+        pass
+    return 0.0
+
+
+def muc_cung_viec(cwd, m, so, ten_tho, jl=""):
+    """(True, "") = được ghi lời khai của con vừa xong vào mục sổ `m`; (False, lý do) = mục của việc khác."""
+    if os.environ.get("UNIV3_BK_SO_TEN_TAT") == "1":
+        return True, ""
+    try:
+        a, b = _tu_khoa_ten(m.get("ten")), _tu_khoa_ten(ten_tho)
+        if (m.get("bao_khach") or {}) and a and b and len(a & b) / float(min(len(a), len(b))) < 0.34:
+            return False, "mục «%s» đã có lời khai, mô tả thợ «%s» là việc khác — không đè" % (
+                (m.get("ten") or "")[:50], ten_tho[:50])
+        luc = _luc_bat_dau(jl) if jl else 0.0
+        if luc and m.get("ngay"):
+            for du_an in NT._ung_vien_du_an(cwd):
+                ng = NT._ngay_theo_wseq(du_an, so, luc)
+                if ng:
+                    if ng != m.get("ngay"):
+                        return False, "sổ số thợ quy %s của con này về ngày %s, mục sổ là ngày %s" % (
+                            so, ng, m.get("ngay"))
+                    break
+    except Exception:
+        return True, ""
+    return True, ""
+
+
 def khai_tu_bao_cao_tho(cwd: str):
     """Ghi dòng khai `BAO-KHACH:` của thợ VỪA KẾT THÚC vào đúng mục sổ nghiệm thu.
 
@@ -491,6 +559,16 @@ def khai_tu_bao_cao_tho(cwd: str):
     except Exception:
         return []
     ra = []
+    # Vé e7c1eac966 điểm 1 (W301): Người soát mô tả «SOÁT: W###» không lọt vào `ds` (chỉ nhận mô tả
+    # mở đầu W###) -> dòng SOAT-KQ trong báo cáo của nó trước đây không bao giờ được đọc.
+    try:
+        for so_soat, ten_soat, jl_soat in (WK.agent_soat_vua_ket_thuc(cwd) or []):
+            try:
+                ghi_ket_qua_soat(cwd, boc_soat_kq(WK._khai_cuoi(jl_soat) or ""), "SOÁT " + so_soat)
+            except Exception:
+                pass
+    except Exception:
+        pass
     for so, (_ten, jl) in ds.items():
         try:
             van = WK._khai_cuoi(jl) or ""
@@ -504,6 +582,12 @@ def khai_tu_bao_cao_tho(cwd: str):
                 continue
             m = NT.doc_muc(cwd, so)          # CHỈ ngày làm việc đang mở — con vừa xong hôm nay
             if not m:
+                continue
+            khop, vi_sao = muc_cung_viec(cwd, m, so, _ten, jl)
+            if not khop:
+                if NT.nen_nhac(cwd, "BKLECH-%s" % so, vi_sao):
+                    NT.ghi_nhat_ky("BAO-KHACH KHÔNG ghi lời khai của thợ %s vào %s — %s"
+                                   % (so, NT.khoa(cwd, so, m.get("ngay") or ""), vi_sao))
                 continue
             cs = boc_cho_soat(van)
             if cs and not m.get("cho_soat"):
@@ -580,7 +664,7 @@ def thieu_dong_khai(cwd: str) -> str:
         dong.append("  · %s «%s» — %s" % (so, str(ten)[:60], loai))
     if not dong:
         return ""
-    return ("📣 VIỆC ĐÃ NGHIỆM THU ĐẠT MÀ NHÓM «Hệ thống Fulfill» CHƯA NHẬN ĐƯỢC TIN NÀO:\n"
+    return ("📣 VIỆC ĐÃ NGHIỆM THU ĐẠT MÀ CHƯA BÁO AI (anh Thành chưa nhận tin riêng / người dùng chưa có chuông web):\n"
             + "\n".join(dong) + "\n"
             "   Luật Dev 23/09: việc MẶT TIỀN (người dùng mở web ra nhìn thấy / dùng được)"
             " xong là GỬI, TẤT CẢ, không chờ ai nhắc.\n"
@@ -590,8 +674,11 @@ def thieu_dong_khai(cwd: str) -> str:
             "   Không có màn để chụp -> thay phần ảnh bằng «KHÔNG ẢNH: <vì sao không có>».\n"
             "   Việc HẬU TRƯỜNG (cổng, luật, dọn kho, đổi tên kỹ thuật, cắm lịch chạy) ->"
             " `BAO-KHACH: không`.\n"
-            "   Khai xong tin TỰ bay vào nhóm lúc thợ dừng. Thợ đã đóng việc rồi thì ĐIỀU PHỐI"
-            " gửi bù NGAY trong ngày, không để sang hôm sau.")
+            "   Khai xong máy TỰ gửi tin riêng anh Thành lúc thợ dừng (P137: không tin việc nào vào nhóm"
+            " nữa). Thợ đã đóng việc rồi thì ĐIỀU PHỐI báo bù NGAY trong ngày, không để sang hôm sau.\n"
+            "   ĐÃ báo bằng lối khác thì khai thêm phần cuối dòng BAO-KHACH (chữ số = mã):\n"
+            "     ::ĐÃ BÁO: tin riêng <mã tin>     hoặc     ::ĐÃ BÁO: chuông web <mã chuông>\n"
+            "   -> cổng coi như đã báo, không gửi trùng.")
 
 
 def hook(data: dict) -> int:
@@ -607,7 +694,7 @@ def hook(data: dict) -> int:
     khoi = []
     for k in quet(cwd, that=not kho_thu):
         if k.get("gui"):
-            khoi.append("📣 ĐÃ BÁO NHÓM «Hệ thống Fulfill TheChic» việc %s (tin số %s, %d ảnh"
+            khoi.append("📣 ĐÃ BÁO anh Thành (tin riêng, P137) việc %s (tin số %s, %d ảnh"
                         " gửi kèm):\n%s"
                         % (k.get("kh"), k.get("message_id"), len(k.get("anh") or []),
                            k.get("tin")))

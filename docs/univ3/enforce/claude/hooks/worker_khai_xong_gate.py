@@ -75,6 +75,29 @@ RX_KHAI_XONG = re.compile(
 RX_MAIN_XONG = re.compile(
     r"(đã xong|xong rồi|xong\b|hoàn tất|hoàn thành|chốt xong|done\b|✅)", re.I)
 RX_MA_W = re.compile(r"\bW(\d{1,4})\b")
+# Vé e7c1eac966 (W301 15/10/2026, nợ W171 12/10) — mô tả của NGƯỜI SOÁT mở bằng «SOÁT: W120» /
+# «Soát W120» (khuôn bao_khach_gui `dang_giu_cho_soat`), không mở bằng W###; RX_MA_W.match bỏ sót nên
+# báo cáo `SOAT-KQ:` không bao giờ được đọc. W### ở đây là việc ĐƯỢC SOÁT, không phải số của con soát.
+RX_SOAT_MO_TA = re.compile(r"^\s*so[aá]t\b\s*[:\-–—]?\s*W(\d{1,4})\b", re.I)
+
+
+def ma_w_mo_ta(mo_ta, nhan_soat=False):
+    """`W###` mở đầu mô tả; `nhan_soat=True` thì nhận cả «SOÁT: W###» (trả mã việc được soát)."""
+    t = str(mo_ta or "").strip()
+    m = RX_MA_W.match(t) or (RX_SOAT_MO_TA.match(t) if nhan_soat else None)
+    return "W%s" % m.group(1) if m else ""
+
+
+def agent_soat_vua_ket_thuc(cwd):
+    """[(W được soát, mô tả, transcript)] — Người soát VỪA KẾT THÚC (mô tả «SOÁT: W###»).
+
+    Tách riêng khỏi `agent_w_vua_ket_thuc`: con soát mang mã của việc ĐƯỢC SOÁT, gộp chung một
+    từ điển theo mã thì đè/ bị đè bởi chính thợ W### đó."""
+    ra = []
+    for _aid, mo_ta, jl, _mt in _agent_vua_xong(cwd):
+        if RX_SOAT_MO_TA.match(mo_ta or ""):
+            ra.append((ma_w_mo_ta(mo_ta, True), mo_ta[:80], jl))
+    return ra
 
 
 def _vai_khong_co_bash(agent_type):
@@ -483,8 +506,9 @@ def quet(cwd):
         # `tools:` thật của `agents/<agentType>.md`, không đoán/không hardcode tên vai.
         if _vai_khong_co_bash(agent_type):
             continue
-        m = RX_MA_W.match(mo_ta.strip())
-        so = "W%s" % m.group(1) if m else ""
+        # Vé e7c1eac966: CỐ Ý không nhận «SOÁT: W###» ở đây — mã này dùng để đọc mốc tiến độ của
+        # CHÍNH con đang xét; với Người soát W### là việc được soát -> đọc nhầm mốc của thợ kia.
+        so = ma_w_mo_ta(mo_ta)
         slug = ""
         if WB is not None:
             try:
@@ -630,17 +654,50 @@ def _luot_cuoi(cac_dong):
     return "\n".join(manh)
 
 
+# P143 1G (W195 13/10/2026) — cổng «xong cho thợ chưa 100%» bắt nhầm 6/8 câu mẫu: nó kết tội
+# MỌI mã W## nằm trong câu có chữ «xong», kể cả câu phủ định («W53 em chưa gọi là xong»), «xong»
+# của thao tác đọc («vừa đọc xong mã»), «xong» của việc khác đứng trước mã («lượt lên bản xong là
+# em dừng W105»). Nay xét THEO VẾ (cắt ở , ; — và dấu gạch có cách hai bên — KHÔNG cắt ở «:» vì
+# «**W122 (…):** đã sửa xong» là nhãn đầu dòng): vế phủ định/điều kiện -> im; gỡ cụm xong-của-
+# thao-tác (dùng lại `RX_XONG_THAO_TAC`/`RX_CHO_XONG` của nhánh nghiệm thu); còn dấu xong thì mã
+# phải đứng TRƯỚC chữ xong trong cùng vế (hoặc ngay sau: «xong W59»). Lùi: `UNIV3_P143_1G_TAT=1`.
+RX_MIEN_100_KD = re.compile(r"(?<![0-9a-z])(khi|coi la|goi la|tinh la|chi con)(?![0-9a-z])")
+RX_RANH_VE = re.compile(r"[,;]|\s[-–—]\s|—")
+RX_MA_W_KD = re.compile(r"(?<![0-9a-z])w(\d{1,4})(?![0-9a-z])")
+RX_XONG_ROI_MA_KD = re.compile(r"(?<![0-9a-z])xong\s+(?:(?:ca|viec|het)\s+)?w(\d{1,4})(?![0-9a-z])")
+
+
+def ma_khai_xong(cau):
+    """{W##} mà câu THẬT SỰ khai là xong (bản P143 1G — xem WHY ngay trên)."""
+    ra = set()
+    for ve in RX_RANH_VE.split(_bo_dau(cau or "").lower()):
+        if RX_MIEN_KD.search(ve) or RX_MIEN_100_KD.search(ve):
+            continue
+        goc = RX_CHO_XONG.sub(" ", RX_XONG_THAO_TAC.sub(" ", ve))
+        for mx in RX_MAIN_XONG_KD.finditer(goc):
+            truoc = goc if mx.group(0) == "✅" else goc[:mx.start()]
+            ra |= {"W%s" % m.group(1) for m in RX_MA_W_KD.finditer(truoc)}
+        ra |= {"W%s" % m.group(1) for m in RX_XONG_ROI_MA_KD.finditer(goc)}
+    return ra
+
+
 def soi_loi_main(van_ban, rows):
     """[(câu, W###)] — main đang nói con CHƯA tới 100 là đã xong."""
     do = {r["so"]: r for r in rows if r["so"] and r["so"] != "W??"}
     if not do:
         return []
+    cu = os.environ.get("UNIV3_P143_1G_TAT") == "1"
     bat = []
     for cau in _cau_cua(van_ban):
         if not RX_MAIN_XONG.search(cau):
             continue
-        for m in RX_MA_W.finditer(cau):
-            so = "W%s" % m.group(1)
+        if cu:
+            cac_so = ["W%s" % m.group(1) for m in RX_MA_W.finditer(cau)]
+        else:
+            khai = ma_khai_xong(cau)
+            cac_so = [so for so in ("W%s" % m.group(1) for m in RX_MA_W.finditer(cau))
+                      if so in khai]
+        for so in cac_so:
             if so in do:
                 bat.append((cau.strip()[:200], so))
     return bat
@@ -759,6 +816,48 @@ def _goc_cua_xong(cau):
     return kd
 
 
+# P143 1G (W195 13/10/2026) — cổng «chưa khai nghiệm thu» TỰ LẤY lời khai trong báo cáo cuối
+# của thợ thay vì đòi main gõ lại. Đo 2 ngày: 67/141 lần chặn là «CHƯA KHAI TIÊU CHÍ» và 24/38
+# lần (24 giờ) main né chữ «xong» thay vì đi khai — trong khi báo cáo thợ đã có sẵn lời khai:
+#   · dòng `NGHIEM THU:` (tiêu chí / `khong-man`) -> khai đúng như thợ viết;
+#   · `BAO-KHACH: không` (hậu trường, không có màn) + dòng `MUC-KIEM:` đủ dài -> khai `khong-man`
+#     với lý do = chính dòng mức kiểm (thợ tự nói đã thử tới đâu);
+#   · việc Mặt tiền đã có mục mà sổ chưa có mức kiểm -> ghi dòng `MUC-KIEM:` hợp lệ vào sổ.
+# Mặt tiền KHÔNG có tiêu chí thì KHÔNG tự khai: vẫn phải mở trang thật (định nghĩa XONG 08/09).
+# Chỉ đụng con VỪA KẾT THÚC; mọi lần ghi đều qua `NT.khai`/`MK.ghi_so` nên có nhật ký.
+# Lùi: `UNIV3_P143_1G_TAT=1`.
+def _tu_khai_tu_bao_cao(NT, cwd, so, ten, jl):
+    if os.environ.get("UNIV3_P143_1G_TAT") == "1":
+        return ""
+    try:
+        van = _khai_cuoi(jl) or ""
+        if not van:
+            return ""
+        import tin_nhom_trung_thuc_gate as MK
+        muc = NT.doc_muc(cwd, so)
+        bk = NT.boc_bao_khach(van)
+        kh = MK.boc(van)
+        if muc is None:
+            tc, km, _loi = NT.boc_tieu_chi(van)
+            if km and len(km.strip()) < NT.LY_DO_TOI_THIEU:
+                km = ""
+            if tc or km:
+                NT.khai(cwd, so, tc, km, ten, nguon="bao-cao-tho", bao_khach=bk)
+                return "nghiem-thu"
+            dong = ((kh or {}).get("dong") or "").strip()
+            if bk is not None and bk.get("co") is False and len(dong) >= NT.LY_DO_TOI_THIEU:
+                NT.khai(cwd, so, [], "hậu trường (BAO-KHACH: không) — thợ tự khai mức kiểm: "
+                        + dong[:300], ten, nguon="bao-cao-tho", bao_khach=bk)
+                return "khong-man"
+            return ""
+        if MK.la_viec_mat_tien(muc) and not MK.khai_cua(muc) and kh and MK.hop_le(kh):
+            MK.ghi_so(cwd, so, kh, muc.get("ngay") or "")
+            return "muc-kiem"
+    except Exception:
+        return ""
+    return ""
+
+
 def _nghiem_thu_soi(van_ban, cwd):
     """[(số, câu, lý do, nguồn)] — main gọi 'xong' cho việc chưa đối chiếu đạt với web thật.
 
@@ -767,7 +866,9 @@ def _nghiem_thu_soi(van_ban, cwd):
     NT = _nap_nghiem_thu()
     if NT is None or not NT.bat_cong():
         return []
-    vua = _ma_w_vua_ket_thuc(cwd)
+    vua_day = agent_w_vua_ket_thuc(cwd)
+    vua = {so: v[0] for so, v in vua_day.items()}
+    da_tu_khai = set()
     bat = []
     for cau in _cau_cua(van_ban):
         if not RX_MAIN_XONG_NT.search(cau):
@@ -804,6 +905,9 @@ def _nghiem_thu_soi(van_ban, cwd):
             so = "W%s" % m.group(1)
             if so in [b[0] for b in bat]:
                 continue
+            if so in vua_day and so not in da_tu_khai:
+                da_tu_khai.add(so)
+                _tu_khai_tu_bao_cao(NT, cwd, so, vua_day[so][0], vua_day[so][1])
             co_muc = NT.doc_muc(cwd, so) is not None
             # Chỉ xét con VỪA KẾT THÚC hôm nay, hoặc con đã có mục trong sổ nghiệm thu.
             # Không thì câu nhắc lại một W## của hôm kia cũng bị chặn oan.
@@ -1136,10 +1240,10 @@ def _khoi_nhac_anh(cwd):
             ghi[aid] = {"mt": mt, "luc": int(time.time())}
             continue                       # có ảnh, hoặc đã nói thẳng vì sao không có
         ghi[aid] = {"mt": mt, "luc": int(time.time())}
-        m = RX_MA_W.match(mo_ta)
+        ma_hien = ma_w_mo_ta(mo_ta, nhan_soat=True)
         dong.append("  · %s «%s» — vùng ghi %s (giao diện), báo cáo cuối KHÔNG có đường "
                     "dẫn ảnh nào, cũng không nói vì sao không chụp"
-                    % ("W%s" % m.group(1) if m else "(không rõ mã)", mo_ta[:60] or aid,
+                    % (ma_hien or "(không rõ mã)", mo_ta[:60] or aid,
                        " ".join(vung[:3])))
     if not dong:
         return ""

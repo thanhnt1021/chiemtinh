@@ -258,6 +258,23 @@ nhac_bot_clitell(){
   say "   → làm theo skill bot-nhan-viec mục 7d + ca thử 20–23 (references/ca-thu.md), thử thật một lời rồi ghi dấu:"
   say "      $HOME_HOOKS/sync-uni.sh bot-nhan-viec clitell-da-co"
 }
+# WHY (15/10/2026, lệnh founder Task-15102026-06 «lệnh gì tương tác với claude cli đều đồng bộ hết»): skill
+# bot-nhan-viec mục 7f là BỘ LỆNH CHUNG chạm phiên CLI. Tệp dấu khai `lenh_chung` = lệnh dự án đã có; thiếu lệnh nào thì
+# nhắc «dự án X thiếu /…». Danh sách dưới PHẢI khớp bảng 7f (đổi bảng là đổi dòng này cùng lượt). Chỉ nhắc, KHÔNG đổi mã thoát.
+LENH_CHUNG_BAT_BUOC="viec clitell lam lamdi khac cho tatmay momay pause khoidong xoa help"
+nhac_bot_lenh_chung(){
+  f="$PROJECT/$BOT_DAU_REL"
+  thieu="$(python3 -c '
+import json,sys
+d=json.load(open(sys.argv[1],encoding="utf-8"))
+v=d.get("lenh_chung")
+co=set(str(x).strip().lstrip("/").lower() for x in v) if isinstance(v,list) else set()
+print(" ".join("/"+l for l in sys.argv[2].split() if l not in co))
+' "$f" "$LENH_CHUNG_BAT_BUOC" 2>/dev/null)" || thieu="(đọc tệp dấu lỗi)"
+  if [ -z "$thieu" ]; then say "✓ bot đủ bộ lệnh chung chạm phiên CLI (lenh_chung, skill bot-nhan-viec mục 7f)"; return 0; fi
+  say "⚠ VIỆC CHO MAIN: dự án $(basename "$PROJECT") thiếu $thieu (bộ lệnh chung chạm phiên CLI)"
+  say "   → làm theo bảng skill bot-nhan-viec mục 7f, thử thật trên bot rồi thêm tên lệnh vào mảng \"lenh_chung\" của $BOT_DAU_REL"
+}
 cmd_bot_nhan_viec(){
   if [ -z "$BOT_CHON" ]; then hoi_bot_nhan_viec; exit 0; fi
   if [ "$BOT_CHON" = "thoai-da-co" ] || [ "$BOT_CHON" = "clitell-da-co" ]; then
@@ -445,7 +462,7 @@ cmd_check(){
   hr; say "▶ 3c. Bot nhận việc của dự án (skill bot-nhan-viec)"
   BOT_TT="$(bot_trang_thai)"
   case "$BOT_TT" in
-    da-co) say "   ✓ $BOT_DAU_REL: $BOT_TT"; nhac_bot_thoai | sed 's/^/   /'; nhac_bot_clitell | sed 's/^/   /' ;;
+    da-co) say "   ✓ $BOT_DAU_REL: $BOT_TT"; nhac_bot_thoai | sed 's/^/   /'; nhac_bot_clitell | sed 's/^/   /'; nhac_bot_lenh_chung | sed 's/^/   /' ;;
     khong-can) say "   ✓ $BOT_DAU_REL: $BOT_TT" ;;
     *) hoi_bot_nhan_viec | sed 's/^/   /' ;;
   esac

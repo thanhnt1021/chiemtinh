@@ -164,6 +164,78 @@ def san_bay_gio(cwd: str):
     return {str(v.get("ma") or ""): v for v in ves if v.get("ma")}
 
 
+# ══════ P143 1C (W195 13/10/2026) — CHỈ ĐÁNH THỨC KHI CHẮC THẢ ĐƯỢC ══════
+# Đo 24 giờ: canh này đánh thức main 40 lần, 12 lần main dậy mà KHÔNG thả được (lý do main tự
+# ghi: đủ 5 thợ · thông báo đến sau khi vé đã thả · cổng tiền kiểm chặn vì trùng vùng), và 135
+# lần hai cú đánh thức cách nhau ≤ 2 phút. Hai lớp lọc TRƯỚC khi đánh thức:
+#   (a) hỏi ĐÚNG cổng thả: chạy chính `worker_cap_enforce.py` trong hộp cát (qua
+#       `tien_kiem_brief.chay_cong` — đúng đường tiền kiểm dùng, không chép luật) với brief của
+#       vé; cổng trả «trùng vùng» hoặc «đủ trần» thì vé đó KHÔNG đánh thức (main dậy cũng không
+#       làm gì được). Cổng chặn vì lỗi brief (thiếu `VIEC:`, DoR…) thì VẪN đánh thức — main sửa
+#       brief được. Hỏng gì cũng giữ vé lại (fail-open = vẫn đánh thức như cũ).
+#   (b) main VỪA thấy lệnh thả cho đúng các vé này ≤ `MAIN_THAY_THA_GIAY` (sổ
+#       `worker_queue.main_vua_thay_tha`) -> chưa đánh thức; quá hạn mà vé còn nằm thì đánh thức.
+# Lùi: `UNIV3_P143_1C_TAT=1`.
+P143_1C_TAT = os.environ.get("UNIV3_P143_1C_TAT") == "1"
+HOI_CONG_LAI_GIAY = float(os.environ.get("UNIV3_TU_THA_HOI_CONG_LAI_GIAY", "60"))
+DAU_CONG_KHONG_THA_DUOC = ("ghi vào VÙNG mà worker khác ĐANG GIỮ", "THỰC SỰ ĐANG CHẠY, trần là")
+
+
+def _cong_tha_chan_cung(cwd: str, v: dict, transcript: str = "") -> bool:
+    """True = cổng thả THẬT đang chặn vé này vì lý do main không gỡ được (trùng vùng/đủ trần)."""
+    prompt = str(v.get("prompt") or "")
+    if not prompt.strip():
+        return False
+    import shutil
+    goc = ""
+    try:
+        sys.path.insert(0, HOOKS)
+        import tien_kiem_brief as TK
+        goc = os.path.join("/tmp", "tu-tha-hoi-cong-%d-%d" % (os.getpid(), int(time.time() * 1000) % 100000))
+        env = TK.dung_hop_cat(goc)
+        payload = {"session_id": "tu-tha-hoi-cong", "cwd": cwd,
+                   "transcript_path": transcript or TK.transcript_that(cwd),
+                   "hook_event_name": "PreToolUse", "tool_name": "Agent",
+                   "tool_input": {"description": str(v.get("description") or ""),
+                                  "prompt": prompt,
+                                  "subagent_type": str(v.get("subagent_type") or "tho-fulfill")}}
+        tt, loi = TK.chay_cong("worker_cap_enforce.py", payload, env, cwd)
+        return tt == "THIẾU" and any(d in (loi or "") for d in DAU_CONG_KHONG_THA_DUOC)
+    except Exception:
+        return False
+    finally:
+        if goc:
+            shutil.rmtree(goc, ignore_errors=True)
+
+
+def loc_chac_tha_duoc(cwd: str, moi: dict, transcript: str = "", nho: dict = None) -> dict:
+    """Bỏ khỏi `moi` các vé mà đánh thức main là vô ích (xem P143 1C ở trên)."""
+    if P143_1C_TAT or not moi:
+        return moi
+    try:
+        sys.path.insert(0, HOOKS)
+        import worker_queue as WQ
+        if WQ.main_vua_thay_tha(cwd, list(moi)):
+            vet("1C: main vừa thấy lệnh thả cho %s -> chưa đánh thức" % ",".join(sorted(moi)))
+            return {}
+    except Exception:
+        pass
+    nho = {} if nho is None else nho
+    ra = {}
+    for ma, v in moi.items():
+        cu = nho.get(ma)
+        if cu and (time.time() - cu[0]) < HOI_CONG_LAI_GIAY:
+            chan = cu[1]
+        else:
+            chan = _cong_tha_chan_cung(cwd, v, transcript)
+            nho[ma] = (time.time(), chan)
+        if chan:
+            vet("1C: cổng thả chặn cứng vé %s (trùng vùng/đủ trần) -> không đánh thức" % ma)
+            continue
+        ra[ma] = v
+    return ra
+
+
 def duoc_keu(cwd: str, khoa_ve: str) -> bool:
     """Hãm theo bậc 8' -> 20' -> 45'. KHÔNG bao giờ câm hẳn."""
     try:
@@ -439,6 +511,7 @@ def canh(cwd: str, hop=None, sid: str = "", transcript: str = "") -> str:
     t0 = time.time()
     ban_dau = set((hop[0]() if hop else san_bay_gio(cwd)).keys())
     lien_tiep, vong = 0, 0
+    nho_cong = {}                        # P143 1C: nhớ kết quả hỏi cổng thả theo mã vé
     while True:
         vong += 1
         if hop is not None:
@@ -478,6 +551,11 @@ def canh(cwd: str, hop=None, sid: str = "", transcript: str = "") -> str:
         lien_tiep += 1
         if lien_tiep < ON_DINH:          # đợi ổn định, tránh bắt đúng khe worker vừa chớp
             continue
+        if hop is None:
+            moi = loc_chac_tha_duoc(cwd, moi, transcript, nho_cong)     # P143 1C
+            if not moi:
+                lien_tiep = 0
+                continue
         khoa_ve = ",".join(sorted(moi))
         if not duoc_keu(cwd, khoa_ve):
             lien_tiep = 0

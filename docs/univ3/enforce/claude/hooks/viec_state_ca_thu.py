@@ -323,10 +323,28 @@ def ca11_m5_do_hai_lan():
     """M5.6 — S12 (TaskStop) chỉ chấm sau khi đo HAI LẦN cách nhau >= 60 giây, cùng kết
     quả; đối chứng âm: worker khác đang sống (không notification) không được lẫn vào."""
     goc = _hop_cat()
+    import viec_state as _VS
+    _nguong_cu = _VS.S12_TU_DONG_PHUT
     try:
         import tu_tha_ve as TTV
         aid, cha = _dung_session_agent(goc, "sessM5", "m5xactreo000001",
                                         ket_thuc="completed", mo_ta="W97 xác treo test M5")
+        # P143 1A (W195): mặc định MỚI — harness đã báo kết thúc thì KHÔNG đòi TaskStop nữa.
+        _VS.S12_TU_DONG_PHUT = 0.0
+        r0 = TTV.s12_xac_nhan_hai_lan(CWD)
+        _sv = [v for v in _VS.trang_thai_viec(CWD, nang=False) if v["trang_thai"] == "S12"]
+        ok("P143-1A — mặc định mới: thợ harness đã báo kết thúc -> KHÔNG có S12, không đòi TaskStop",
+           r0 == {} and _sv == [], "r0=%r s12=%r" % (r0, _sv))
+        # Phần dưới đo ĐƯỜNG LÙI (`UNIV3_P143_1A_TAT=1` = ngưỡng 5 phút cũ): M5 đo-hai-lần còn
+        # nguyên. Sổ `da_bam` vừa được tự ghi ở bước trên -> xoá mục ca thử để đo lại từ đầu.
+        _VS.S12_TU_DONG_PHUT = 5.0
+        _so = _VS._tep_taskstop_da_bam(CWD)
+        try:
+            _st = json.load(open(_so, encoding="utf-8"))
+            _st = {k: v for k, v in _st.items() if not k.startswith("m5xactreo")}
+            json.dump(_st, open(_so, "w", encoding="utf-8"))
+        except Exception:
+            pass
         r1 = TTV.s12_xac_nhan_hai_lan(CWD)
         ok("M5.6a — lần đo THỨ NHẤT (chưa đủ 60s) KHÔNG trả kết quả", r1 == {}, "r1=%r" % r1)
         st_path = TTV._moc_s12(CWD)
@@ -344,6 +362,7 @@ def ca11_m5_do_hai_lan():
         ok("M5.6c — ĐỐI CHỨNG ÂM: worker đang sống (W98) KHÔNG lọt vào S12",
            "W98" not in r3, "r3=%r" % r3)
     finally:
+        _VS.S12_TU_DONG_PHUT = _nguong_cu
         _don(goc)
 
 
@@ -365,7 +384,9 @@ def ca12_s12_cua_thoat():
         def running_workers(self, _cwd):
             return ([], [(self.age, FAKE, "W99 ca thu cửa thoát", "", -1.0, False)])
 
+    nguong_cu = VS.S12_TU_DONG_PHUT
     try:
+        VS.S12_TU_DONG_PHUT = 5.0      # đo đường lùi (ngưỡng cũ); mặc định mới đo ở ca (d)
         VS.WCE = _Gia(VS.S12_TU_DONG_PHUT + 4)
         r1 = VS._nguon_worker(CWD)
         r2 = VS._nguon_worker(CWD)
@@ -380,7 +401,18 @@ def ca12_s12_cua_thoat():
         r3 = VS._nguon_worker(CWD)
         ok("S12-cửa-thoát(c) ĐỐI CHỨNG ÂM: xác MỚI (im 1 phút) vẫn còn S12 — bấm còn tác dụng",
            len(r3) == 1 and r3[0]["trang_thai"] == "S12", "r3=%r" % r3)
+        # P143 1A (W195): mặc định MỚI ngưỡng 0 — xác mới đúng 1 phút cũng im, tự ghi sổ.
+        FAKE3 = "cCATHUS12P143MOI"
+        _Gia.running_workers = lambda self, _c: ([(2.0, "dCATHUSONGTHAT", "W97 đang sống", "", 0.5, False)],
+                                                 [(1.0, FAKE3, "W96 xác mới", "", -1.0, False)])
+        VS.S12_TU_DONG_PHUT = 0.0
+        r4 = VS._nguon_worker(CWD)
+        ok("S12-P143-1A(d) mặc định mới: xác harness đã báo kết thúc (1 phút) -> IM, ghi sổ da_bam; "
+           "thợ còn sống vẫn hiện S06",
+           [x["trang_thai"] for x in r4] == ["S06"] and FAKE3 in (VS.da_bam_taskstop(CWD) or {}),
+           "r4=%r" % r4)
     finally:
+        VS.S12_TU_DONG_PHUT = nguong_cu
         VS.WCE = that
         if goc_so:
             open(SO, "w", encoding="utf-8").write(goc_so)

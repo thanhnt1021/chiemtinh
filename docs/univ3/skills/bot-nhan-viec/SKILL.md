@@ -1,6 +1,6 @@
 ---
 name: bot-nhan-viec
-description: Kích hoạt khi dựng bot Telegram NHẬN VIỆC từ sếp / nhóm vận hành cho một dự án — mỗi việc có mã Task-ddmmyyyy-NN, sếp Reply tin bot là câu trả lời tự vào đúng việc, tin hỏi đánh số 1A/1B, máy tắt không mất tin, phiên Claude CLI mở ra tự thấy việc dồn. User thường nói "dựng bot nhận việc sếp", "nhóm giao việc qua Telegram", "bot nhận task kiểu ChicHub", "sếp nhắn nhóm là vào sổ việc", "con canh việc sếp", hoặc `sync uni` in khối «HỎI ANH: dự án này chưa có bot/nhóm nhận việc». Cũng dùng khi bot đã có mà Reply bị im / đẻ thẻ trùng / máy nhà tắt thì lỡ việc, hoặc sếp nhắn THOẠI mà thẻ ghi «[tin không có chữ]» (bot chưa nghe thoại), hoặc chủ nhà muốn «nhắn thẳng vào phiên Claude CLI đang chạy, khỏi tạo task» (lệnh /clitell), hoặc chủ nhà muốn «duyệt qua 1 lượt các task, cái nào làm được ngay / cần hỏi lại / gộp được, lên phương án gửi inbox riêng, tao OK hết mới làm» (lệnh /lam duyệt lượt). Trigger en - task bot, boss task inbox, Telegram work queue, voice message transcription, message the running CLI session.
+description: Kích hoạt khi dựng bot Telegram NHẬN VIỆC từ sếp / nhóm vận hành cho một dự án — mỗi việc có mã Task-ddmmyyyy-NN, sếp Reply tin bot là câu trả lời tự vào đúng việc, tin hỏi đánh số 1A/1B, máy tắt không mất tin, phiên Claude CLI mở ra tự thấy việc dồn. User thường nói "dựng bot nhận việc sếp", "nhóm giao việc qua Telegram", "bot nhận task kiểu ChicHub", "sếp nhắn nhóm là vào sổ việc", "con canh việc sếp", hoặc `sync uni` in khối «HỎI ANH: dự án này chưa có bot/nhóm nhận việc». Cũng dùng khi bot đã có mà Reply bị im / đẻ thẻ trùng / máy nhà tắt thì lỡ việc, hoặc sếp nhắn THOẠI mà thẻ ghi «[tin không có chữ]» (bot chưa nghe thoại), hoặc chủ nhà muốn «nhắn thẳng vào phiên Claude CLI đang chạy, khỏi tạo task» (lệnh /clitell), hoặc chủ nhà muốn «duyệt qua 1 lượt các task, cái nào làm được ngay / cần hỏi lại / gộp được, lên phương án gửi inbox riêng, tao OK hết mới làm» (lệnh /lam duyệt lượt), hoặc thêm/sửa một lệnh bot chạm phiên Claude CLI (/lamdi, /khac, /cho, /tatmay, /momay, /pause, /khoidong, /xoa) — mọi dự án phải giống nhau theo «Bộ lệnh chung» mục 7f, hoặc `sync uni` in «dự án X thiếu /…». Trigger en - task bot, boss task inbox, Telegram work queue, voice message transcription, message the running CLI session.
 ---
 
 # Bot nhận việc sếp qua Telegram
@@ -8,6 +8,8 @@ description: Kích hoạt khi dựng bot Telegram NHẬN VIỆC từ sếp / nh�
 > Chưng cất từ hai hệ đang chạy thật: bản đầy đủ (bảng việc trên web + nhóm vận hành nhiều người)
 > và bản gọn (kho SQLite trên hosting PHP + CLI Python). Skill tự đủ: đọc xong là dựng được.
 > Không có tên người, mã nhóm, khoá thật nào ở đây — chỉ TÊN biến và chỗ trống `<…>`.
+> Cập nhật 15/10/2026: thêm mục 7f (BỘ LỆNH CHUNG chạm phiên Claude CLI — một bảng cho mọi dự án, trường `lenh_chung`
+> trong tệp dấu, `sync uni` báo dự án thiếu lệnh); sửa 7d.1 (`/clitell` của chủ nhà trong nhóm chính cũng nhận).
 > Cập nhật 12/10/2026 (lượt 3): thêm mục 7e (lệnh `/lam` = DUYỆT LƯỢT — máy rà mọi việc đang chờ, chia làm ngay / cần hỏi
 > lại / gộp, gửi phương án vào chat riêng chủ nhà, chủ nhà OK hết mới làm; mọi dự án có bot nhận việc phải có).
 > Cập nhật 12/10/2026 (lượt 2): thêm mục 7d (lệnh `/clitell` — chủ nhà nhắn thẳng phiên Claude CLI đang chạy, không đẻ thẻ;
@@ -232,8 +234,12 @@ Mẫu (HTML):
 ## 7d. Lệnh `/clitell` — chủ nhà nhắn THẲNG phiên Claude CLI đang chạy (BẮT BUỘC mọi bot nhận việc)
 Chủ nhà chốt 12/10/2026: «tao chỉ nhắn tin vào claude cli của session đang chạy… thay vì mỗi lần muốn nói gì lại phải tạo
 task». Lời này là lời chủ gõ trong cửa sổ CLI, chỉ khác là gõ từ điện thoại — KHÔNG phải việc, KHÔNG đẻ thẻ.
-1. **Ai / ở đâu**: chỉ CHỦ NHÀ, trong chat riêng với bot (bản đầy đủ: thêm kênh giao việc của chủ nhà). Người khác gõ `/clitell`
-   → nuốt tin, bot im (như lệnh riêng chủ nhà khác — đừng để lọt sang trợ lý AI). Nhận cả `/clitell@ten_bot` và chú thích ảnh.
+1. **Ai / ở đâu**: chỉ CHỦ NHÀ — trong chat riêng với bot **VÀ trong nhóm chính** của dự án (nhóm giao việc nội bộ; nhóm có
+   chủ đề thì chủ đề giao việc của chủ nhà). Ca thật 15/10/2026: hai bot chỉ nhận chat riêng, chủ nhà gõ `/clitell` trong nhóm →
+   bot nuốt im, chủ nhà tưởng phiên đã nhận. Người KHÁC gõ `/clitell` trong nhóm → nuốt tin (không ghi lời, không lọt sang trợ lý AI
+   hay luồng thẻ) nhưng bot **Reply MỘT dòng** «Lệnh /clitell chỉ <chủ nhà> dùng — lời này không chuyển vào phiên CLI», **cấm im**.
+   Người lạ chat riêng vẫn theo luật 4.6 (bỏ, không đáp). Reply vào tin bot luồng này của người khác không phải lời CLI → để luồng
+   sau xử như cũ. Nhận cả `/clitell@ten_bot` và chú thích ảnh.
 2. **Ba cách gõ**: `/clitell <lời>` · Reply MỘT tin bất kỳ bằng `/clitell` (chữ tin được Reply đi kèm làm ngữ cảnh) · Reply tiếp
    vào tin bot CỦA LUỒNG NÀY (dòng xác nhận / lời CLI trả) không cần gõ lệnh = lời mới. Nhận ra tin bot của luồng bằng DẤU ĐẦU TIN
    cố định (vd `📨 CLI ·` và `🤖 Phiên CLI:`), soát dấu trước rồi mới tra kho — tin Reply thường không tốn lượt đọc kho.
@@ -299,6 +305,51 @@ cho làm: trạng thái ghi nhận / nhãn «Làm sau»). Bản gốc: Nhà thu�
 9. Menu «/»: mô tả `/lam` = «Duyệt lượt việc đang chờ (/lam) · cho làm thẳng (/lam <mã> · /lam tatca)», scope chủ nhà. Ca thử 24–31
    ở `references/ca-thu.md`.
 
+## 7f. BỘ LỆNH CHUNG chạm phiên Claude CLI (BẮT BUỘC mọi bot nhận việc — chủ nhà chốt 15/10/2026)
+Chủ nhà 15/10/2026: «đồng bộ hết các task mà giao tiếp với Claude cli cho tất cả các dự án và các bot … mặc định rule sau này là
+lệnh gì tương tác với claude cli đều đồng bộ hết». Bảng dưới tả đúng bản đang chạy ở bản gốc đầy đủ (Next.js + Postgres); chỗ
+`<…>` mỗi dự án tự thay (bảng thẻ, máy chủ chạy lịch, tên chủ nhà, giờ lịch). Bản gọn PHP/SQLite: cùng hành vi, khác kho.
+> ⛔ **Luật đồng bộ**: một dự án thêm / đổi lệnh chạm phiên CLI → CÙNG LƯỢT sửa bảng này ở SSOT + trường `lenh_chung` tệp dấu
+> của dự án đó + nhắn phiên các dự án đã cài bot (đường `/clitell` / tin của dự án đó) làm theo — không chờ `sync uni` lần sau.
+
+Bốn đường đi (cột «Đường»):
+- **CLITELL** — một dòng kho lời CLI (mục 7d.4) → con canh thoát → phiên đọc «coi như chủ gõ trong cửa sổ này». Loại lời ghi trong
+  dòng: `loi` (chủ gõ) · `tong-hop` (bản gom sổ dồn) · `lenh_may` (`tatmay` / `momay`).
+- **CỜ** — một dòng trạng thái trong kho (như nhịp tim) mà con canh + lịch máy chủ đọc; không đánh thức phiên trực tiếp.
+- **THẺ** — tạo / ghi / huỷ thẻ việc; con canh thấy mục chưa đọc thì đánh thức phiên như mọi lời trên thẻ.
+- **MÁY CHỦ TRẢ** — máy chủ tự đọc kho rồi trả lời, không cần phiên; chủ Reply tin trả lời = lời vào đúng thẻ (đường THẺ).
+
+| Lệnh | Mô tả menu «/» (dán nguyên, thay `<…>`) | Ai | Ở đâu | Đường | Phiên cần tệp lệnh |
+|---|---|---|---|---|---|
+| `/viec` | Giao việc mới, máy tạo thẻ | chủ nhà (+ danh sách luật 4.6) | mọi nhóm có bot + chat riêng chủ nhà | THẺ (luật 4.6). **Tối thượng**: tin mở đầu `/viec` luôn tạo thẻ, kể cả Reply vào tin CLI / tin gom / tin phương án | `check-viec-sep.md` (việc mới) |
+| `/clitell` | Nhắn thẳng phiên Claude trên <máy nhà>, không tạo thẻ | chủ nhà | chat riêng + nhóm chính | CLITELL `loi` (mục 7d); Reply tin bot luồng này = lời mới; Reply bằng lệnh `/…` khác = gọi lệnh đó | `check-viec-sep.md` + CLI `clitell-tra` |
+| `/lam` | Duyệt lượt việc đang chờ (/lam) · cho làm thẳng (/lam <mã> · /lam tatca) | chủ nhà | chat riêng + nhóm chính | CỜ lượt `DLn` (mục 7e) — `chua-doc` trả `duyet_luot` làm con canh thoát; `/lam <mã>` · `/lam tatca` · Reply `/lam` = máy chủ khởi động thẳng | `check-viec-sep.md` mục «Duyệt lượt» |
+| `/lamdi` | Đẩy mọi trao đổi chưa làm trên các thẻ vào phiên Claude + gửi <chủ nhà> mỗi thẻ một tin | chủ nhà | chat riêng + nhóm chính | gỡ CỜ `/pause` → CLITELL `tong-hop` (sổ dồn = mọi lời người chưa mang cờ đã-đọc; chỉ ghi khi con canh đang nghe, bản cũ chưa nhận thì thay) → máy chủ gửi mỗi thẻ một tin. Lịch `<máy chủ>` gom cùng đường `<giờ>`/ngày, bỏ lượt khi `/pause` · sổ trống · CLI không nghe · còn bản chưa nhận | `check-viec-sep.md` mục «Sổ dồn»: chạy `moi` lấy id rồi xử TỪNG mục |
+| `/khac` | Việc chưa xong đang chờ người khác — <chủ nhà> ngó và quyết hộ | chủ nhà | chat riêng + nhóm chính | MÁY CHỦ TRẢ một tin tóm + mỗi thẻ một tin (trần/lượt, gõ lại gửi tiếp); chủ Reply «#3 <lời>» vào tin tóm hoặc Reply tin thẻ → THẺ (ghi như lời chủ, ✍ + «Đã ghi vào thẻ») | không (đi đường mục chưa đọc) |
+| `/cho` | Ảnh việc đang chờ: chờ <chủ nhà>, chờ người khác, chờ dùng thử | chủ nhà | chỉ chat riêng | MÁY CHỦ TRẢ mỗi thẻ đang chờ một tin, ba nhóm (chờ chủ nhà quyết/xác nhận · chờ người khác trả lời · chờ dùng thử); bỏ thẻ máy đang làm | không |
+| `/tatmay` | Sắp tắt máy: phiên Claude cất hết việc dở, dừng thợ | chủ nhà | chat riêng + nhóm chính | CLITELL `lenh_may` với chữ «/tatmay — làm đúng `.claude/commands/tatmay.md`». **Con canh không nghe → KHÔNG lưu chờ**, bot báo «chưa chuyển» (một `/tatmay` cũ đọc lúc mở máy hôm sau sẽ dừng thợ sai lúc) | `.claude/commands/tatmay.md` |
+| `/momay` | Vừa mở máy: phiên Claude đọc sổ, chạy tiếp việc dở | chủ nhà | chat riêng + nhóm chính | như `/tatmay` (không lưu chờ) | `.claude/commands/momay.md` |
+| `/pause` | Tạm dừng máy tự làm việc tới /khoidong hoặc <giờ sáng> | chủ nhà | chat riêng + nhóm chính | CỜ tạm dừng: con canh vẫn hỏi (không tốn token) nhưng KHÔNG thoát, lịch gom bỏ lượt; việc mới vẫn ghi thẻ; bot trả người giục như lúc máy tắt (mục 7b); mẻ đang chạy không bị cắt. Lịch `<máy chủ>` tự `/pause` đêm, `/khoidong` sáng | không |
+| `/khoidong` | Cho máy tự làm việc lại sau /pause, làm bù việc chờ | chủ nhà | chat riêng + nhóm chính | gỡ CỜ `/pause` + khởi động mọi thẻ «chờ khởi động» (việc người khác giao, nhãn «Làm sau») → con canh thấy mục chưa báo, thoát → phiên làm bù | không (đi đường `check-viec-sep.md`) |
+| `/xoa` | Huỷ thẻ tạo nhầm: /xoa <mã thẻ> hoặc Reply /xoa vào tin của thẻ | chủ nhà | chat riêng + nhóm chính | THẺ xoá mềm (sang Xong + dấu huỷ; ẩn khỏi bảng và tin định kỳ; «Mở lại» được). Reply `/xoa` trần chỉ khi tin gắn ĐÚNG một thẻ, không đoán. Tối thượng như `/viec`. Chủ Reply «nhầm / huỷ / xoá» trong 10 phút sau `/viec` = tự huỷ | không |
+| `/help` | Danh sách lệnh theo nhóm | mọi người (danh sách nội bộ) | mọi nơi bot nhận lệnh | MÁY CHỦ TRẢ; chữ sinh từ CHỖ KHAI LỆNH DUY NHẤT (cùng nguồn menu «/»): chủ nhà chat riêng thấy đủ, nơi khác chỉ lệnh chung | không |
+| `/admin` `/today` `/runlist` | mức dùng tài khoản Claude · mức dùng hôm nay · bảng thợ đang chạy | chủ nhà | chat riêng | **CHỈ dự án gom số máy (bản gốc ChicHub)** — số chung cả máy nhà, dự án khác KHÔNG làm, không khai vào `lenh_chung` | — |
+
+Luật chung cho cả bảng:
+- **Một chỗ khai lệnh duy nhất** (mảng: tên · mô tả · ai · nhóm · hiện ở nhóm chính không) → sinh menu «/» từng scope (skill
+  `bot-commands`: scope chat riêng chủ nhà đủ lệnh; scope `chat_member` (riêng chủ nhà trong nhóm chính) chỉ lệnh có «nhóm chính»
+  — người khác trong nhóm vẫn thấy scope mặc định; scope mặc định chỉ lệnh mọi người: `/help` + lệnh nghiệp vụ riêng dự án) + chữ
+  `/help`. Thêm lệnh là sửa đúng một chỗ.
+- Cổng «chủ nhà» là MỘT hàm dùng chung (chat riêng chủ nhà HOẶC chủ nhà trong nhóm chính); đừng chép điều kiện vào từng lệnh.
+  Các lệnh này đứng TRƯỚC mọi luồng thẻ việc và không phụ thuộc công tắc «bot im trong nhóm».
+- Thứ tự trong webhook (bản gốc): nhóm có lối riêng (nhóm việc ngoài) → `/clitell` → `/tatmay` `/momay` → `/lam` + Reply tin phương án → `/lamdi` →
+  `/khac` + Reply tin `/khac` → Reply tin danh sách → (`/viec` `/xoa` tối thượng) → lệnh chỉ-chat-riêng (`/cho` …) → luồng thẻ việc →
+  trợ lý AI → `/help`.
+- Nhận `/lenh@ten_bot`; `/lenh@bot_khac` bỏ. Lệnh chạm CLI lúc máy nhà tắt phải nói ĐÚNG loại: `/clitell` «đã lưu, mở phiên sẽ đọc» ·
+  `/tatmay` `/momay` «chưa chuyển» · `/lamdi` «sổ giữ nguyên, CLI không nghe».
+- Tệp dấu khai `lenh_chung` (mục 9) = các lệnh trong bảng dự án ĐÃ CÓ (bỏ dấu `/`). `sync-uni.sh check` in «dự án X thiếu /…» cho
+  lệnh còn thiếu — chỉ nhắc, không đổi mã thoát.
+
 ## 8. Checklist dựng cho dự án mới (theo thứ tự)
 0. Đọc `references/hop-dong.md` + `references/mau-tep.md`; chọn bản gọn (PHP/SQLite) hay bản đầy đủ (app web sẵn có).
 1. `.env`: `TG_BOT_TOKEN`, `TG_CHAT_SEP`, `TG_WEBHOOK_SECRET`, `SEP_VIEC_TOKEN` (khác secret webhook), `TG_SEP_ID`,
@@ -321,8 +372,12 @@ cho làm: trạng thái ghi nhận / nhãn «Làm sau»). Bản gốc: Nhà thu�
 ## 9. Tệp dấu dự án — `docs/bot-nhan-viec.json`
 `sync-uni.sh check` đọc tệp này để biết có cần hỏi anh không. KHÔNG ghi khoá / mã nhóm vào đây.
 ```json
-{ "trang_thai": "da-co", "bot": "@ten_bot", "nhom": "tên nhóm hiển thị", "cli": "scripts/sep-viec/sep_viec.py", "ghi_luc": "2026-10-09" }
+{ "trang_thai": "da-co", "bot": "@ten_bot", "nhom": "tên nhóm hiển thị", "cli": "scripts/sep-viec/sep_viec.py", "ghi_luc": "2026-10-09",
+  "thoai": "da-co", "clitell": "da-co",
+  "lenh_chung": ["viec","clitell","lam","lamdi","khac","cho","tatmay","momay","pause","khoidong","xoa","help"] }
 ```
+- `lenh_chung` = lệnh của bảng mục 7f dự án đã có (không dấu `/`, không gồm `/admin` `/today` `/runlist`). Sửa tay được (mảng
+  JSON), nhưng chỉ ghi lệnh đã chạy thật trên bot của dự án. Thiếu trường / thiếu lệnh → `sync uni` in «dự án X thiếu /…».
 - `da-co` (đủ `bot` + `nhom`) hoặc `khong-can` → sync uni im.
 - Không có tệp, hoặc `de-sau` → sync uni in khối hỏi mỗi lần check.
 - Ghi bằng lệnh, đừng viết tay: `sync-uni.sh bot-nhan-viec khong-can|de-sau` ·
@@ -337,5 +392,6 @@ cho làm: trạng thái ghi nhận / nhãn «Làm sau»). Bản gốc: Nhà thu�
 - Đừng gửi tin chữ trơn dài, thiếu mã lựa chọn, ảnh không chữ; đừng dùng nút bấm thay Reply gõ mã.
 - Đừng để `/clitell` đẻ thẻ hay lọt sang trợ lý AI; đừng báo chủ «đã chuyển vào phiên đang chạy» khi con canh không chạy.
 - Đừng để tin thoại thành «[tin không có chữ]»; đừng nghe thoại trong lúc giữ Telegram chờ (trả 200 trước, nghe sau).
+- Đừng thêm lệnh chạm phiên CLI ở một dự án mà không sửa bảng 7f + nhắn các dự án khác; đừng để `/clitell` của chủ nhà trong nhóm chính bị nuốt im.
 - Đừng để `/lam` trần khởi động việc khi chủ nhà chưa OK phương án; đừng để máy chủ tự phân loại bằng AI; đừng coi «ok nhưng …» là OK.
 - Đừng giả lập hỏng kho trên host thật (thử T3 ở cục bộ); đừng quên bật lại con canh.

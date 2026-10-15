@@ -55,6 +55,7 @@ TRAN_LENH = float(os.environ.get("UNIV3_MOPHIEN_TRAN_LENH", "14"))
 # gỡ được. Đây là ca khoá cứng thật lúc 01:35 ngày 15/09.
 MAX_CHAN = int(os.environ.get("UNIV3_MOPHIEN_MAX_CHAN", "8"))   # van an toàn chống kẹt cứng
 VN_LECH = 7 * 3600                                              # Asia/Ho_Chi_Minh, không DST
+GIAO_CA_GIO = int(os.environ.get("UNIV3_GIAO_CA_GIO", "6"))      # cùng ngưỡng `wseq.sh`
 
 LENH_CUU = "python3 ~/.claude/universal-hooks/mo_phien_gate.py chay"
 # Dấu MÁY ĐỌC ĐƯỢC của một mắt xích hỏng. WHY không bắt exception: `_chay` cố tình
@@ -121,33 +122,39 @@ def _cat(s: str, n: int) -> str:
 
 # ── các mắt xích của chuỗi mở phiên ─────────────────────────────────────────
 def buoc_ngay_lam_viec(cwd: str) -> tuple:
-    """Mốc ngày làm việc — CHỈ NHẮC, KHÔNG tự mở (P085 §7B.6, chốt C1 + F3).
+    """Mốc ngày làm việc — TỰ MỞ khi đã sang ngày mới và qua giờ giao ca (W305).
 
-    VÌ SAO GỠ NHÁNH TỰ MỞ (09/09/2026): hai luật đang chọi nhau. L-1 (`wseq.sh:43-47`,
-    04/09) CẤM reset theo đồng hồ — nguyên văn founder: *"tao đã bảo reset sang ngày mới
-    đâu???"*. L-2 (chính hàm này) lại reset theo đồng hồ ở mỗi `SessionStart`. Nay còn
-    ĐÚNG MỘT CỬA mở ngày: **founder gõ lệnh đầu-ngày** (`can_dau_ngay` +
-    `xu_ly_dau_ngay`, nhánh `UserPromptSubmit`).
+    LỊCH SỬ: 09/09/2026 gỡ nhánh tự mở theo đồng hồ (bệnh 4, 04/09 — qua nửa đêm về W01
+    giữa lúc chốt ngày cũ; founder: *"tao đã bảo reset sang ngày mới đâu???"*), chỉ còn
+    NHẮC gõ "đầu ngày". Hệ quả đo được 15/10/2026: không ai gõ thì mốc kẹt 12/10, số thợ
+    leo tới W306. Anh Thành 07:20 15/10 (Task-15102026-04): *"reset cách đánh số worker
+    khi sang ngày mới nhé. hiện không đổi nên chạy đến mấy trăm."* — lệnh mới THẮNG.
+    NAY: hỏi `wseq.sh tu-mo` (MỘT cửa quyết, cùng luật với lần cấp số `next/adopt`):
+    trước GIAO_CA_GIO (6h sáng VN) giữ ngày cũ, từ đó trở đi tự mở dãy mới.
 
-    Chốt F3 của founder: gỡ cho **TẤT CẢ dự án**, CẤM làm cờ riêng cho một dự án (khoá
-    bằng AC24a: `grep` tên dự án bất kỳ trong hàm này phải RỖNG). Hệ quả phải nói trước:
-    hai dự án khác đang dựa vào nhánh tự-mở nay mất tự-reset — từ nay phải gõ "đầu ngày"
-    trong chính dự án đó, nên dòng nhắc dưới đây in kèm ĐÚNG CÂU CẦN GÕ.
+    Chốt F3 vẫn giữ: chung cho TẤT CẢ dự án, CẤM cờ riêng theo tên dự án (AC24a).
     """
     scope = ten_scope(cwd)
-    f = os.path.join(COUNTER, "%s.dau-ngay" % scope)
     nay = hom_nay_vn()
-    cu = ""
-    try:
-        with open(f, encoding="utf-8") as fh:
-            cu = (fh.readline() or "").split()[0]
-    except Exception:
-        cu = ""
-    if cu == nay:
-        return ("ngày làm việc: đã mở %s (không đụng, giữ nguyên dãy số)" % nay), False
-    _ghi("NHAC MOC NGAY %s cho %s (moc cu %r) — KHONG tu mo" % (nay, scope, cu))
-    return ("⚠ mốc còn %s, hôm nay %s — gõ \"đầu ngày\" để mở dãy số mới"
-            % (cu or "chưa có", nay)), False
+    out = _chay(["bash", os.path.join(HOOKS, "wseq.sh"), "tu-mo"], cwd=cwd,
+                env={"WSEQ_ROOT": COUNTER, "WSEQ_PROJECT": scope, "WSEQ_HOM_NAY_VN": nay})
+    dong = (out.splitlines() or [""])[0].split()
+    ma = dong[0] if dong else ""
+    if ma == "TU-MO" and len(dong) >= 3:
+        _ghi("TU-MO NGAY %s cho %s (ngay cu %s)" % (dong[1], scope, dong[2]))
+        return ("ngày làm việc: đã tự mở ngày làm việc %s (ngày cũ %s) — dãy số về W01"
+                % (dong[1], dong[2])) + _nhac_tat_tho_chot_ngay_cu(cwd), True
+    if ma == "DA-MO" and len(dong) >= 2:
+        cach = "máy tự mở" if dong[2:3] == ["tu-mo"] else "founder gõ đầu ngày"
+        return ("ngày làm việc: đã mở %s (%s — không đụng, giữ nguyên dãy số)"
+                % (dong[1], cach)), False
+    if ma == "CHUA" and len(dong) >= 2:
+        return ("ngày làm việc: còn %s — chưa tới %dh sáng nên giữ dãy số cũ; "
+                "từ %dh lần cấp số đầu tiên tự mở dãy mới"
+                % (dong[1], GIAO_CA_GIO, GIAO_CA_GIO)), False
+    _ghi("TU-MO HONG cho %s: %r" % (scope, out[:200]))
+    return ("⚠ không hỏi được sổ số để tự mở ngày (%s) — chạy tay: "
+            "bash ~/.claude/universal-hooks/wseq.sh tu-mo" % out.replace("\n", " | ")[:160]), False
 
 
 def buoc_watchdog(cwd: str) -> str:
@@ -473,6 +480,13 @@ def xu_ly_dau_ngay(cwd: str) -> str:
                     env={"WSEQ_ROOT": COUNTER, "WSEQ_PROJECT": scope})
         _ghi("DAU-NGAY cwd=%s MO DAY MOI (phien 2+) sau chot ngay" % os.path.abspath(cwd))
         return out.strip() + _nhac_tat_tho_chot_ngay_cu(cwd)
+    # W305: ngày hôm nay do MÁY tự mở, đây là lần gõ ĐẦU TIÊN của founder -> dãy đang chạy
+    # CHÍNH LÀ dãy của hôm nay, không mở phiên 2 (mở là đè W01… vừa cấp). Không hỏi lại.
+    if _da_tu_mo_hom_nay(cwd):
+        _ghi("DAU-NGAY cwd=%s DA TU MO %s — giu nguyen day" % (os.path.abspath(cwd), moc))
+        return ("ngày làm việc %s đã được máy tự mở lúc %s — giữ nguyên dãy số đang chạy.\n"
+                "   Thật sự muốn mở phiên 2 trong ngày: bash ~/.claude/universal-hooks/wseq.sh dau-ngay"
+                % (moc, moc_dau_ngay_gio_cua(cwd) or "?"))
     # Gõ lần hai trong ngày mà CHƯA có dấu chốt ngày -> HỎI LẠI, cấm tự xử (chốt C2).
     _ghi("DAU-NGAY cwd=%s HOI LAI (da mo %s, chua thay dau chot ngay)"
          % (os.path.abspath(cwd), moc))
@@ -482,6 +496,19 @@ def xu_ly_dau_ngay(cwd: str) -> str:
             "     (b) giữ nguyên dãy — vừa gõ nhầm\n"
             "   Founder chọn (a) thì chạy: bash ~/.claude/universal-hooks/wseq.sh dau-ngay"
             % (moc_dau_ngay_gio_cua(cwd) or "?"))
+
+
+def _da_tu_mo_hom_nay(cwd: str) -> bool:
+    """Mốc hiện hành do `wseq.sh tu_mo_ngay_moi` ghi (dòng 1 tệp `.tu-mo` khớp dòng 1 `.dau-ngay`)."""
+    s = ten_scope(cwd)
+    try:
+        with open(os.path.join(COUNTER, "%s.dau-ngay" % s), encoding="utf-8") as fh:
+            a = (fh.readline() or "").strip()
+        with open(os.path.join(COUNTER, "%s.tu-mo" % s), encoding="utf-8") as fh:
+            b = (fh.readline() or "").strip()
+    except OSError:
+        return False
+    return bool(a) and a == b
 
 
 def moc_dau_ngay_gio_cua(cwd: str) -> str:

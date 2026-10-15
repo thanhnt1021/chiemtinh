@@ -27,6 +27,17 @@ TMPDIR = "/tmp/claude_hooks"
 MAX_CHAN = 2          # bằng worker_khai_xong_gate.py:56 — chặn 2 lần rồi thả
 
 
+def _cach_hoi(cwd, nhanh=False):
+    """Vé d991d9a878 (W301): anh vắng khỏi CLI (cờ /afk hoặc đang làm qua Telegram) → hỏi qua tin riêng,
+    không bảo AskUserQuestion. `nhanh` = lượt UserPromptSubmit (anh vừa gõ CLI) → chỉ xét cờ /afk."""
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import afk_trang_thai as TT
+        return TT.cach_hoi_anh(cwd, nhanh=nhanh)
+    except Exception:
+        return "AskUserQuestion"
+
+
 def dem_chan(sid, ma):
     """Số lần đã chặn cho đúng mục này. Fail-open: đọc/ghi hỏng thì coi như quá hạn."""
     p = os.path.join(TMPDIR, "%s_so_lenh_chan.json" % (sid or "x"))
@@ -209,8 +220,8 @@ def main():
                 % (m["so"], m["so_ky_tu"], m["so_gach"], len(m["anh_cho"])),
                 "→ THỨ TỰ BẮT BUỘC (founder chốt 09/09/2026): (1) ĐIỀU TRA TRƯỚC "
                 "— worker trinh sát khai `GHI: -` hoặc tự Grep/Read; CHƯA được lưu bản "
-                "dịch, CHƯA được nhại lại · (2) chỗ chưa rõ → AskUserQuestion · "
-                "(3) rõ rồi MỚI ghi bản dịch · (4) rồi mới thả thợ thi công.",
+                "dịch, CHƯA được nhại lại · (2) chỗ chưa rõ → hỏi bằng %s · "
+                "(3) rõ rồi MỚI ghi bản dịch · (4) rồi mới thả thợ thi công." % _cach_hoi(cwd, True),
                 "→ Sau khi đã điều tra, ghi BẢN DỊCH cùng số mục:",
                 "   `python3 ~/.claude/universal-hooks/so_lenh.py dich --muc %s --tep <tệp>`"
                 % m["so"],
@@ -219,9 +230,9 @@ def main():
                 % (m["so"][1:].lstrip("0") or "0", m["so"][1:].lstrip("0") or "0",
                    max(m["so_gach"], 1), m["so_gach"])]
         if r.get("bat_buoc_hoi"):
-            nhac.append("⚠️ BẮT BUỘC HỎI LẠI (%s) — 1 lượt AskUserQuestion, ≤3 câu, "
+            nhac.append("⚠️ BẮT BUỘC HỎI LẠI (%s) — 1 lượt hỏi bằng %s, ≤3 câu, "
                         "rồi ghi `ĐÃ HỎI:` + `FOUNDER CHỐT:` vào bản dịch. %s"
-                        % ("; ".join(r["dau_hieu"]), r["vi_sao"]))
+                        % ("; ".join(r["dau_hieu"]), _cach_hoi(cwd, True), r["vi_sao"]))
         elif r.get("doi_viec"):
             nhac.append("⚠️ D4 — lượt này bị bộ phân loại xếp nhãn HỎI nhưng có từ ĐÒI "
                         "VIỆC «%s»: founder đang GIAO VIỆC, không phải hỏi thăm. Vẫn phải "
@@ -285,7 +296,7 @@ def main():
     ly = ["⛔ SỔ LỆNH: mục **%s** có BẢN GỐC nhưng CHƯA có BẢN DỊCH — "
           "chưa có bản dịch thì không có Definition of Done để nghiệm thu." % ma,
           "Bản dịch phải viết SAU khi đã điều tra (đọc code/chạy lệnh) và đã "
-          "AskUserQuestion chỗ chưa rõ — cấm dịch từ trí nhớ rồi mới đi tra.",
+          "hỏi chỗ chưa rõ bằng %s — cấm dịch từ trí nhớ rồi mới đi tra." % _cach_hoi(cwd),
           "Chạy: python3 ~/.claude/universal-hooks/so_lenh.py dich --muc %s --tep <tệp>" % ma,
           "Rồi soi: python3 ~/.claude/universal-hooks/so_lenh.py doi-chieu"]
     if so["muc"][ma].get("so_gach"):

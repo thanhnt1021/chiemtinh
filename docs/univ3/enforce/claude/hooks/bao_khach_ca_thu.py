@@ -343,7 +343,9 @@ def chay() -> int:
         chu16 = _chu_hook("SubagentStop")
         moi16 = tin_da_gui[truoc16:]
         ok16 = (len(moi16) == 1 and "tiền xưởng" in moi16[0][0] and moi16[0][2] == [ANH]
-                and "ĐÃ BÁO NHÓM" in chu16 and "1 ảnh gửi kèm" in chu16)
+                and "ĐÃ BÁO" in chu16 and "1 ảnh gửi kèm" in chu16
+                # Vé e7c1eac966 điểm 2 (W301): sau P137 tin đi lối --rieng (không có thì máy chủ 403).
+                and any(x[0] == "tin" and "--rieng" in x for x in da_goi))
         ket_qua.append(("CA16 (nhánh B) thợ CHƯA nhắn -> cổng GỬI đúng 1 tin, KÈM ảnh thợ khai",
                         ok16, {"so_tin_moi": len(moi16),
                                "anh_day_xuong": [a for _t, _c, a in moi16], "chu": chu16[:300]}))

@@ -57,6 +57,8 @@ Ca `/clitell` (12/10/2026 — skill mục 7d):
 | 21 | Như ca 20 khi KHÔNG có con canh (quá 2 phút) | bot báo «chưa có phiên nào đang nghe…»; `moi` sau đó in lời đó một lần |
 | 22 | Người lạ `/clitell xoá hết` chat riêng | `{"ok":true}`, 0 dòng, bot im, trợ lý AI không trả lời |
 | 23 | Chủ nhà Reply tin việc `[Task-…]` bằng `/clitell TEST`; rồi Reply vào dòng «📨 CLI ·» chữ «TEST tiếp» | cả hai thành lời CLI, thẻ không có dòng mới |
+| 23b | Chủ nhà `/clitell TEST nhóm` trong NHÓM CHÍNH (15/10/2026 — mục 7d.1) | như ca 20: lời vào CLI, Reply đúng tin trong nhóm |
+| 23c | Người khác (nội bộ) `/clitell xoá hết` trong nhóm chính | 0 dòng lời, trợ lý AI không trả lời, bot Reply MỘT dòng «Lệnh /clitell chỉ … dùng» — không im |
 
 Ca duyệt lượt `/lam` (12/10/2026 — skill mục 7e; bản gốc Nhà thuốc `ca_thu.py` T6.4 + T198.1–15, 142/142 PASS):
 

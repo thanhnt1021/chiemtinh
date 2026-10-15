@@ -4,7 +4,8 @@
 
 Phủ AC15 (dựng lại ca sáng 09/09) · AC16 (8 ca nhận diện, ca ⑧ là nguyên văn prompt
 founder) · AC17 (cây quyết định gõ lần hai) · AC17b (hai nơi tra `.map` ra cùng một số) ·
-AC19 (SessionStart chỉ NHẮC, không tự mở) · AC24a (cấm cờ riêng theo tên dự án).
+AC19 (SessionStart: trước 6h giữ ngày cũ, từ 6h TỰ MỞ — đổi ở W305) · W305 (số thợ tự về
+W01 khi sang ngày mới, ca a–e) · AC24a (cấm cờ riêng theo tên dự án).
 
 Chạy HOÀN TOÀN trong hộp cát: `WSEQ_ROOT` trỏ thư mục tạm, nhật ký trỏ tệp tạm. Sổ số
 THẬT đang phục vụ worker sống — không đụng một byte.
@@ -236,13 +237,39 @@ def main():
            d3_so_worker != "W07" and not re.match(r"^W\d+$", d3_so_worker or ""),
            "đường3=%r" % d3_so_worker)
 
-        # ── AC19 — SessionStart chỉ NHẮC, không tự mở ─────────────────────────────
+        # ── AC19 (đổi ở W305, 15/10/2026 — Task-15102026-04) ─────────────────────
+        # Luật cũ "SessionStart chỉ NHẮC, không tự mở" bị lệnh anh Thành 07:20 15/10 THAY:
+        # sang ngày mới, từ GIAO_CA_GIO (6h sáng VN) là tự mở; trước 6h vẫn giữ ngày cũ.
         open(os.path.join(C, "HopCat.dau-ngay"), "w").write("2026-09-08 07:14:47\n1\n")
+        # Dấu chốt ngày AC17 vừa ghi mang giờ THẬT = cùng giây với lần tự mở dưới -> nhánh
+        # "đã chốt ngày sau mốc" (phiên 2) sẽ thắng oan. Sổ nhật ký sạch cho ca này.
+        open(nhat_ky, "w").close()
         h2 = bam(os.path.join(C, "HopCat.dau-ngay"))
-        cau_ss, doi = M.buoc_ngay_lam_viec(os.path.join(goc, "HopCat"))
-        ca("AC19 `SessionStart` mốc cũ + đồng hồ mới -> KHÔNG gọi `wseq dau-ngay`, chỉ NHẮC",
+        os.environ["WSEQ_GIO_VN"] = "05"
+        try:
+            cau_ss, doi = M.buoc_ngay_lam_viec(os.path.join(goc, "HopCat"))
+        finally:
+            del os.environ["WSEQ_GIO_VN"]
+        ca("AC19(b) SessionStart 05h sáng, mốc cũ -> GIỮ ngày cũ, không đụng mốc",
            doi is False and bam(os.path.join(C, "HopCat.dau-ngay")) == h2
-           and 'gõ "đầu ngày"' in cau_ss, cau_ss[:80])
+           and "chưa tới 6h" in cau_ss, cau_ss[:80])
+        os.environ["WSEQ_GIO_VN"] = "07"
+        try:
+            cau_ss, doi = M.buoc_ngay_lam_viec(os.path.join(goc, "HopCat"))
+            moc19 = open(os.path.join(C, "HopCat.dau-ngay")).read().split()[0]
+            cau_tay = M.xu_ly_dau_ngay(os.path.join(goc, "HopCat"))
+            moc19b = bam(os.path.join(C, "HopCat.dau-ngay"))
+            cau_ss2, doi2 = M.buoc_ngay_lam_viec(os.path.join(goc, "HopCat"))
+        finally:
+            del os.environ["WSEQ_GIO_VN"]
+        ca("AC19(a) SessionStart 07h, mốc cũ -> TỰ MỞ, in «đã tự mở ngày làm việc», bỏ câu nhắc",
+           doi is True and moc19 == "2026-09-09" and "đã tự mở ngày làm việc 2026-09-09" in cau_ss
+           and 'gõ "đầu ngày"' not in cau_ss, cau_ss[:80])
+        ca("AC19(c) founder gõ «đầu ngày» sau khi máy đã tự mở -> giữ dãy, không hỏi, không reset",
+           "máy tự mở" in cau_tay and "Hỏi lại founder" not in cau_tay
+           and bam(os.path.join(C, "HopCat.dau-ngay")) == moc19b, cau_tay.splitlines()[0][:80])
+        ca("AC19(d) SessionStart lần hai cùng ngày -> không mở lại", doi2 is False
+           and "đã mở 2026-09-09" in cau_ss2, cau_ss2[:80])
 
         # ── AC24(a) — cấm cờ riêng theo tên dự án ─────────────────────────────────
         import re
@@ -348,6 +375,99 @@ def main():
         wseq(goc, "adopt", "viec-x", "W02", "viec x")
         _c = open(os.path.join(C, "HopCat.map"), encoding="utf-8").read().rstrip("\n").split(US)
         ca("W15-7 `wseq adopt` ghi đủ 7 cột (có cột `phien`)", len(_c) >= 7, "%d cột" % len(_c))
+        # ══ W305 (15/10/2026, Task-15102026-04) — SỐ THỢ TỰ VỀ W01 KHI SANG NGÀY MỚI ══
+        # Ca gốc trên sổ thật: mốc `.dau-ngay` = 2026-10-12, sáng 15/10 bộ đếm ở 305/306.
+        # Sổ thử riêng (dự án `W305Thu` trong hộp cát), giờ VN ép bằng WSEQ_GIO_VN.
+        def w(gio, *dt, ngay="2026-10-15"):
+            r = subprocess.run(["bash", os.path.join(HOOKS, "wseq.sh")] + list(dt),
+                               capture_output=True, text=True,
+                               env=dict(os.environ, WSEQ_ROOT=C, WSEQ_PROJECT="W305Thu",
+                                        WSEQ_HOM_NAY_VN=ngay, WSEQ_GIO_VN=gio,
+                                        WSEQ_NHAT_KY=os.path.join(goc, "nha.log")))
+            return r.returncode, (r.stdout or "").strip(), (r.stderr or "").strip()
+
+        def so_cu(*dong):
+            open(os.path.join(C, "W305Thu.dau-ngay"), "w").write("2026-10-12 00:45:53\n1\n")
+            open(os.path.join(C, "W305Thu.seq"), "w").write("2026-10-12\n305\n")
+            for x in ("W305Thu.tu-mo",):
+                if os.path.exists(os.path.join(C, x)):
+                    os.remove(os.path.join(C, x))
+            open(os.path.join(C, "W305Thu.map"), "w").write(
+                "".join(US.join(d) + "\n" for d in dong))
+
+        def moc305():
+            return open(os.path.join(C, "W305Thu.dau-ngay")).read().split()[0]
+
+        song_cu = ["W305", "viec-cu-dang-chay", "việc cũ", "2026-10-15 07:00:00", "running",
+                   "2026-10-12", "1"]
+        # (a) mốc 12/10, 07:30 sáng 15/10 -> W01, mốc thành 15/10
+        so_cu(song_cu)
+        _m, so_a, loi_a = w("07", "next", "viec-sang-15", "việc sáng 15/10")
+        ca("W305(a) mốc 12/10 · 07:30 ngày 15/10 -> cấp W01, mốc thành 15/10",
+           so_a == "W01" and moc305() == "2026-10-15" and "đã tự mở" in loi_a,
+           "next=%s · mốc=%s" % (so_a, moc305()))
+        _m, ds, _l = w("07", "list")
+        ca("W305(a2) bảng `wseq list` khai nguồn ngày = tu-mo", "NGUON=tu-mo" in ds,
+           (ds.splitlines()[1:2] or [""])[0])
+        # (b) 05:30 sáng ngày mới -> vẫn dãy ngày cũ
+        so_cu(song_cu)
+        _m, so_b, _l = w("05", "next", "viec-ca-dem", "việc ca đêm")
+        ca("W305(b) 05:30 sáng ngày mới -> vẫn số ngày cũ (W306), mốc giữ 12/10",
+           so_b == "W306" and moc305() == "2026-10-12", "next=%s · mốc=%s" % (so_b, moc305()))
+        _m, bd_b, _l = w("05", "bo-dem")
+        ca("W305(b2) `bo-dem` lúc 05h không tự mở (giữ 306)", bd_b == "306", bd_b)
+        # (c) thợ W01 của ngày cũ còn chạy, thả 23:00 hôm 12/10 (quá mốc 12 giờ) -> ngày mới
+        #     KHÔNG cấp W01; gõ tay W01 cũng không được nhận; số gõ tay của dãy cũ bị nắn.
+        so_cu(["W01", "viec-w01-ngay-cu", "việc W01 cũ", "2026-10-12 23:00:00", "running",
+               "2026-10-12", "1"], song_cu)
+        _m, so_c, _l = w("08", "next", "viec-moi-c", "việc mới c")
+        _ma_c, so_c2, _l = w("08", "adopt", "viec-go-tay-w01", "W01", "gõ tay W01")
+        ca("W305(c) thợ W01 ngày cũ còn chạy -> ngày mới cấp W02 (không trùng W01)",
+           so_c == "W02", "next=%s" % so_c)
+        ca("W305(c2) gõ tay W01 trong ngày mới -> sổ từ chối (số đang có chủ)",
+           _ma_c != 0 and so_c2 == "", "ma=%d out=%r" % (_ma_c, so_c2))
+        _m, so_c3, _l = w("08", "next", "viec-moi-c3", "việc mới c3")
+        ca("W305(c3) số kế tiếp W03 — không đụng W305 đang sống", so_c3 == "W03", so_c3)
+        _m, ds_c, _l = w("08", "list")
+        ca("W305(c5) bảng ngày mới vẫn hiện thợ ngày cũ còn chạy (W01 · W305) kèm nhãn ngày cũ",
+           ds_c.count("ngày cũ") == 2 and "W305 " in ds_c and "W03 " in ds_c,
+           "%d dòng ngày cũ" % ds_c.count("ngày cũ"))
+        so_cu(["W01", "viec-w01-ngay-cu", "việc W01 cũ", "2026-10-12 23:00:00", "running",
+               "2026-10-12", "1"], song_cu)
+        _e = dict(os.environ, WSEQ_ROOT=C, WSEQ_HOM_NAY_VN="2026-10-15", WSEQ_GIO_VN="08")
+        _cu_env = dict(os.environ)
+        os.environ.update(_e)
+        try:
+            WCE2 = _il.reload(_il.import_module("worker_cap_enforce"))
+            WCE2._du_an_cua = lambda _cwd: "W305Thu"
+            m306, b306 = WCE2.chuan_hoa_so_day("W306 viec go theo day cu", duan)
+        finally:
+            os.environ.clear(); os.environ.update(_cu_env)
+        ca("W305(c4) điều phối gõ W306 theo dãy cũ -> cổng nắn về W02 của ngày mới",
+           m306.startswith("W02 "), "%r | %s" % (m306, b306))
+        # (d) gõ «đầu ngày» lần hai cùng ngày -> phiên 2 như cũ
+        so_cu(song_cu)
+        w("09", "next", "viec-d1", "việc d1")                      # tự mở 15/10, W01
+        w("09", "done", "viec-d1")
+        _m, o1, _l = w("09", "dau-ngay")
+        ph1 = open(os.path.join(C, "W305Thu.dau-ngay")).read().split()[-1]
+        _m, o2, _l = w("09", "dau-ngay")
+        ph2 = open(os.path.join(C, "W305Thu.dau-ngay")).read().split()[-1]
+        _m, so_d, _l = w("09", "next", "viec-d2", "việc d2")
+        ca("W305(d) gõ «đầu ngày» hai lần cùng ngày (sau tự mở) -> phiên 2 rồi 3, next=W01",
+           ph1 == "2" and ph2 == "3" and so_d == "W01" and "MỞ NGÀY LÀM VIỆC MỚI" in o2,
+           "phiên %s→%s · next=%s" % (ph1, ph2, so_d))
+        _m, ds, _l = w("09", "list")
+        ca("W305(d2) sau khi gõ tay, nguồn ngày trở lại dau-ngay (dấu tự mở hết hiệu lực)",
+           "NGUON=dau-ngay" in ds, (ds.splitlines()[1:2] or [""])[0])
+        # (e) không có mốc tay bao giờ (dự án chưa từng gõ «đầu ngày») -> vẫn tự mở theo `.seq`
+        if os.path.exists(os.path.join(C, "W305Thu.dau-ngay")):
+            os.remove(os.path.join(C, "W305Thu.dau-ngay"))
+        open(os.path.join(C, "W305Thu.seq"), "w").write("2026-10-12\n40\n")
+        open(os.path.join(C, "W305Thu.map"), "w").write("")
+        _m, so_e, _l = w("10", "next", "viec-e", "việc e")
+        ca("W305(e) dự án chưa từng có mốc tay -> cũng tự về W01", so_e == "W01" and
+           moc305() == "2026-10-15", "next=%s" % so_e)
     finally:
         shutil.rmtree(goc, ignore_errors=True)
     n = sum(1 for _t, d in KQ if d)

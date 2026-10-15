@@ -251,7 +251,14 @@ def ghi_taskstop_da_bam(cwd, task_id: str):
 # `da_bam` (một nguồn duy nhất, không sinh sổ thứ hai) rồi im, có ghi vết để đo lại được.
 # Vẫn giữ S12 trong mấy phút đầu — đó là lúc bấm TaskStop còn tác dụng thật (giải phóng
 # slot trần worker), không được cắt.
-S12_TU_DONG_PHUT = float(os.environ.get("UNIV3_S12_TU_DONG_PHUT", "5"))
+# P143 1A (W195 13/10/2026): ngưỡng về 0 — harness đã báo kết thúc thì CLI đã tự đóng thợ,
+# `TaskStop` lúc đó chỉ là thủ tục. Đo 24 giờ: 253/269 lần (94%) máy trả «No task found» /
+# «is not running»; S12 đánh thức main 46 lần + cổng `ve_de_sau_gate` chặn 58 lần cho đúng
+# việc thừa này. Thợ còn sống mà im lâu KHÔNG đi qua đây (nó nằm ở `song`, pl != -1).
+# LÙI: `UNIV3_P143_1A_TAT=1` (về ngưỡng 5 phút cũ) hoặc đặt thẳng `UNIV3_S12_TU_DONG_PHUT`.
+P143_1A_TAT = os.environ.get("UNIV3_P143_1A_TAT") == "1"
+S12_TU_DONG_PHUT = float(os.environ.get("UNIV3_S12_TU_DONG_PHUT",
+                                        "5" if P143_1A_TAT else "0"))
 
 
 def _tu_dong_dong_s12(cwd, aid: str, age: float, desc: str) -> None:

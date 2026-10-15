@@ -1621,6 +1621,48 @@ def _moc_nhac_tha(cwd: str) -> str:
     return os.path.join(thu_muc(cwd), ".nhac-tha.json")
 
 
+# ── P143 1C (W195 13/10/2026) — SỔ «MAIN VỪA THẤY LỆNH THẢ NGAY» ─────────────────────
+# Đo 24 giờ: 135 lần hai cú đánh thức main cách nhau ≤ 2 phút; 12/40 lần hàng chờ đánh thức
+# mà không thả được. Ca điển hình: thợ xong -> thông báo thợ đánh thức main, lượt đó main
+# đã thấy «➜ THẢ NGAY» (khối hàng chờ ở `worker_cap_enforce`) hoặc «⛔ CẤM KẾT THÚC LƯỢT»
+# (`khoi_tha_ngay`) — rồi `tu_tha_ve` lại đánh thức thêm một lần cho đúng các vé đó.
+# Hai nơi in lệnh ghi sổ này; `tu_tha_ve` đọc trước khi đánh thức. MỘT tệp, một nguồn.
+MAIN_THAY_THA_GIAY = float(os.environ.get("UNIV3_TU_THA_MAIN_THAY_GIAY", "120"))
+
+
+def _moc_main_thay_tha(cwd: str) -> str:
+    return os.path.join(thu_muc(cwd), ".main-thay-tha.json")
+
+
+def ghi_main_thay_tha(cwd: str, cac_ma) -> None:
+    """Ghi: main VỪA được in lệnh thả cho đúng các mã vé này (fail-open, không bao giờ ném)."""
+    try:
+        ma = sorted({str(m) for m in (cac_ma or []) if m})
+        if not ma:
+            return
+        p = _moc_main_thay_tha(cwd)
+        tmp = p + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as fh:
+            json.dump({"luc": time.time(), "ma": ma}, fh)
+        os.replace(tmp, p)
+    except Exception:
+        pass
+
+
+def main_vua_thay_tha(cwd: str, cac_ma, giay: float = None) -> bool:
+    """True = trong `giay` giây qua main ĐÃ thấy lệnh thả phủ ĐỦ các mã vé này."""
+    try:
+        with open(_moc_main_thay_tha(cwd), encoding="utf-8") as fh:
+            st = json.load(fh) or {}
+    except Exception:
+        return False
+    han = MAIN_THAY_THA_GIAY if giay is None else giay
+    if (time.time() - float(st.get("luc") or 0)) > han:
+        return False
+    can = {str(m) for m in (cac_ma or []) if m}
+    return bool(can) and can <= set(st.get("ma") or [])
+
+
 # ══════ W18 10/09/2026 — THỨ TỰ ƯU TIÊN KHI HAI CỔNG ĐÁ NHAU (P089 O1.6) ══════
 # Cổng này ÉP *"thả NGAY trong lượt này"*; `nhai_lai_gate` CẤM thả cho tới khi founder
 # gật khối NHẠI LẠI. Gặp nhau là kẹt cứng: không thả -> cổng này chặn kết lượt, mà kết
@@ -1753,6 +1795,7 @@ def khoi_tha_ngay(cwd: str, sid: str = "", transcript: str = "") -> str:
     except Exception:
         pass
     _nhat_ky(cwd, "EP THA %d ve (lan %d): %s" % (len(san), lan, khoa))
+    ghi_main_thay_tha(cwd, [v.get("ma") for v in san])      # P143 1C
     return "\n".join(ra)
 
 

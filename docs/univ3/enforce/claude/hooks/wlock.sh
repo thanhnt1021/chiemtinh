@@ -427,6 +427,16 @@ tu_giu() {
 #   - người xin phải nằm trong PROXY_OWNERS (mặc định chỉ `deploy-batch`), VÀ
 #   - khoá đang giữ KHÔNG canh tiến trình (= khoá giữ-chỗ của worker, không phải lô
 #     đang chạy thật: lô luôn xin bằng --pid=$$ nên khoá của lô CÓ canh tiến trình).
+so_tho() { printf '%s' "$1" | sed -nE 's/^[wW]0*([0-9]+)([^0-9].*)?$/\1/p'; }
+co_ve_trong_lo() { # <chủ khoá> <danh sách chủ vé, cách nhau dấu cách> -> 0 = có vé
+  local ho="$1" ds="$2" n x
+  [ -n "$ho" ] && [ -n "$ds" ] || return 1
+  case " $ds " in *" $ho "*) return 0 ;; esac
+  n=$(so_tho "$ho"); [ -n "$n" ] || return 1
+  for x in $ds; do [ "$(so_tho "$x")" = "$n" ] && return 0; done
+  return 1
+}
+
 doat_khoa_thay() {
   local res="$1" owner="$2"; local ld="$ROOT/$res.lock"
   [ -d "$ld" ] || return 1
@@ -436,6 +446,17 @@ doat_khoa_thay() {
   [ -z "$hp" ] || [ "$hp" = "0" ] || return 1     # khoá của một tiến trình thật -> KHÔNG đoạt
   ho=$(read_field "$ld" owner)
   [ -n "$ho" ] && [ "$ho" != "$owner" ] || return 1
+  # Vé ce749c224c (W301 15/10/2026, gốc tra ở vé f1397c4bd6 / P145 mục 6.8): 01:24 14/10 lô
+  # deploy đoạt khoá 'deploy' của W222 đang nâng PostgreSQL (wlock.log dòng 8503) — điều kiện
+  # cũ chỉ xét TÊN người xin + khoá không canh tiến trình, không hỏi chủ khoá có vé trong lô
+  # không. Nay chỉ đoạt khi chủ khoá nằm trong WLOCK_PROXY_FOR (người gọi khai = chủ các vé
+  # đang chờ trong lô, xem scripts/deploy-batch.sh). Không khai / không có tên -> xếp hàng.
+  # Khớp nguyên tên, HOẶC cùng số thợ: chủ khoá thật hay mang tên ngắn `w26` trong khi vé
+  # deploy mang slug `w26-...` / `W283` (đo wlock.log + deploy-queue/done 15/10).
+  if ! co_ve_trong_lo "$ho" "${WLOCK_PROXY_FOR:-}"; then
+    log "KHÔNG ĐOẠT khoá '$res': '$ho' không có vé trong lô của '$owner' -> xếp hàng"
+    return 1
+  fi
   tok1=$(read_field "$ld" token)
   tok2=$(read_field "$ld" token)
   [ -n "$tok1" ] && [ "$tok1" = "$tok2" ] || return 1   # vừa đổi chủ -> không đụng

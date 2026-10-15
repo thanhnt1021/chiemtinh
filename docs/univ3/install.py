@@ -162,6 +162,9 @@ HOOK_FILES = ["session_context.py", "askback_enforce.py", "quality_gate_enforce.
               # Chạy tay, KHÔNG đăng ký vào settings.json (giống chay-het-ca-thu.sh).
               "wlock_gop_luot_ca_thu.sh", "wlock_hang_cho_ca_thu.sh",
               "w24_lech_nhip_ca_thu.sh",
+              # W301 15/10/2026 — ca thử vé ce749c224c (lô deploy chỉ đoạt khoá của chủ có vé trong lô)
+              # + vé e7c1eac966 (5 lỗi cổng báo khách khớp P137). Chạy tay, KHÔNG đăng ký hook.
+              "wlock_doat_ca_thu.sh", "p137_bao_khach_ca_thu.py",
               # 03/09: cổng chốt ngày — chặn gửi báo cáo ngày khi việc của ngày còn nợ
               # (worker sống / vé chờ / dòng `ĐỂ LẠI:` chưa có vé). Ca thật: báo cáo 03/09
               # gửi NON hai lần vì định nghĩa "xong" cũ chỉ là ảnh chụp một thời điểm.

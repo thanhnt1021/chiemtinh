@@ -280,8 +280,8 @@ Lượt vừa rồi của founder KHÔNG phải lệnh làm việc ({loai_ly_do}
 
 Founder đang HỎI / GÓP Ý / CUNG CẤP THÔNG TIN. Việc đúng lúc này:
   1. TRẢ LỜI đúng câu hỏi bằng dữ kiện đã kiểm (không thả worker, không chạy lệnh).
-  2. Nếu bạn nghĩ việc này CẦN làm → HỎI LẠI bằng `AskUserQuestion` rồi chờ founder chốt.
-     (Founder duyệt qua AskUserQuestion là cổng này tự mở.)
+  2. Nếu bạn nghĩ việc này CẦN làm → HỎI LẠI bằng {cach_hoi} rồi chờ founder chốt.
+     (Founder duyệt qua AskUserQuestion là cổng này tự mở; founder vắng thì chờ anh trả lời tin.)
   3. TUYỆT ĐỐI không tự suy ra "vậy chắc founder muốn tôi làm X" rồi thi hành.
 
 Chỉ khi founder ĐÃ ra lệnh rõ ở một lượt trước và bạn đang tiếp tục đúng lệnh đó,
@@ -289,6 +289,17 @@ mới được vượt cổng: thêm vào description/prompt/lệnh CẢ HAI:
     {cua_thoat}
     {nhan} "<chép nguyên văn câu founder ra lệnh>"
 Thiếu phần chép nguyên văn = vẫn chặn. Mọi lần vượt cổng đều bị ghi nhật ký."""
+
+
+def _cach_hoi(data, nhanh=False) -> str:
+    """Vé d991d9a878 (W301): anh vắng khỏi CLI (cờ /afk hoặc đang làm qua Telegram) → hỏi qua tin riêng,
+    không bảo AskUserQuestion. Nguồn duy nhất: `afk_trang_thai.cach_hoi_anh`. Hỏng → chữ cũ."""
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import afk_trang_thai as TT
+        return TT.cach_hoi_anh(str((data or {}).get("cwd") or os.getcwd()), nhanh=nhanh)
+    except Exception:
+        return "`AskUserQuestion`"
 
 
 def main() -> None:
@@ -317,8 +328,8 @@ def main() -> None:
         if loai == "HOI":
             # Lớp xác suất mỏng phủ lên cổng tất định — 2 dòng, không hơn.
             print("⚠️ Lượt này founder đang HỎI/GÓP Ý (%s), KHÔNG phải giao việc: "
-                  "trả lời trước đã. Muốn làm gì thêm → hỏi lại bằng AskUserQuestion, "
-                  "cấm tự thả worker / tự chạy lệnh." % ly_do)
+                  "trả lời trước đã. Muốn làm gì thêm → hỏi lại bằng %s, "
+                  "cấm tự thả worker / tự chạy lệnh." % (ly_do, _cach_hoi(data, nhanh=True)))
         sys.exit(0)
 
     if ev != "PreToolUse":
@@ -392,6 +403,7 @@ def main() -> None:
         trich=str(trang_thai.get("trich") or "")[:200],
         cua_thoat=CUA_THOAT,
         nhan=NHAN_TRICH,
+        cach_hoi=_cach_hoi(data),
     ))
 
 

@@ -60,8 +60,8 @@ KHUON_MAC_DINH = {
         "_ghi_chu": "P130 (14C) — tin gốc sửa thành bảng trạng thái: ≤ thân gốc + 2 + số câu dòng.",
         "dong_them_goc": 2
     },
-    "ma_re": "^Task-[0-9]{8}-[0-9]{2,3}$",
-    "ma_trong_chu_re": "Task-[0-9]{8}-[0-9]{2,3}",
+    "ma_re": "^(?:Task|ANHTAN|DAT)-[0-9]{8}-[0-9]{2,3}$",
+    "ma_trong_chu_re": "(?:Task|ANHTAN|DAT)-[0-9]{8}-[0-9]{2,3}",
     "ma_cu_trong_chu_re": "\\bT-[0-9]{6}-[0-9]{2,3}\\b",
     "dong_bat_buoc": {
         "xong": [
@@ -114,6 +114,25 @@ def doc_khuon(cwd=""):
             except Exception:
                 pass
     return KHUON_MAC_DINH
+
+
+# Vé 515118e1e9 (ANHTAN-14102026-01, W301 15/10/2026): cổng ráp cứng `^\[(Task-…)\]` nên tin của thẻ
+# nhóm việc ngoài (`ANHTAN-14102026-01`, tiền tố khai ở `src/lib/task-dev/ma-the.mjs` TIEN_TO_MA) bị chặn
+# «Dòng đầu phải mở bằng mã việc dạng [Task-…]». Mẫu mã nay đọc từ khuôn của DỰ ÁN (`ma_trong_chu_re`,
+# không neo, KHÔNG nhóm bắt); khuôn thiếu khoá / mẫu hỏng / có nhóm bắt -> giữ mặc định Task-….
+# MỘT chỗ cho mọi cổng bóc mã thẻ (nghiem_thu_gate · bao_khach_gui · tin_nhom_trung_thuc_gate).
+MA_TRONG_CHU_MAC_DINH = "Task-[0-9]{8}-[0-9]{2,3}"
+
+
+def ma_trong_chu_re(cwd=""):
+    """Chuỗi nguồn regex mã thẻ (không neo) của dự án; mặc định `Task-ddmmyyyy-NN`."""
+    try:
+        r = (doc_khuon(cwd) or {}).get("ma_trong_chu_re") or MA_TRONG_CHU_MAC_DINH
+        if re.compile(r).groups:
+            return MA_TRONG_CHU_MAC_DINH
+        return r
+    except Exception:
+        return MA_TRONG_CHU_MAC_DINH
 
 
 def ghi_log(dong):
@@ -279,9 +298,12 @@ def kiem(tin, loai="xong", so_anh=0, ly_do="", cwd="", loc_ky_thuat=True, nhan_a
         if len(dau.replace("**", "")) > T["tieu_de"]:
             loi.append("Tiêu đề %d ký tự, trần %d." % (len(dau.replace("**", "")), T["tieu_de"]))
     else:
-        m = re.match(r"^\[(Task-\d{8}-\d{2,3})\]\s*(.*)$", dau)
+        rx_ma = ma_trong_chu_re(cwd)
+        m = re.match(r"^\[(%s)\]\s*(.*)$" % rx_ma, dau)
         if not m:
-            loi.append("Dòng đầu phải mở bằng mã việc dạng [Task-ddmmyyyy-NN].")
+            loi.append("Dòng đầu phải mở bằng mã việc dạng [Task-ddmmyyyy-NN]%s." % (
+                "" if rx_ma == MA_TRONG_CHU_MAC_DINH else " (việc nhóm ngoài: mã theo tiền tố nhóm, "
+                "vd [ANHTAN-ddmmyyyy-NN])"))
         else:
             ma = m.group(1)
             if not m.group(2).strip():
@@ -307,7 +329,7 @@ def kiem(tin, loai="xong", so_anh=0, ly_do="", cwd="", loc_ky_thuat=True, nhan_a
     if cu:
         moi = re.sub(r"^T-(\d{4})(\d{2})-", lambda x: "Task-%s20%s-" % (x.group(1), x.group(2)), cu.group(0))
         loi.append('Mã dạng cũ "%s" — dùng mã mới "%s".' % (cu.group(0), moi))
-    for x in re.findall(K["ma_trong_chu_re"], tin):
+    for x in re.findall(ma_trong_chu_re(cwd), tin):
         if ma and x != ma:
             loi.append("Thân tin nhắc mã %s khác mã dòng đầu %s — mỗi tin một việc." % (x, ma))
     tran_dong, tran_ky_tu = tran_than(
@@ -326,7 +348,7 @@ def kiem(tin, loai="xong", so_anh=0, ly_do="", cwd="", loc_ky_thuat=True, nhan_a
         try:
             import tin_van_hanh_gate as TV
             # Mã việc + link thẻ là thứ người đọc CẦN — bóc ra trước khi soi chữ kỹ thuật.
-            sach = re.sub(K["ma_trong_chu_re"], " ", tin)
+            sach = re.sub(ma_trong_chu_re(cwd), " ", tin)
             for nhan, cum in TV.soi(sach)[:6]:
                 loi.append("Chữ kỹ thuật «%s» — %s (người đọc là người vận hành)." % (cum[:60], nhan))
         except Exception:
@@ -562,6 +584,29 @@ def ca_thu():
     ca("37. tin hỏi 2 câu độn thêm 12 dòng → vẫn CHẶN ở trần 6+4×2+1", any("dòng, trần 15" in x for x in l), l)
     ca("38. «14 câu trong ảnh» mà không kèm ảnh/tệp → không tính là câu trong ảnh",
        so_cau_trong_anh(T14, 0, 0) is None and so_cau_trong_anh(T14, 0, 1) == 14 and so_cau_trong_anh(T14, 1) == 14)
+    # Vé 515118e1e9 (W301 15/10) — mã thẻ nhóm việc ngoài ANHTAN-… đọc từ khuôn dự án.
+    OA = dict(O, ma="ANHTAN-14102026-01")
+    ta = soan(OA)
+    l = kiem(ta, so_anh=1, cwd=DU_AN_MAC_DINH)
+    ca("39. [ANHTAN-14102026-01] ở dự án khai tiền tố nhóm → qua", l == [], l)
+    l = kiem(dung, so_anh=1, cwd=DU_AN_MAC_DINH)
+    ca("40. [Task-…] vẫn qua sau khi nới mẫu mã", l == [], l)
+    l = kiem(ta.replace("[ANHTAN-14102026-01]", "[RAC-14102026-01]"), so_anh=1, cwd=DU_AN_MAC_DINH)
+    ca("41. mã rác [RAC-…] → chặn", any("mã việc" in x for x in l), l)
+    with tempfile.TemporaryDirectory() as d0:
+        os.makedirs(os.path.join(d0, "src", "lib", "task-dev"))
+        kk = dict(KHUON_MAC_DINH)
+        kk.pop("ma_trong_chu_re")
+        with open(os.path.join(d0, TEP_KHUON), "w", encoding="utf-8") as f:
+            json.dump(kk, f)
+        ca("42. khuôn dự án THIẾU khoá mẫu mã → mặc định chỉ Task-…",
+           ma_trong_chu_re(d0) == MA_TRONG_CHU_MAC_DINH
+           and any("mã việc" in x for x in kiem(ta, so_anh=1, cwd=d0)))
+        kk["ma_trong_chu_re"] = "(Task|X)-[0-9]{8}-[0-9]{2}"
+        with open(os.path.join(d0, TEP_KHUON), "w", encoding="utf-8") as f:
+            json.dump(kk, f)
+        ca("43. mẫu mã có nhóm bắt (làm lệch group) → về mặc định Task-…",
+           ma_trong_chu_re(d0) == MA_TRONG_CHU_MAC_DINH)
     print("\n%d/%d ca đúng" % (len(tong) - len(sai), len(tong)))
     return 1 if sai else 0
 

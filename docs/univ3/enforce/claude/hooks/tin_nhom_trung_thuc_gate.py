@@ -365,6 +365,15 @@ def no_nguoi_khac(cwd: str, so_minh: str):
 
 
 RX_MA_THE = re.compile(r"Task-\d{8}-\d+", re.I)
+
+
+def _rx_ma_the(cwd: str = ""):
+    """Vé 515118e1e9 (W301): mã thẻ theo khuôn dự án (Task-… · ANHTAN-… · DAT-…); hỏng -> Task-…."""
+    try:
+        import tin_nhom_khuon as K
+        return re.compile(K.ma_trong_chu_re(cwd), re.I)
+    except Exception:
+        return RX_MA_THE
 # Ranh giới số hai đầu: W11 KHÔNG được khớp W116/W111/W119, cũng không khớp "AW11".
 RX_MA_THO = re.compile(r"(?<![A-Za-z0-9])W0*(\d+)(?!\d)", re.I)
 
@@ -372,7 +381,7 @@ RX_MA_THO = re.compile(r"(?<![A-Za-z0-9])W0*(\d+)(?!\d)", re.I)
 def dau_hieu_tin(cmd: str):
     """(tập mã thẻ, tập số thợ) mà chính lệnh gửi tin tự khai — để biết tin THUỘC việc nào."""
     t = str(cmd or "")
-    return ({x.upper() for x in RX_MA_THE.findall(t)},
+    return ({x.upper() for x in _rx_ma_the().findall(t)},
             {int(x) for x in RX_MA_THO.findall(t)})
 
 
@@ -385,11 +394,29 @@ def tin_thuoc_viec(muc: dict, the_tin: set, tho_tin: set) -> bool:
     """Tin có thuộc việc `muc` không — khớp mã thợ (đúng số) hoặc mã thẻ của việc."""
     if _so_tho(muc.get("so")) in tho_tin:
         return True
+    return bool(the_cua_viec(muc) & the_tin)
+
+
+def the_cua_viec(muc: dict) -> set:
+    """Mã thẻ CỦA CHÍNH việc `muc` (chữ hoa).
+
+    Vé e7c1eac966 điểm 5 (W301 15/10, nợ W171): bản cũ quét MỌI mã thẻ trong cả bản ghi — W114, W151
+    (12/10) có link trang thử `/settings/task-dev/Task-03102026-02` trong tiêu chí / bằng chứng nên bị
+    coi là việc của thẻ Task-03102026-02 và bị đòi câu nhờ xác nhận khi gửi tin của thẻ đó. Nay: mục có
+    thẻ khai riêng (`bao_khach.the`, `the`, `ma_the`) thì CHỈ thẻ đó; chưa khai thẻ thì giữ cách cũ (quét
+    cả bản ghi — W126 ca 32: việc chỉ biết thẻ qua link trang thẻ trong tiêu chí). Lùi: `UNIV3_MK_THE_RIENG_TAT=1`."""
+    rx = _rx_ma_the()
     try:
-        the_viec = {x.upper() for x in RX_MA_THE.findall(json.dumps(muc, ensure_ascii=False))}
+        if os.environ.get("UNIV3_MK_THE_RIENG_TAT") == "1":
+            return {x.upper() for x in rx.findall(json.dumps(muc, ensure_ascii=False))}
+        rieng = [str((muc.get("bao_khach") or {}).get("the") or ""), str(muc.get("the") or ""),
+                 str(muc.get("ma_the") or "")]
+        co = {x.upper() for r in rieng for x in rx.findall(r)}
+        if co:
+            return co
+        return {x.upper() for x in rx.findall(json.dumps(muc, ensure_ascii=False))}
     except Exception:
-        the_viec = set()
-    return bool(the_viec & the_tin)
+        return set()
 
 
 def chua_thu_that(cwd: str, so_minh: str = "", cmd: str = ""):
@@ -463,6 +490,40 @@ def _tep_kich_ban(cwd: str, cmd: str):
 RX_SOAN_TEP = re.compile(r">{1,2}\s*[^\s|;&]+[^\n]*<<-?\s*[\"\']?\w+")
 
 
+def nhan_dien_gui(cwd: str, cmd: str):
+    """(là lệnh gửi tin nhóm vận hành?, lối chung `task-dev tin`?, [tệp kịch bản], mô-đun TV).
+
+    Tách khỏi `can_chan_gui` (P143 1F, W195 13/10/2026) để câu NHẮC «thợ khác còn nợ mức
+    kiểm» chỉ in ở lệnh GỬI TIN: bản cũ in ở MỌI lệnh Bash của thợ — đo 24 giờ 1.472 lần,
+    1.422 lần y hệt lượt trước. Một bộ nhận diện, hai nơi dùng — không chép luật thứ hai.
+    """
+    if not cmd or RX_SOAN_TEP.search(cmd):
+        return False, False, [], None
+    try:
+        import tin_van_hanh_gate as TV          # tái dùng bộ nhận diện đích + bộ rút nội dung
+    except Exception:
+        return False, False, [], None
+    # P118: lối chung `task-dev.mjs tin` LÀ gửi tin nhóm Hệ thống — luật mức kiểm áp y như cũ.
+    loi_chung = bool(re.search(r"task-dev\.mjs[\"']?\s+tin\b", cmd))
+    # Lệnh task-dev.mjs KHÁC `tin` (moi/canh/xem/ghi/chuyen/da-doc…) chỉ đọc/ghi thẻ, không gửi
+    # tin nhóm — đừng soi thân tệp script (chứa sendMessage + mã nhóm) mà chặn oan (09/10/2026:
+    # `canh`, `moi` bị chặn vì W11).
+    if not loi_chung and re.search(r"task-dev\.mjs[\"']?\s+(?!tin\b)[a-z-]+", cmd):
+        return False, False, [], TV
+    kich_ban = [] if loi_chung else _tep_kich_ban(cwd, cmd)
+    van_ban = [cmd] + [noi for _t, noi in kich_ban]
+    if not loi_chung:
+        if not any(TV.RX_GUI.search(v) for v in van_ban):
+            return False, False, kich_ban, TV
+        if not any(TV.dich_den(v)[0] == "van-hanh" for v in van_ban):
+            return False, False, kich_ban, TV
+        if any(TV.dich_den(v)[0] == "ky-thuat" for v in van_ban) and TV.dich_den(cmd)[0] != "van-hanh":
+            # kịch bản nhắc CẢ hai nhóm (vd bộ đọc-lại tin chuyển tiếp sang nhóm kỹ thuật) mà
+            # lệnh không tự nói gửi vận hành -> không phải tin mới cho người dùng, đừng chặn oan.
+            return False, False, kich_ban, TV
+    return True, loi_chung, kich_ban, TV
+
+
 def can_chan_gui(cwd: str, cmd: str, so_minh: str = "") -> str:
     """Lý do chặn lệnh Bash đang gửi tin cho nhóm vận hành; rỗng = cho qua (fail-open).
 
@@ -471,35 +532,9 @@ def can_chan_gui(cwd: str, cmd: str, so_minh: str = "") -> str:
     """
     if not bat_cong() or not cmd:
         return ""
-    if RX_SOAN_TEP.search(cmd):
+    la_gui, loi_chung, kich_ban, TV = nhan_dien_gui(cwd, cmd)
+    if not la_gui:
         return ""
-    try:
-        import tin_van_hanh_gate as TV          # tái dùng bộ nhận diện đích + bộ rút nội dung
-    except Exception:
-        return ""
-    # P118: lối chung `task-dev.mjs tin` LÀ gửi tin nhóm Hệ thống — luật mức kiểm áp y như cũ.
-    loi_chung = False
-    try:
-        import tin_nhom_khuon as K
-        loi_chung = bool(re.search(r"task-dev\.mjs[\"']?\s+tin\b", cmd))
-    except Exception:
-        pass
-    # Lệnh task-dev.mjs KHÁC `tin` (moi/canh/xem/ghi/chuyen/da-doc…) chỉ đọc/ghi thẻ, không gửi
-    # tin nhóm — đừng soi thân tệp script (chứa sendMessage + mã nhóm) mà chặn oan (09/10/2026:
-    # `canh`, `moi` bị chặn vì W11).
-    if not loi_chung and re.search(r"task-dev\.mjs[\"']?\s+(?!tin\b)[a-z-]+", cmd):
-        return ""
-    kich_ban = [] if loi_chung else _tep_kich_ban(cwd, cmd)
-    van_ban = [cmd] + [noi for _t, noi in kich_ban]
-    if not loi_chung:
-        if not any(TV.RX_GUI.search(v) for v in van_ban):
-            return ""
-        if not any(TV.dich_den(v)[0] == "van-hanh" for v in van_ban):
-            return ""
-        if any(TV.dich_den(v)[0] == "ky-thuat" for v in van_ban) and TV.dich_den(cmd)[0] != "van-hanh":
-            # kịch bản nhắc CẢ hai nhóm (vd bộ đọc-lại tin chuyển tiếp sang nhóm kỹ thuật) mà
-            # lệnh không tự nói gửi vận hành -> không phải tin mới cho người dùng, đừng chặn oan.
-            return ""
     thieu = thieu_khai(cwd, so_minh)
     if thieu:
         d = ["⛔ CHƯA KHAI MỨC KIỂM mà đã đi gửi tin cho nhóm người dùng.",
@@ -544,6 +579,9 @@ def nhac_no_nguoi_khac(cwd: str, cmd: str, so_minh: str) -> int:
     """
     try:
         if not bat_cong() or not so_minh:
+            return 0
+        # P143 1F (W195): chỉ nhắc ở lệnh GỬI TIN — xem WHY ở `nhan_dien_gui`.
+        if os.environ.get("UNIV3_P143_1F_TAT") != "1" and not nhan_dien_gui(cwd, cmd)[0]:
             return 0
         no = no_nguoi_khac(cwd, so_minh)
         if not no:
@@ -833,6 +871,38 @@ def tu_kiem() -> int:
                '"Góp ý" --da-lam "%s"' % TIN_KHOE)
     ca("35. `task-dev.mjs tin --ma …` thiếu khai nhờ xác nhận -> VẪN CHẶN",
        "THIẾU PHẦN NHỜ" in can_chan_gui(c4, T_THIEU, ""), can_chan_gui(c4, T_THIEU, "")[:200])
+    # Vé e7c1eac966 điểm 5 (W301): W114/W151 12/10 khai thẻ riêng Task-12102026-49 nhưng tiêu chí có link
+    # trang thử Task-03102026-02 -> tin của thẻ Task-03102026-02 (việc khác) bị đòi câu nhờ cho W114.
+    m11["bao_khach"] = dict(m11.get("bao_khach") or {}, the="Task-12102026-49")
+    NT.ghi_muc(c4, m11)
+    ca("35b. việc có thẻ riêng -> tin của thẻ KHÁC (chỉ trùng link tiêu chí) KHÔNG chặn",
+       can_chan_gui(c4, T_THIEU, "") == "", can_chan_gui(c4, T_THIEU, "")[:200])
+    T_DUNG = T_THIEU.replace("Task-02102026-02", "Task-12102026-49")
+    ca("35c. việc có thẻ riêng -> tin ĐÚNG thẻ đó VẪN CHẶN",
+       "THIẾU PHẦN NHỜ" in can_chan_gui(c4, T_DUNG, ""), can_chan_gui(c4, T_DUNG, "")[:200])
+    ca("35d. tin thẻ ANHTAN-… của việc khác -> KHÔNG chặn (bóc mã đọc khuôn dự án)",
+       can_chan_gui(c4, T_THIEU.replace("Task-02102026-02", "ANHTAN-14102026-01"), "") == "")
+
+    # ── P143 1F (W195 13/10/2026): nhắc «thợ khác còn nợ» CHỈ ở lệnh gửi tin ──────────
+    import io
+    import contextlib
+
+    def _nhac(c, lenh, so):
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            nhac_no_nguoi_khac(c, lenh, so)
+        return buf.getvalue()
+    c2 = _sandbox()                       # sổ thử RIÊNG: `_sandbox()` trỏ lại gốc sổ mỗi lần gọi
+    _dung_muc(c2, "W01")
+    _dung_muc(c2, "W26", khai_dong="MUC-KIEM: da-thu-ban-that — thợ W26 đăng nhập bản "
+                                   "thật, mở bảng thấy số tiền hiện đúng")
+    for lenh_thuong in ("ls -la", "git status --short", "python3 scripts/x.py"):
+        ca("36. (P143 1F) lệnh Bash thường `%s` -> KHÔNG in nhắc nợ" % lenh_thuong,
+           _nhac(c2, lenh_thuong, "W26") == "", _nhac(c2, lenh_thuong, "W26")[:160])
+    ca("37. (P143 1F) lệnh GỬI tin nhóm vận hành -> VẪN nhắc W01 còn nợ",
+       "W01" in _nhac(c2, LENH_GUI % TIN_KHOE, "W26"), _nhac(c2, LENH_GUI % TIN_KHOE, "W26")[:160])
+    ca("38. (P143 1F) lối chung `task-dev.mjs tin` -> VẪN nhắc",
+       "W01" in _nhac(c2, TIN_CLI % TIN_KHOE, "W26"), _nhac(c2, TIN_CLI % TIN_KHOE, "W26")[:160])
 
     print("\n%d/%d ca đúng" % (len(tong) - len(loi), len(tong)))
     return 1 if loi else 0

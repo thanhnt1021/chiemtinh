@@ -58,12 +58,20 @@ today() {
   if [ -n "${WSEQ_HOM_NAY_VN:-}" ]; then printf '%s\n' "$WSEQ_HOM_NAY_VN"; return 0; fi
   TZ="$VN_TZ" date '+%Y-%m-%d'
 }
-# NGÀY LÀM VIỆC — mở bằng LỆNH `đầu-ngày` của founder, KHÔNG bằng đồng hồ (bệnh 4,
-# 04/09/2026). Đêm qua qua nửa đêm là bộ đếm về 0, cấp lại W01/W02/W03 trong lúc cả
-# nhóm vẫn đang chốt ngày 03/09 — founder: *"tao đã bảo reset sang ngày mới đâu???"*.
-# Có tệp `<project>.dau-ngay` -> lấy NGÀY GHI TRONG TỆP làm khoá.
-# Chưa có -> lùi GIAO_CA_GIO giờ: làm xuyên đêm tới 6h sáng vẫn là ngày cũ.
+# NGÀY LÀM VIỆC — khoá = NGÀY GHI TRONG TỆP `<project>.dau-ngay`.
+# Hai cửa ghi tệp đó: (1) founder gõ `đầu-ngày` (`cmd_dau_ngay`); (2) TỰ MỞ ở lần cấp số
+# đầu tiên khi giờ VN đã sang ngày mới VÀ đã qua GIAO_CA_GIO (`tu_mo_ngay_moi`, W305).
+# WHY cửa (2) (anh Thành 15/10/2026, Task-15102026-04): *"reset cách đánh số worker khi
+# sang ngày mới nhé. hiện không đổi nên chạy đến mấy trăm"* — chỉ dựa lệnh gõ tay thì
+# quên gõ là mốc kẹt mãi (EtsyFulfillChichub kẹt 12/10 tới W306).
+# WHY vẫn chặn trước GIAO_CA_GIO (bệnh 4, 04/09/2026): qua nửa đêm bộ đếm về 0, cấp lại
+# W01/W02/W03 trong lúc cả nhóm đang chốt ngày 03/09 — founder: *"tao đã bảo reset sang
+# ngày mới đâu???"*. Làm xuyên đêm tới 6h sáng vẫn là ngày cũ.
 GIAO_CA_GIO="${UNIV3_GIAO_CA_GIO:-6}"
+gio_vn() {
+  local g="${WSEQ_GIO_VN:-$(TZ="$VN_TZ" date '+%H')}"
+  echo $((10#${g:-12}))
+}
 ngay_lam_viec() {
   local f="$ROOT/$PROJECT.dau-ngay" d
   if [ -f "$f" ]; then
@@ -107,7 +115,7 @@ cmd_dau_ngay() {
   if [ "${1:-}" = "--ep" ]; then shift; ep="${*:-}"; fi
   if [ -z "$ep" ]; then
     local gio dang
-    gio="${WSEQ_GIO_VN:-$(TZ="$VN_TZ" date '+%H')}"; gio=$((10#${gio:-12}))
+    gio=$(gio_vn)
     if [ "$gio" -lt "$GIAO_CA_GIO" ]; then
       dang=$(viec_do_dang)
       if [ -n "$dang" ]; then
@@ -126,6 +134,9 @@ cmd_dau_ngay() {
   cu_phien=$(phien_hien)
   if [ "$cu_ngay" = "$(today)" ]; then moi_phien=$(( cu_phien + 1 )); else moi_phien=1; fi
   printf '%s\n%s\n' "$(stamp)" "$moi_phien" > "$ROOT/$PROJECT.dau-ngay"
+  # Mốc do founder gõ -> dấu "máy tự mở" hết hiệu lực NGAY, kể cả khi trùng giây với lần tự
+  # mở (so dòng mốc thì hai lần cùng giây ra hai dòng y hệt).
+  rm -f "$ROOT/$PROJECT.tu-mo"
   # MỞ DÃY MỚI = bộ đếm về 0 NGAY TẠI ĐÂY. Trước đây `cmd_next` chỉ reset khi ĐỔI NGÀY,
   # nên phiên 2 trong cùng ngày sẽ nối dãy cũ (W12, W13…) thay vì W01 như founder chờ.
   printf '%s\n%s\n' "$(today)" "0" > "$SEQ"
@@ -133,10 +144,57 @@ cmd_dau_ngay() {
   echo "      Từ đây mã worker cấp lại từ W01; trước đó vẫn nối dãy cũ."
 }
 
+# ── TỰ MỞ NGÀY LÀM VIỆC MỚI (W305, 15/10/2026 — Task-15102026-04) ──────────────────
+# Tệp dấu `<project>.tu-mo`: dòng 1 = đúng dòng mốc vừa ghi vào `.dau-ngay`, dòng 2 = ngày
+# làm việc CŨ vừa khép. Dòng 1 còn khớp `.dau-ngay` = ngày hiện hành do MÁY mở; founder gõ
+# `đầu-ngày` sau đó thì mốc đổi, dấu tự hết hiệu lực. Tệp riêng chứ không thêm dòng 3 vào
+# `.dau-ngay`: có chỗ đọc `.dau-ngay` lấy TỪ CUỐI làm số phiên (`dau_ngay_ca_thu.py`).
+ngay_truoc_tu_mo() {
+  local f="$ROOT/$PROJECT.dau-ngay" m="$ROOT/$PROJECT.tu-mo" a b
+  [ -s "$m" ] && [ -s "$f" ] || return 0
+  a=$(awk 'NR==1' "$f" 2>/dev/null); b=$(awk 'NR==1' "$m" 2>/dev/null)
+  [ -n "$a" ] && [ "$a" = "$b" ] && awk 'NR==2{print $1}' "$m" 2>/dev/null
+  return 0
+}
+# Gọi khi ĐÃ giữ khoá sổ. Mở được -> mã 0 + một dòng báo ra stderr (stdout của `next`
+# chỉ được có SỐ — chỗ gọi lấy dòng cuối stdout làm số worker).
+# Không chặn vì việc dở của ngày cũ như `cmd_dau_ngay`: từ GIAO_CA_GIO trở đi là ngày mới
+# thật; thợ cũ còn chạy GIỮ số của nó nhờ `busy_numbers` đọc ngày cũ trong tệp dấu.
+tu_mo_ngay_moi() {
+  local cu nay moc
+  cu=$(ngay_lam_viec); nay=$(today)
+  [ -n "$cu" ] && [[ "$cu" < "$nay" ]] || return 1
+  [ "$(gio_vn)" -ge "$GIAO_CA_GIO" ] || return 1
+  moc=$(stamp)
+  printf '%s\n%s\n' "$moc" "1" > "$ROOT/$PROJECT.dau-ngay"
+  printf '%s\n%s\n' "$moc" "$cu" > "$ROOT/$PROJECT.tu-mo"
+  printf '%s\n%s\n' "$nay" "0" > "$SEQ"
+  echo "wseq: đã tự mở ngày làm việc $nay cho '$PROJECT' (ngày cũ $cu) — dãy số về W01." >&2
+  return 0
+}
+# Lệnh `tu-mo` cho cổng mở phiên. Dòng đầu stdout là MÃ máy đọc:
+#   TU-MO <ngày mới> <ngày cũ>  vừa tự mở
+#   DA-MO <ngày> [tu-mo|tay]    ngày hiện hành đã là hôm nay (máy mở / founder gõ)
+#   CHUA <ngày cũ> <giờ>        còn trước GIAO_CA_GIO — giữ ngày cũ
+cmd_tu_mo() {
+  lock_take || return 1
+  local cu; cu=$(ngay_lam_viec)
+  if tu_mo_ngay_moi 2>/dev/null; then
+    lock_free; echo "TU-MO $(today) $cu"; return 0
+  fi
+  lock_free
+  if [ "$cu" = "$(today)" ]; then
+    if [ -n "$(ngay_truoc_tu_mo)" ]; then echo "DA-MO $cu tu-mo"; else echo "DA-MO $cu tay"; fi
+  else
+    echo "CHUA $cu $(gio_vn)"
+  fi
+}
+
 # Nguồn của ngay_lam_viec() hiện tại — AC-B4: bảng không được tự khai "reset mỗi ngày"
 # mà phải in ra CĂN CỨ đọc được (có mốc đầu-ngày hay đang lùi về sổ / đồng hồ).
 nguon_ngay_lam_viec() {
   local f="$ROOT/$PROJECT.dau-ngay"
+  if [ -s "$f" ] && [ -n "$(ngay_truoc_tu_mo)" ]; then echo "tu-mo"; return 0; fi
   if [ -s "$f" ]; then echo "dau-ngay"; return 0; fi
   if [ -s "$SEQ" ]; then echo "seq"; return 0; fi
   echo "date"
@@ -237,12 +295,15 @@ line_of_slug() {
 # Tính duy nhất được giữ ở chỗ KHÁC, không cần hy sinh số: lượt thả LẠI cùng slug chỉ được
 # nhận lại số cũ khi số đó còn trống (xem nhánh `chan` trong `cmd_next`/`cmd_adopt`); số đã
 # bị việc khác nhận thì slug này lấy số mới.
+# W305 15/10/2026 — ngày vừa được MÁY tự khép (`ngay_truoc_tu_mo`) cũng giữ chỗ cho dòng
+# `running` của nó, KHÔNG giới hạn ${BUSY_HOURS} giờ: thợ thả 23:00 hôm qua vẫn chạy lúc
+# 11:30 sáng nay thì mốc 12 giờ đã trôi, không có vế này là ngày mới cấp trùng số của nó.
 busy_numbers() {
   [ -f "$MAP" ] || return 0
-  local d_today cut
-  d_today=$(ngay_lam_viec); cut=$(cutoff_stamp)
-  awk -v FS="$US" -v d="$d_today" -v cut="$cut" \
-    '$5=="running" && ($6==d || ($4 "") >= (cut "")) {print $1}' "$MAP" \
+  local d_today cut nt
+  d_today=$(ngay_lam_viec); cut=$(cutoff_stamp); nt=$(ngay_truoc_tu_mo)
+  awk -v FS="$US" -v d="$d_today" -v cut="$cut" -v nt="$nt" \
+    '$5=="running" && ($6==d || (nt!="" && $6==nt) || ($4 "") >= (cut "")) {print $1}' "$MAP" \
     | sed 's/^W//' | sed 's/^0*//'
 }
 
@@ -255,11 +316,11 @@ busy_numbers() {
 # con, nhìn sổ thấy hai việc khác hẳn. Dòng `done` giữ lại làm DẤU VẾT, không giữ chỗ.
 number_taken() {  # $1 = W## | ##
   local want; want=$(printf '%s' "$1" | sed 's/^W//' | sed 's/^0*//')
-  local d_today cut
-  d_today=$(ngay_lam_viec); cut=$(cutoff_stamp)
+  local d_today cut nt
+  d_today=$(ngay_lam_viec); cut=$(cutoff_stamp); nt=$(ngay_truoc_tu_mo)
   [ -f "$MAP" ] || return 1
-  awk -v FS="$US" -v d="$d_today" -v cut="$cut" -v w="$want" '
-    $5=="running" && ($6==d || ($4 "") >= (cut "")) {
+  awk -v FS="$US" -v d="$d_today" -v cut="$cut" -v nt="$nt" -v w="$want" '
+    $5=="running" && ($6==d || (nt!="" && $6==nt) || ($4 "") >= (cut "")) {
       n=$1; sub(/^W/,"",n); sub(/^0+/,"",n); if (n==w) f=1
     } END{ exit !f }' "$MAP"
 }
@@ -274,6 +335,8 @@ cmd_next() {
   [ -n "$desc" ] || desc="$slug"
 
   lock_take || return 1
+  # TRƯỚC khi tra slug: mở ngày xong thì tra theo ngày MỚI (W305).
+  tu_mo_ngay_moi || true
 
   # 1 slug = 1 số SUỐT ĐỜI: thả lại / resume cùng slug -> trả về đúng số cũ.
   local old; old=$(line_of_slug "$MAP" "$slug")
@@ -476,6 +539,7 @@ cmd_adopt() {
   if [ "$id" = "W00" ]; then echo "wseq: W00 không phải số worker hợp lệ" >&2; return 1; fi
   desc="${desc//$US/ }"; desc="${desc//$'\n'/ }"; [ -n "$desc" ] || desc="$slug"
   lock_take || return 1
+  tu_mo_ngay_moi || true
   local cu; cu=$(line_of_slug "$MAP" "$slug")
   # Cùng luật `chan` như `cmd_next`: số đã nhả mà việc khác đã nhận thì không lấy lại.
   if [ -n "$cu" ] && { [ "$(map_field "$cu" 5)" != "chan" ] || ! number_taken "$(map_field "$cu" 1)"; }; then
@@ -518,7 +582,7 @@ cmd_list() {
 
   echo "Sổ số worker — project: $PROJECT"
   echo "NGAY_LAM_VIEC=$d_today MOC=${moc_gio:-?} NGUON=$(nguon_ngay_lam_viec)"
-  pad "SỐ" 4; pad "SLUG" 26; pad "VIỆC" 34; pad "THẢ LÚC" 20; echo "TRẠNG THÁI"
+  pad "SỐ" 5; pad "SLUG" 26; pad "VIỆC" 34; pad "THẢ LÚC" 20; echo "TRẠNG THÁI"
   # BẢNG TRA, KHÔNG PHẢI NHẬT KÝ (W21, 10/09/2026). awk chỉ LÀM SẠCH LUỒNG ĐỌC — tệp
   # `.map` không bị đụng một byte nào, mọi dòng cũ vẫn nằm nguyên đó làm dấu vết:
   #   (1) đưa số về MỘT dạng `W%02d` (sổ hôm nay có `W1` lẫn `W03` do định dạng cũ `W%d`);
@@ -535,16 +599,17 @@ cmd_list() {
     [ -n "$line" ] || continue
     id=$(map_field   "$line" 1); slug=$(map_field "$line" 2); desc=$(map_field "$line" 3)
     ts=$(map_field   "$line" 4); st=$(map_field   "$line" 5)
-    pad "$id" 4; pad "${slug:0:25}" 26; pad "${desc:0:33}" 34; pad "$ts" 20
+    pad "$id" 5; pad "${slug:0:25}" 26; pad "${desc:0:33}" 34; pad "$ts" 20
     # Ba nhãn KHÁC HẲN NHAU (P089 AC10): founder phải phân biệt được worker chết thật,
     # worker chạy xong, và LƯỢT THẢ bị cổng chặn (chưa từng có worker nào ra đời).
     case "$st" in
       running) echo "đang chạy" ;;
+      running-cu) echo "đang chạy · ngày cũ" ;;
       chan)    echo "bị cổng chặn" ;;
       *)       echo "xong" ;;
     esac
   done <<EOF
-$(awk -v FS="$US" -v OFS="$US" -v d="$d_today" -v all="$all" '
+$(awk -v FS="$US" -v OFS="$US" -v d="$d_today" -v all="$all" -v nt="$(ngay_truoc_tu_mo)" '
     function chuan(x) { sub(/^[Ww]/, "", x); sub(/^0+/, "", x); return x + 0 }
     # LƯỢT ĐỌC 1 — số nào đang có chủ THẬT và chủ đó là slug nào (W66 14/09/2026).
     # WHY: từ nay dòng `chan` KHÔNG giữ chỗ số, nên một số có thể vừa mang dòng `chan` của
@@ -556,7 +621,10 @@ $(awk -v FS="$US" -v OFS="$US" -v d="$d_today" -v all="$all" '
     }
     {
       if ($1 == "") next
-      if (all != "1" && $6 != d) next
+      # W305: ngày vừa được máy tự khép -> thợ CÒN CHẠY của ngày đó vẫn lên bảng hôm nay
+      # (số cũ của nó đang giữ chỗ), kèm nhãn ngày cũ; dòng đã xong của ngày đó thì thôi.
+      cu = (nt != "" && $6 == nt && $5 == "running")
+      if (all != "1" && $6 != d && !cu) next
       v = chuan($1)
       # Dòng `chan` của slug KHÔNG phải chủ hiện tại của số -> việc đó đã mất số, không vẽ
       # lên bảng hôm nay nữa. Dòng vẫn nằm nguyên trong tệp, `--all` vẫn đọc được.
@@ -568,6 +636,7 @@ $(awk -v FS="$US" -v OFS="$US" -v d="$d_today" -v all="$all" '
       # (mới nhất thắng — đúng luật `line_of_slug`).
       if (!(k in seen)) { seen[k] = 1; thu[++n] = k; val[k] = v; slug[k] = $2; tha[k] = $4 }
       viec[k] = $3; st[k] = $5
+      if (cu && all != "1") st[k] = "running-cu"
       if (!((k SUBSEP $2) in da)) { da[k SUBSEP $2] = 1; nbd[k]++ }
     }
     END {
@@ -599,6 +668,10 @@ cmd_reset() {
 # `ngay_lam_viec()` cấm.
 cmd_bo_dem() {
   local d_today d_seq n
+  # Lối cấp số của cổng chuẩn hoá đi qua `bo-dem` TRƯỚC `adopt` (W305): không mở ngày ở
+  # đây thì số gõ tay W306 bị so với bộ đếm ngày CŨ (305) và lọt vào sổ thành W306 của ngày
+  # mới. Mở trước -> bộ đếm 0 -> W306 bị coi là vượt dãy, nắn về W01.
+  if lock_take 2>/dev/null; then tu_mo_ngay_moi || true; lock_free; fi
   d_today=$(ngay_lam_viec)
   d_seq=$(awk 'NR==1{print $1}' "$SEQ" 2>/dev/null)
   n=$(awk 'NR==2{print $1+0}' "$SEQ" 2>/dev/null)
@@ -619,6 +692,8 @@ wseq — cấp số thứ tự cho worker nền (W01, W02, W03…)
   wseq doi-chieu [YYYY-MM-DD]       đầu việc đã dịch ↔ mã thợ; đầu việc chưa ai nhận thì in nổi bật
   wseq reset                        xoá bộ đếm ngày (hiếm khi cần)
   wseq bo-dem                       in giá trị bộ đếm của NGÀY LÀM VIỆC hiện tại
+  wseq tu-mo                        tự mở ngày làm việc mới nếu giờ VN đã qua GIAO_CA_GIO (6h)
+                                    (next/adopt/bo-dem cũng tự làm việc này trước khi cấp số)
 
 LUẬT ĐẶT TÊN (điều phối viên BẮT BUỘC theo):
   1. Xin số TRƯỚC khi thả worker:
@@ -643,6 +718,7 @@ case "${1:-list}" in
   list|ls)       shift; cmd_list "$@" ;;
   reset)         shift; cmd_reset "$@" ;;
   dau-ngay)      shift; cmd_dau_ngay "$@" ;;
+  tu-mo)         shift; cmd_tu_mo "$@" ;;
   # Gọi thẳng bộ đo bên Python, KHÔNG chép lại phép đọc sổ sang bash — hai bản đếm lệch
   # nhau đúng là bệnh mà lệnh này sinh ra để chữa (W11, 19/09/2026).
   doi-chieu)     shift; exec python3 "$(dirname "$0")/viec_vs_tho.py" \

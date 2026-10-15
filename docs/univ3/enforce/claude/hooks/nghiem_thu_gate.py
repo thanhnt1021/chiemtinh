@@ -267,12 +267,23 @@ RX_KHONG_ANH = re.compile(r"^\s*(?:KHÔNG\s*ẢNH|KHONG\s*ANH|NO-IMG)\s*[:=—-]
 # 28/09: 26 dòng, toàn Nathan Goo / Lam Quynh / Phương Thu, không một dòng nào của bot) —
 # tra sổ là mù hoàn toàn với tin thợ vừa bắn.
 #   ...::ĐÃ GỬI: 3557            (nhiều tin thì ngăn bằng dấu phẩy)
+# Vé e7c1eac966 điểm 3 (W301): sau P137 tin không vào nhóm nữa — thợ báo bằng tin riêng anh / chuông web
+# thì khai `::ĐÃ BÁO: tin riêng 9984` hoặc `::ĐÃ BÁO: chuông web 26608` (chữ số = mã tin / mã chuông).
 RX_DA_GUI = re.compile(
-    r"^\s*(?:ĐÃ\s*GỬI|DA\s*GUI|TIN\s*ĐÃ\s*GỬI|TIN\s*DA\s*GUI|MÃ\s*TIN|MA\s*TIN|SENT)"
+    r"^\s*(?:ĐÃ\s*GỬI|DA\s*GUI|TIN\s*ĐÃ\s*GỬI|TIN\s*DA\s*GUI|MÃ\s*TIN|MA\s*TIN|SENT|ĐÃ\s*BÁO|DA\s*BAO)"
     r"\s*[:=—-]*\s*(.+)$", re.I | re.S)
 # P118 (05/10/2026) — phần `THẺ: Task-ddmmyyyy-NN` trong dòng BAO-KHACH: tin báo nhóm gắn đúng thẻ
 # Việc giao Dev, trả lời nối vào tin gốc của thẻ đó. Mã cũ `T-ddmmyy-NN` vẫn nhận, quy về mã mới.
 RX_THE = re.compile(r"^\s*TH(?:E|Ẻ)\s*[:=]\s*(Task-\d{8}-\d{2,3}|T-\d{6}-\d{2,3})\s*$", re.I)
+
+
+def _rx_the(cwd: str = ""):
+    """Vé 515118e1e9 (W301): `THẺ: ANHTAN-…` — nhận mọi tiền tố mã của khuôn dự án; hỏng -> RX_THE cũ."""
+    try:
+        import tin_nhom_khuon as K
+        return re.compile(r"^\s*TH(?:E|Ẻ)\s*[:=]\s*(%s|T-\d{6}-\d{2,3})\s*$" % K.ma_trong_chu_re(cwd), re.I)
+    except Exception:
+        return RX_THE
 
 
 def quy_ma_the(ma: str) -> str:
@@ -300,7 +311,7 @@ def boc_bao_khach(van_ban: str):
     cuc = [c.strip() for c in phan.split("::") if c.strip()]
     cau, anh, khong_anh, da_gui, the = [], [], "", [], ""
     for c in cuc:
-        mt = RX_THE.match(c)
+        mt = _rx_the().match(c)
         if mt:
             the = quy_ma_the(mt.group(1))
             continue

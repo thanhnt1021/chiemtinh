@@ -52,18 +52,34 @@ def main() -> int:
         return 0
     if data.get("tool_name") != "AskUserQuestion" or _TT is None:
         return 0
+    cwd = str(data.get("cwd") or os.getcwd())
     tt = _TT.dang_afk()
+    tg = None
     if not tt:
-        return 0
-    con = max(0, int(tt.get("het_han", 0)) - int(time.time()))
+        # Vé d991d9a878 (W301): lời mới nhất của anh đến từ Telegram, mới hơn lượt gõ CLI cuối = VẮNG.
+        try:
+            tg = _TT.vang_qua_telegram(cwd)
+        except Exception:
+            tg = None
+        if not tg:
+            return 0
+    if tt:
+        con = max(0, int(tt.get("het_han", 0)) - int(time.time()))
+        dau = "⛔ ANH THÀNH ĐANG AFK"
+        duoi = f"Cờ AFK tự hết sau {con // 3600} giờ {(con % 3600) // 60} phút, hoặc khi anh gõ «tao về rồi»."
+    else:
+        gio = lambda x: time.strftime("%H:%M %d/%m", time.localtime(x)) if x else "chưa có"
+        dau = ("⛔ ANH THÀNH ĐANG LÀM QUA TELEGRAM (lời mới nhất của anh %s, lượt gõ CLI cuối %s)"
+               % (gio(tg["tg"]), gio(tg["cli"])))
+        duoi = "Cổng tự mở khi anh gõ một lượt trong CLI (mới hơn lời Telegram cuối)."
     ly_do = (
-        "⛔ ANH THÀNH ĐANG AFK → CẤM AskUserQuestion (hộp hỏi trong CLI không ai bấm, cả luồng đứng chờ).\n"
+        dau + " → CẤM AskUserQuestion (hộp hỏi trong CLI không ai bấm, cả luồng đứng chờ).\n"
         "Làm thay: gom MỌI câu cần anh quyết thành DANH SÁCH đánh số `1.` `2.`, lựa chọn mang mã\n"
         "`1A · 1B · 1C`, khuyến nghị đặt đầu ghi «(đề xuất)», gửi MỘT tin vào INBOX:\n"
-        + loi_inbox(str(data.get("cwd") or os.getcwd()))
+        + loi_inbox(cwd)
         + "Rồi KHÔNG CHỜ: chọn phương án đề xuất / theo quy trình mã đã có, ghi `CHỐT: … — vì …`,\n"
         "việc khác chạy tiếp. Lượt gọi bị chặn này đã tính là «đã hỏi» với các cổng Stop.\n"
-        f"Cờ AFK tự hết sau {con // 3600} giờ {(con % 3600) // 60} phút, hoặc khi anh gõ «tao về rồi»."
+        + duoi
     )
     print(
         json.dumps(
