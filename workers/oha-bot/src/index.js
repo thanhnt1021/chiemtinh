@@ -27,7 +27,6 @@ const TEP_ROI_GIAY = 300;              // luật 4.10 — tệp gửi rời tron
 const CHU_THICH_GIAY = 120;
 const DAU_FORCE = '✍ Gõ việc vào tin này';
 const DAU_CLI = ['📨 CLI ·', '🤖 Phiên CLI:'];
-const CAU_CLI_CHI_CHU = '📨 CLI · Lệnh này chỉ chủ nhà dùng được.';
 const CAU_MAY_TAT = 'Hệ thống đang chạy nhiều việc nên việc này chưa xong, sẽ phản hồi khi xong.';
 // 7f — lịch trên Cron Trigger sẵn có (*/5): skill không ghi giờ gốc → chọn 23h tạm dừng, 7h chạy lại, gom /lamdi mỗi 2 giờ 8h–22h.
 const GIO_TAM_DUNG = 23;
@@ -197,12 +196,6 @@ function lenhCua(text, botTen) {
   return { lenh: r[1].toLowerCase(), du: (r[3] || '').trim() };
 }
 
-function laLenhCli(m, botTen) {
-  const rep = m.reply_to_message;
-  const repChu = String(rep?.text ?? rep?.caption ?? '');
-  return lenhCua(m.text ?? m.caption, botTen)?.lenh === 'clitell' || (!!rep?.from?.is_bot && DAU_CLI.some((d) => repChu.startsWith(d)));
-}
-
 function linkTin(chatId, mid) {
   const s = String(chatId);
   return s.startsWith('-100') ? `https://t.me/c/${s.slice(4)}/${mid}` : '';
@@ -251,9 +244,7 @@ async function webhook(req, env, ctx) {
   const ch = cauHinh(env);
   const chat = String(m.chat.id);
   const rieng = m.chat.type === 'private';
-  // Người lạ gõ /clitell ở chat riêng: đáp một dòng từ chối (không lưu) thay vì im — người gõ biết lệnh không dành cho mình.
-  if (rieng && String(m.from.id) !== ch.chu && !m.from.is_bot && !upd.edited_message && laLenhCli(m, ch.botTen))
-    return json(traLoi(chat, m.message_id, CAU_CLI_CHI_CHU));
+  // Người lạ chat riêng (kể cả /clitell) → bỏ, không lưu, KHÔNG đáp: không lộ bot có lệnh gì (skill 7d.1, luật 4.6).
   if (rieng ? String(m.from.id) !== ch.chu : !ch.noiBo.includes(chat)) return OK();   // người lạ / nhóm ngoài danh sách: bỏ, không lưu
   try {
     const t = !upd.edited_message ? thoaiCua(m) : null;
