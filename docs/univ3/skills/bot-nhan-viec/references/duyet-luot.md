@@ -32,6 +32,7 @@ const DL_NHOM = ['lam', 'hoi', 'gop', 'bo', 'de_sau'];
 const DL_TEN_TT = ['cho-may' => 'chờ máy dựng phương án', 'cho-chu-nha' => 'chờ anh duyệt', 'gop-y' => 'máy đang sửa theo góp ý của anh',
     'da-ok' => 'anh đã OK, chờ máy làm', 'dang-ap' => 'máy đang làm theo phương án', 'da-ap' => 'đã làm xong', 'huy' => 'đã huỷ'];
 // «OK» = CẢ tin chỉ là lời đồng ý (kèm «hết»/dấu câu được). «ok nhưng 02 bỏ» là góp ý — quy tắc tất định, không đoán.
+// 👍❤️ chỉ được ĐI SAU chữ đồng ý; tin chỉ có emoji và cảm xúc (message_reaction) thả lên tin phương án KHÔNG BAO GIỜ là OK (SKILL mục 4.9).
 const DL_OK_RE = '/^(?:ok|oke|okie|okay|okela|duyệt|đồng ý|chốt|làm đi|cứ làm đi|được|1a)(?:\s+(?:hết|tất cả|luôn|nhé|nha|đi))*[\s.!👍❤️]*$/iu';
 ```
 

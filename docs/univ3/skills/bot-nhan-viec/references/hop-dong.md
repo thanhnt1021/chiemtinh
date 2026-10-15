@@ -82,5 +82,5 @@ Bản đầy đủ (Postgres): giữ cờ đọc trong JSONB của sự kiện (
 
 Bản đầy đủ thêm: `ghi` (dòng diễn biến lên việc), `ket-qua` (tóm tắt + cách kiểm + ảnh), `chuyen --cot … --cho "<tên>"`,
 `tin --loai xong|hoi|khong-task [--nhom <id>] [--reply <message_id>] [--rieng]` (lối gửi DUY NHẤT — nhóm chính, nhóm
-khác, nối tin người hỏi, chat riêng chủ nhà; sự kiện ghi `chat_id` nhóm đó để Reply vào đúng thẻ), `tim` (thả ❤ tin việc + tin trả lời),
+khác, nối tin người hỏi, chat riêng chủ nhà; sự kiện ghi `chat_id` nhóm đó để Reply vào đúng thẻ), `tim` (BOT thả ❤ tin việc + tin trả lời = «đã xử»; ❤ chủ nhà thả thì không bao giờ là trả lời — SKILL mục 4.9),
 `phan-hoi` (gom việc theo người đang chờ).

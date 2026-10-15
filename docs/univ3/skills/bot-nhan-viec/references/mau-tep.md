@@ -68,7 +68,7 @@ exit 0
 2. Từng mục: **việc mới** → nhận (`trang-thai --tt dang-lam`) và làm theo luật dự án · **câu trả lời** → làm tiếp đúng việc ·
    **tin sửa** → so bản cũ/mới, đang làm theo bản cũ thì sửa. Không rõ → hỏi chủ nhà (nhắn riêng), không đoán.
 3. `da-doc --id <id đã xử>` — đích danh.
-4. Thả ❤ tin việc + tin trả lời (nếu bản có `tim`); bật lại `canh` nền.
+4. BOT thả ❤ tin việc + tin trả lời (nếu bản có `tim`) = báo «đã xử»; bật lại `canh` nền. ❤ chủ nhà thả chỉ là «đã đọc», không phải duyệt (SKILL mục 4.9).
 5. Ghi «xử lý xong việc gì» vào sổ tiếp tục của dự án; `keo` cập nhật sổ.
 
 ## 5. Tệp dấu — `docs/bot-nhan-viec.json`

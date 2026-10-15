@@ -1,6 +1,6 @@
 ---
 name: bot-nhan-viec
-description: Kích hoạt khi dựng bot Telegram NHẬN VIỆC từ sếp / nhóm vận hành cho một dự án — mỗi việc có mã Task-ddmmyyyy-NN, sếp Reply tin bot là câu trả lời tự vào đúng việc, tin hỏi đánh số 1A/1B, máy tắt không mất tin, phiên Claude CLI mở ra tự thấy việc dồn. User thường nói "dựng bot nhận việc sếp", "nhóm giao việc qua Telegram", "bot nhận task kiểu ChicHub", "sếp nhắn nhóm là vào sổ việc", "con canh việc sếp", hoặc `sync uni` in khối «HỎI ANH: dự án này chưa có bot/nhóm nhận việc». Cũng dùng khi bot đã có mà Reply bị im / đẻ thẻ trùng / máy nhà tắt thì lỡ việc, hoặc sếp nhắn THOẠI mà thẻ ghi «[tin không có chữ]» (bot chưa nghe thoại), hoặc chủ nhà muốn «nhắn thẳng vào phiên Claude CLI đang chạy, khỏi tạo task» (lệnh /clitell), hoặc chủ nhà muốn «duyệt qua 1 lượt các task, cái nào làm được ngay / cần hỏi lại / gộp được, lên phương án gửi inbox riêng, tao OK hết mới làm» (lệnh /lam duyệt lượt), hoặc thêm/sửa một lệnh bot chạm phiên Claude CLI (/lamdi, /khac, /cho, /tatmay, /momay, /pause, /khoidong, /xoa) — mọi dự án phải giống nhau theo «Bộ lệnh chung» mục 7f, hoặc `sync uni` in «dự án X thiếu /…». Trigger en - task bot, boss task inbox, Telegram work queue, voice message transcription, message the running CLI session.
+description: Kích hoạt khi dựng bot Telegram NHẬN VIỆC từ sếp / nhóm vận hành cho một dự án — mỗi việc có mã Task-ddmmyyyy-NN, sếp Reply tin bot là câu trả lời tự vào đúng việc, tin hỏi đánh số 1A/1B, máy tắt không mất tin, phiên Claude CLI mở ra tự thấy việc dồn. User thường nói "dựng bot nhận việc sếp", "nhóm giao việc qua Telegram", "bot nhận task kiểu ChicHub", "sếp nhắn nhóm là vào sổ việc", "con canh việc sếp", hoặc `sync uni` in khối «HỎI ANH: dự án này chưa có bot/nhóm nhận việc». Cũng dùng khi bot đã có mà Reply bị im / đẻ thẻ trùng / máy nhà tắt thì lỡ việc, hoặc sếp nhắn THOẠI mà thẻ ghi «[tin không có chữ]» (bot chưa nghe thoại), hoặc chủ nhà chỉ thả tim mà bot báo «Đã nhận duyệt» rồi tự làm (cảm xúc không bao giờ là duyệt — mục 4.9), hoặc chủ nhà muốn «nhắn thẳng vào phiên Claude CLI đang chạy, khỏi tạo task» (lệnh /clitell), hoặc chủ nhà muốn «duyệt qua 1 lượt các task, cái nào làm được ngay / cần hỏi lại / gộp được, lên phương án gửi inbox riêng, tao OK hết mới làm» (lệnh /lam duyệt lượt), hoặc thêm/sửa một lệnh bot chạm phiên Claude CLI (/lamdi, /khac, /cho, /tatmay, /momay, /pause, /khoidong, /xoa) — mọi dự án phải giống nhau theo «Bộ lệnh chung» mục 7f, hoặc `sync uni` in «dự án X thiếu /…». Trigger en - task bot, boss task inbox, Telegram work queue, voice message transcription, message the running CLI session.
 ---
 
 # Bot nhận việc sếp qua Telegram
@@ -92,13 +92,20 @@ Luật chung:
 9. **Ghi xong phải cho người gửi THẤY**: Reply tin việc ở BẤT KỲ chat nào (mọi nhóm có bot + chat riêng) → ghi lên thẻ
    → bot thả ✍ lên chính tin đó + Reply MỘT dòng «✍ Đã ghi vào thẻ <mã> · <link thẻ>». Ghi hỏng → Reply ngắn «Chưa ghi
    được vào thẻ — <lý do>», tuyệt đối không im (ca thật: người hỏi «sao nhắn mà bot không phản hồi, chỉ thấy react»).
-   Reply mang mã lựa chọn (`1A 2B`) ghi được → thả ❤ (giữ ❤, không đè bằng ✍).
+   Reply mang mã lựa chọn (`1A 2B`) ghi được → BOT thả ❤ lên tin chủ gõ (giữ ❤, không đè bằng ✍) — ❤ do bot thả là «đã ghi»; chiều ngược lại, ❤ do chủ nhà thả KHÔNG phải trả lời (đoạn ⛔ dưới).
    **MỌI nhánh ghi thẻ đều phải thả** (ca thật 12/10: nhánh «Reply tin bot không mã» ghi thẻ + nhắn «Đã ghi» mà quên ✍ →
    chủ nhà hỏi «sao tin này không react»). Tin KHÔNG có chữ (sticker, thoại chưa nghe, ảnh trần) **không bao giờ tính là câu
    trả lời** của phiếu → ✍, không ❤ (ca thật: chữ thay «[tin không có chữ]» bị tính là trả lời câu 1 → ❤ nhầm). `/viec` tạo thẻ → ✍ lên tin lệnh +
    «✅ Đã lên thẻ <mã> · link»; Reply vào dòng đó vẫn ghi thêm vào thẻ.
    Muốn đọc cảm xúc người khác thả: bot phải là quản trị nhóm + webhook khai `message_reaction` (Telegram KHÔNG trả lại
    cảm xúc thả trước lúc bật).
+   ⛔ **Cảm xúc của chủ nhà / sếp KHÔNG BAO GIỜ là câu trả lời** (chủ nhà chốt 15/10/2026: «tao chỉ thả tim để đánh dấu
+   thôi. tất cả các bot đều thế»). ❤ hay emoji bất kỳ lên tin bot CHỈ là «đã đọc» — được ghi vào thẻ và đổi nhãn kiểu
+   «chưa phản hồi» / «đang hỏi lại»; **CẤM** tính là trả lời phiếu, duyệt, OK phương án, chọn mã (`1A`), hay lệnh làm tiếp
+   / khởi động việc; bot không đáp «Đã nhận duyệt», trạng thái việc và cột không đổi. Duyệt / chọn CHỈ tính khi có **CHỮ**:
+   Reply gõ mã hoặc lời đồng ý, gõ trên thẻ, hoặc lệnh (`/lam`, `/lamdi`…). Luật này áp cả phiên Claude CLI: `moi` / con
+   canh in «chủ nhà thả ❤ lên tin …» thì chỉ `da-doc`, không làm tiếp việc đang chờ duyệt. Ca thật 15/10/2026: chủ nhà thả
+   tim lên tin hỏi một việc → bot ghi «Đã nhận duyệt» rồi máy bắt tay làm khi chưa ai duyệt. Ca thử 32–35 ở `references/ca-thu.md`.
 10. **Tệp/ảnh gửi RỜI ngay sau tin việc tự gắn vào thẻ đó** — điện thoại không Reply kèm tệp được. Trong chat riêng chủ
    nhà: tệp tới trong vài phút sau tin việc → gắn thẻ vừa giao; chữ gõ ngay sau tệp = chú thích; gửi liền nhiều tệp gom
    MỘT dòng diễn biến; muốn tách thành việc khác thì Reply `/viec`. Thẻ phải tải lại được tệp đính kèm (CSV, PDF…), không
@@ -150,7 +157,7 @@ Sếp / chủ nhà hay trả lời bằng thoại trên điện thoại. Bot kh�
 - Nhắc tên ai thì **in đậm** tên đó. Máy tự xưng «Trợ lý hệ thống», **cấm nhập vai người thật**.
 - **Tin hỏi**: câu đánh số `1.` `2.`, mỗi lựa chọn mang mã `1A · 1B`; mỗi ảnh có **chữ in trên ảnh** (`--nhan-anh "1A · bản trước"`).
   Dòng cuối: «👉 Reply tin này, gõ mã lựa chọn (vd 1A 2B) hoặc nói thêm». **Không dùng nút bấm** — Dev đã chốt bỏ hẳn nút
-  (08/10/2026), mọi câu trả lời đi bằng Reply gõ mã.
+  (08/10/2026), mọi câu trả lời đi bằng Reply gõ mã. Thả ❤ / emoji lên tin hỏi = đã đọc, KHÔNG phải chọn mã (mục 4.9).
 - **Tin «chỉ cần biết»**: vẫn xin xác nhận — «👉 **<tên>** Reply 1A = Đã đọc» (dòng này tính vào trần).
 - Tin hỏi Dev / chủ nhà khi họ vắng → nhắn **riêng** (`<CHU_NHA_ID>`), không hỏi trong nhóm sếp.
 - Trước khi gửi thật: `gui --thu` (in + đo, không gửi). Đọc lại tin mới nhất của người nhận — họ có thể vừa trả lời.
@@ -193,7 +200,7 @@ Mẫu (HTML):
 - **Con canh** chạy NỀN (`run_in_background`, timeout 7200000): 60 giây/lượt, có tin chưa đọc mới thì in 1 dòng rồi THOÁT
   → phiên được gọi dậy; hết `--phut 110` thì thoát 0. Mỗi máy một con (tệp pid). **Xử lý xong PHẢI bật lại** — quên bật là lỡ việc.
 - Quy trình xử lý (`.claude/commands/check-viec-sep.md`): `moi` → mở ảnh bằng Read → từng mục: việc mới / câu trả lời /
-  tin sửa → `da-doc --id …` đúng mục đã xử → thả ❤ → bật lại canh → ghi «xong gì» vào sổ tiếp tục của dự án.
+  tin sửa → `da-doc --id …` đúng mục đã xử → BOT thả ❤ lên tin đã xử (báo «đã xử», không phải chủ duyệt) → bật lại canh → ghi «xong gì» vào sổ tiếp tục của dự án.
 - **Bỏ qua ghi chú do chính máy viết**: con canh / `moi` không coi dòng «Cập nhật / Tình hình…» do máy tự ghi lên thẻ là
   tin chưa đọc (tự gắn đã-đọc). Phân biệt bằng nguồn: người thật luôn mang tên người; máy viết hộ phải mang cờ máy.
   Ca thật: con canh tự thoát 4 lần/giờ vì chính ghi chú của mình.
@@ -290,6 +297,8 @@ cho làm: trạng thái ghi nhận / nhãn «Làm sau»). Bản gốc: Nhà thu�
 6. **Chủ nhà Reply tin phương án**: CẢ tin chỉ là lời đồng ý (ok · oke · okay · duyệt · đồng ý · chốt · làm đi, kèm «hết» được)
    → `da-ok`; chữ khác (kể cả «ok nhưng 02 bỏ») = góp ý → `gop-y`, lưu nguyên văn, bot đáp «📝 Đã ghi góp ý — máy gửi bản b+1».
    Mỗi lần gửi là bản mới (`ban` +1, lịch sử bản + góp ý giữ trong lượt). Reply bản CŨ → nhắc Reply bản mới nhất, không đổi gì.
+   **Thả ❤ / 👍 / emoji bất kỳ lên tin phương án KHÔNG phải OK** (mục 4.9): lượt giữ nguyên `cho-chu-nha`, 0 việc khởi động —
+   chỉ Reply có CHỮ đồng ý mới thành `da-ok`.
 7. **Áp sau OK** (`ap-phuong-an`, máy chủ từ chối khi lượt chưa `da-ok`): máy chủ trong MỘT giao dịch: gộp (cách gộp thẻ Fulfill:
    mọi tin của việc phụ dời sang việc chính → Reply tin cũ tự vào việc chính; câu đáp / thẻ / mã phụ trỏ việc phụ cũng đổi; việc phụ
    sang «đã chuyển» kèm `chuyen_sang`; diễn biến hai bên ghi «Gộp … vào đây» + nguyên văn) → khởi động nhóm `lam` (đúng hàm khởi
@@ -394,4 +403,5 @@ Luật chung cho cả bảng:
 - Đừng để tin thoại thành «[tin không có chữ]»; đừng nghe thoại trong lúc giữ Telegram chờ (trả 200 trước, nghe sau).
 - Đừng thêm lệnh chạm phiên CLI ở một dự án mà không sửa bảng 7f + nhắn các dự án khác; đừng để `/clitell` của chủ nhà trong nhóm chính bị nuốt im.
 - Đừng để `/lam` trần khởi động việc khi chủ nhà chưa OK phương án; đừng để máy chủ tự phân loại bằng AI; đừng coi «ok nhưng …» là OK.
+- Đừng coi cảm xúc (❤, 👍, emoji bất kỳ) của chủ nhà / sếp là duyệt, chọn mã hay lệnh làm tiếp — chỉ CHỮ mới là trả lời.
 - Đừng giả lập hỏng kho trên host thật (thử T3 ở cục bộ); đừng quên bật lại con canh.

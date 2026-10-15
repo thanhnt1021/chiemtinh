@@ -73,6 +73,18 @@ Ca duyệt lượt `/lam` (12/10/2026 — skill mục 7e; bản gốc Nhà thu�
 | 30 | `ap-phuong-an --thu` rồi `ap-phuong-an` | thử không đổi gì; thật: khởi động / gộp (tin việc phụ dời, Reply tin cũ vào việc chính) / bỏ → huỷ / hỏi sếp vào NHÓM Reply tin gốc / hỏi chủ nhà chat riêng có ảnh / tin «Đã làm theo phương án»; chạy lại bị từ chối, không gửi trùng; gửi riêng ngoài lượt vẫn `409` |
 | 31 | Sếp `/lam` · chủ nhà `/lam <mã>` · máy tắt rồi `/lam` trần trong nhóm · cổng thợ | sếp: im, không lượt; `/lam <mã>` chạy thẳng; máy tắt: «Đã ghi yêu cầu… hệ thống đang nhiều việc» (không chữ «tắt»); thợ `phuong-an`/`ap-phuong-an` thật bị chặn, `--thu` qua |
 
+Ca cảm xúc của chủ nhà (15/10/2026 — skill mục 4.9; ca thật: tim lên tin hỏi bị ghi «Đã nhận duyệt» rồi máy tự làm). Update giả
+`{"update_id":990040,"message_reaction":{"chat":{"id":<TG_CHAT_SEP>},"message_id":<tin bot>,"user":{"id":<CHU_NHA_ID>,"is_bot":false},
+"date":1760000000,"old_reaction":[],"new_reaction":[{"type":"emoji","emoji":"❤"}]}}`. Trước mỗi ca chụp trạng thái việc / lượt / cột / số
+lượt chọn để so sau.
+
+| Ca | Gửi | Đạt khi |
+|---|---|---|
+| 32 | Chủ nhà thả ❤ lên tin HỎI có mã lựa chọn (`1A · 1B`) của việc đang chờ | 0 lượt chọn ghi, việc vẫn chờ trả lời (không sang đang làm / không khởi động), 0 tin bot (không «Đã nhận», không «Đã nhận duyệt»); `moi` nếu in thì chỉ là «thả ❤», phiên `da-doc` rồi thôi |
+| 33 | Chủ nhà thả ❤ lên tin BÁO xong của một việc | chỉ nhãn đổi (bỏ «chưa phản hồi»); cột / trạng thái việc không đổi, 0 tin bot |
+| 34 | Chủ nhà thả 👍 rồi ❤ lên tin phương án DLn (lượt `cho-chu-nha`) | lượt vẫn `cho-chu-nha`, bản không đổi, 0 việc khởi động; sau đó Reply «OK» → mới `da-ok` |
+| 35 | Chủ nhà thả 👍 lên câu ghi nhận của việc chờ cho làm («Làm sau» / ghi nhận) | việc không khởi động; chỉ `/lam <mã>` hoặc Reply có chữ mới chạy |
+
 Thêm (chỉ cục bộ): kho chỉ đọc → webhook trả `500`; trả quyền, gửi lại cùng update → ghi đúng một lần.
 Cổng chặn: chạy thử lệnh `curl …api.telegram.org…/sendMessage…` không mã → cổng thoát mã 2.
 Dọn: `xoa --tin 990001 990002 … --ma <mã TEST>` (đích danh), `moi` trống, `keo` không còn dòng TEST.
