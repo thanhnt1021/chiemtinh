@@ -29,6 +29,36 @@ const DAU_FORCE = '✍ Gõ việc vào tin này';
 const DAU_CLI = ['📨 CLI ·', '🤖 Phiên CLI:'];
 const CAU_CLI_CHI_CHU = '📨 CLI · Lệnh này chỉ chủ nhà dùng được.';
 const CAU_MAY_TAT = 'Hệ thống đang chạy nhiều việc nên việc này chưa xong, sẽ phản hồi khi xong.';
+// 7f — lịch trên Cron Trigger sẵn có (*/5): skill không ghi giờ gốc → chọn 23h tạm dừng, 7h chạy lại, gom /lamdi mỗi 2 giờ 8h–22h.
+const GIO_TAM_DUNG = 23;
+const GIO_KHOI_DONG = 7;
+const GIO_GOM = [8, 10, 12, 14, 16, 18, 20, 22];
+const TRAN_THE_LUOT = 5;               // /khac /cho /lamdi: tối đa ngần này tin thẻ mỗi lượt, gõ lại gửi tiếp
+const DS_HET_HAN_GIAY = 30 * 60;       // gõ lại /khac /cho sau ngần này thì gửi lại từ đầu
+const HUY_NHAM_GIAY = 10 * 60;         // chủ Reply «nhầm / huỷ / xoá» trong 10 phút sau /viec = tự huỷ
+const HUY_NHAM_RE = /^(?:nhầm|nham|huỷ|hủy|huy|xoá|xóa|xoa)(?:\s+(?:rồi|nhé|nha|đi|thẻ này|việc này))*[\s.!]*$/iu;
+
+// 7f — CHỖ KHAI LỆNH DUY NHẤT: menu «/» từng scope + chữ /help sinh từ đây; thêm lệnh là sửa đúng mảng này.
+// ai: chu = chủ nhà · ds = chủ nhà + sếp (luật 4.6) · moi = mọi người trong danh sách nội bộ.
+// noi: rieng = chỉ chat riêng chủ nhà · chinh = chat riêng + nhóm chính · moi = mọi nơi bot nhận lệnh.
+const dsLenh = (tenChu) => [
+  { ten: 'viec', mo_ta: 'Giao việc mới, máy tạo thẻ', ai: 'ds', noi: 'moi', nhom: 'Giao việc' },
+  { ten: 'xoa', mo_ta: 'Huỷ thẻ tạo nhầm: /xoa <mã thẻ> hoặc Reply /xoa vào tin của thẻ', ai: 'chu', noi: 'chinh', nhom: 'Giao việc' },
+  { ten: 'clitell', mo_ta: 'Nhắn thẳng phiên Claude trên máy nhà, không tạo thẻ', ai: 'chu', noi: 'chinh', nhom: 'Phiên Claude CLI' },
+  { ten: 'lamdi', mo_ta: `Đẩy mọi trao đổi chưa làm trên các thẻ vào phiên Claude + gửi ${tenChu} mỗi thẻ một tin`, ai: 'chu', noi: 'chinh', nhom: 'Phiên Claude CLI' },
+  { ten: 'tatmay', mo_ta: 'Sắp tắt máy: phiên Claude cất hết việc dở, dừng thợ', ai: 'chu', noi: 'chinh', nhom: 'Phiên Claude CLI' },
+  { ten: 'momay', mo_ta: 'Vừa mở máy: phiên Claude đọc sổ, chạy tiếp việc dở', ai: 'chu', noi: 'chinh', nhom: 'Phiên Claude CLI' },
+  { ten: 'lam', mo_ta: 'Duyệt lượt việc đang chờ (/lam) · cho làm thẳng (/lam <mã> · /lam tatca)', ai: 'chu', noi: 'chinh', nhom: 'Cho máy làm' },
+  { ten: 'pause', mo_ta: `Tạm dừng máy tự làm việc tới /khoidong hoặc ${GIO_KHOI_DONG}h sáng`, ai: 'chu', noi: 'chinh', nhom: 'Cho máy làm' },
+  { ten: 'khoidong', mo_ta: 'Cho máy tự làm việc lại sau /pause, làm bù việc chờ', ai: 'chu', noi: 'chinh', nhom: 'Cho máy làm' },
+  { ten: 'khac', mo_ta: `Việc chưa xong đang chờ người khác — ${tenChu} ngó và quyết hộ`, ai: 'chu', noi: 'chinh', nhom: 'Xem việc' },
+  { ten: 'cho', mo_ta: `Ảnh việc đang chờ: chờ ${tenChu}, chờ người khác, chờ dùng thử`, ai: 'chu', noi: 'rieng', nhom: 'Xem việc' },
+  { ten: 'help', mo_ta: 'Danh sách lệnh theo nhóm', ai: 'moi', noi: 'moi', nhom: 'Khác' },
+];
+// Tin danh sách bot tự gửi (/khac /cho /lamdi) không phải câu máy trả lời trên thẻ — 7c và «Máy hỏi gần nhất» phải bỏ qua.
+const KHONG_DANH_SACH = 'NOT EXISTS (SELECT 1 FROM bnv_danh_sach d WHERE d.chat_id=b.chat_id AND d.message_id=b.message_id)';
+const TEN_LENH = dsLenh('').map((l) => l.ten);
+const LENH_RE = new RegExp(`^\\/(${TEN_LENH.join('|')})(?:@(\\w+))?(?:\\s+([\\s\\S]*))?$`, 'i');
 const CHU_TAI_CHINH = /(lãi|lỗ|doanh thu|lợi nhuận|profit|revenue|\d[\d.,]*\s*(đ|vnđ|vnd|usd|\$)|\$\s*\d)/i;
 
 const nowS = () => Math.floor(Date.now() / 1000);
@@ -93,6 +123,15 @@ async function mayTat(env) {
   return !m || nowS() - m > MAY_TAT_SAU_GIAY;
 }
 
+// 7f — cờ /pause: mốc lúc bật (0 = không dừng). Con canh vẫn hỏi nhưng không gọi phiên dậy cho mục thẻ, lịch gom bỏ lượt.
+const tamDung = async (env) => (await docMoc(env, 'tam_dung')) || 0;
+// 7d.5 — con canh hỏi lối máy kèm x-canh trong 2 phút = có phiên đang nghe (nhịp tim chung không nói được điều này).
+const canhNghe = async (env) => { const n = await docMoc(env, 'canh_nghe'); return !!n && nowS() - n <= CANH_NGHE_GIAY; };
+// 7f — cổng chủ nhà DÙNG CHUNG cho mọi lệnh: chat riêng chủ nhà HOẶC chủ nhà trong nhóm chính.
+const congChu = (ch, m) => String(m.from.id) === ch.chu && (m.chat.type === 'private' || String(m.chat.id) === ch.chatSep);
+const gioVN = (ts) => new Date((ts + 7 * 3600) * 1000).toISOString().slice(11, 16);
+const ngayGioVN = (ts) => { const d = new Date((ts + 7 * 3600) * 1000).toISOString(); return `${d.slice(8, 10)}/${d.slice(5, 7)} ${d.slice(11, 16)}`; };
+
 // ---------- tệp / thoại ----------
 function tepCua(m) {
   if (m.photo?.length) return m.photo[m.photo.length - 1].file_id;
@@ -152,7 +191,7 @@ async function demLuotAI(env) {
 
 // ---------- câu lệnh ----------
 function lenhCua(text, botTen) {
-  const r = /^\/(viec|clitell|lam)(?:@(\w+))?(?:\s+([\s\S]*))?$/i.exec(String(text || '').trim());
+  const r = LENH_RE.exec(String(text || '').trim());
   if (!r) return null;
   if (r[2] && r[2].toLowerCase() !== botTen) return null;   // /viec@bot_khac → không phải lệnh của mình
   return { lenh: r[1].toLowerCase(), du: (r[3] || '').trim() };
@@ -327,37 +366,159 @@ async function xuLy(env, ctx, m, opt = {}) {
   const rep = m.reply_to_message;
   const repBot = !!rep?.from?.is_bot;
   const repChu = String(rep?.text ?? rep?.caption ?? '');
+  const nguon = rieng ? 'chat riêng chủ nhà' : `nhóm ${m.chat.title || chat}`;
+  const tat = await mayTat(env);
+  const dung = await tamDung(env);
+  const giuc = tat || !!dung;   // 7f: lúc /pause bot trả người giục như lúc máy tắt (mục 7b)
+  const chuDuoc = congChu(ch, m);
+  const tenChu = esc(ch.tenChu);
+  const cliLoi = (chu, loai = 'loi') => run([
+    sqlTin(env, coTin(m, noiDung, 0), up),
+    db.prepare('INSERT INTO bnv_clitell(chu, noi_tiep, chat_id, message_id, tao_luc, loai) VALUES(?,?,?,?,?,?) ON CONFLICT DO NOTHING')
+      .bind(chu || '(không kèm lời — xem tin được Reply)', rep ? repChu.slice(0, 2000) : null, chat, m.message_id, t, loai),
+  ]);
+  const cauCli = async () => ((await canhNghe(env))
+    ? '📨 CLI · Đã chuyển vào phiên Claude CLI đang chạy — phiên sẽ đọc trong khoảng 1 phút.'
+    : '📨 CLI · Chưa có phiên nào đang nghe — tin đã lưu, sẽ được đọc khi mở phiên.');
+  const dap = (s) => ({ traLoi: traLoi(chat, m.message_id, s) });
 
-  // 7d — /clitell đứng TRƯỚC mọi luồng thẻ việc. Chỉ chủ nhà; nhận cả chat riêng lẫn nhóm nội bộ (founder 15/10: chủ nhà
-  // gõ trong nhóm oHa cũng là nhắn phiên CLI). Lời CLI trả về đi theo chat_id + message_id của dòng bnv_clitell nên tự về đúng nhóm.
-  const vaoCli = lenh?.lenh === 'clitell' || (repBot && DAU_CLI.some((d) => repChu.startsWith(d)));
-  if (vaoCli) {
-    if (!laChu) {   // người khác: đáp một dòng, không lọt sang thẻ việc / trợ lý
+  // 7f — mọi lệnh của bảng đứng TRƯỚC luồng thẻ việc. Tin mở đầu bằng lệnh luôn là lệnh đó, kể cả Reply vào tin CLI /
+  // tin gom / tin phương án (/viec /xoa tối thượng; Reply tin CLI bằng /… khác = gọi lệnh đó).
+  if (lenh) {
+    const l = dsLenh(ch.tenChu).find((x) => x.ten === lenh.lenh);
+    const ten = '/' + l.ten;
+    if (l.ai === 'chu' && !laChu) {
       await ghiThuong(0);
-      return { traLoi: traLoi(chat, m.message_id, CAU_CLI_CHI_CHU) };
+      if (l.ten === 'lam') return {};   // 7e.1: người khác gõ /lam → lưu, im
+      return dap(['clitell', 'lamdi', 'tatmay', 'momay'].includes(l.ten)
+        ? `📨 CLI · Lệnh ${ten} chỉ ${tenChu} dùng — lời này không chuyển vào phiên CLI.` : `ℹ Lệnh ${ten} chỉ ${tenChu} dùng.`);
     }
-    if (!rieng && ch.ngoai.includes(chat)) {   // nhóm có người ngoài: lời phiên CLI không được hiện ở đó
+    if (l.ai === 'ds' && !(laChu || laSep)) {   // 4.6: người khác gõ /viec → nuốt, bot im
       await ghiThuong(0);
       return {};
     }
-    const chu = lenh ? lenh.du : text;
-    if (lenh && !chu && !rep) {
+    if (l.ai === 'chu' && (l.noi === 'rieng' ? !rieng : !chuDuoc)) {
       await ghiThuong(0);
-      return { traLoi: traLoi(chat, m.message_id, '📨 CLI · Cách gõ: <b>/clitell lời nhắn</b>, hoặc Reply một tin bằng /clitell, hoặc Reply tiếp vào tin «📨 CLI ·» / «🤖 Phiên CLI:».') };
+      return dap(`ℹ Lệnh ${ten} chỉ dùng trong ${l.noi === 'rieng' ? 'chat riêng với bot' : 'chat riêng với bot hoặc nhóm chính'}.`);
     }
-    await run([
-      sqlTin(env, coTin(m, noiDung, 0), up),
-      db.prepare('INSERT INTO bnv_clitell(chu, noi_tiep, chat_id, message_id, tao_luc) VALUES(?,?,?,?,?) ON CONFLICT DO NOTHING')
-        .bind(chu || '(không kèm lời — xem tin được Reply)', rep ? repChu.slice(0, 2000) : null, chat, m.message_id, t),
-    ]);
-    const nghe = await docMoc(env, 'canh_nghe');
-    const cau = nghe && t - nghe <= CANH_NGHE_GIAY
-      ? '📨 CLI · Đã chuyển vào phiên Claude CLI đang chạy — phiên sẽ đọc trong khoảng 1 phút.'
-      : '📨 CLI · Chưa có phiên nào đang nghe — tin đã lưu, sẽ được đọc khi mở phiên.';
-    return { traLoi: traLoi(chat, m.message_id, cau) };
+    switch (l.ten) {
+      case 'clitell': {   // 7d — lời CLI trả về đi theo chat_id + message_id của dòng bnv_clitell nên tự về đúng nơi gõ
+        if (!lenh.du && !rep) {
+          await ghiThuong(0);
+          return dap('📨 CLI · Cách gõ: <b>/clitell lời nhắn</b>, hoặc Reply một tin bằng /clitell, hoặc Reply tiếp vào tin «📨 CLI ·» / «🤖 Phiên CLI:».');
+        }
+        await cliLoi(lenh.du);
+        return dap(await cauCli());
+      }
+      case 'tatmay':
+      case 'momay': {
+        // Con canh không nghe → KHÔNG lưu chờ: một /tatmay cũ đọc lúc mở máy hôm sau sẽ dừng thợ sai lúc.
+        if (!(await canhNghe(env))) {
+          await ghiThuong(0);
+          return dap(`📨 CLI · Chưa chuyển ${ten} — chưa có phiên Claude CLI nào đang nghe, lệnh không lưu chờ. Mở phiên rồi gõ lại.`);
+        }
+        await cliLoi(`${ten} — làm đúng .claude/commands/${l.ten}.md`, 'lenh_may');
+        return dap(l.ten === 'tatmay'
+          ? '📨 CLI · Đã chuyển /tatmay vào phiên Claude CLI đang chạy — phiên cất việc dở, dừng thợ rồi báo lại; chờ báo xong hãy tắt máy.'
+          : '📨 CLI · Đã chuyển /momay vào phiên Claude CLI đang chạy — phiên đọc sổ, chạy tiếp việc dở rồi báo lại.');
+      }
+      case 'lamdi': {
+        await ghiThuong(0);
+        return dap((await lamDi(env, { chat, mid: m.message_id })).text);
+      }
+      case 'pause': {
+        await run([sqlTin(env, coTin(m, noiDung, 0), up), ...(dung ? [] : [datMoc(env, 'tam_dung', t)])]);
+        return dap(dung
+          ? `⏸ Máy đã đang tạm dừng từ ${gioVN(dung)} — gõ /khoidong để chạy lại.`
+          : `⏸ Đã tạm dừng máy tự làm việc tới /khoidong hoặc ${GIO_KHOI_DONG}h sáng. Việc mới vẫn ghi thẻ; việc đang chạy không bị cắt.`);
+      }
+      case 'khoidong': {
+        const k = await khoiDong(env, await mucCho(env), `chủ nhà /khoidong ở ${nguon}`);
+        await run([sqlTin(env, coTin(m, noiDung, 0), up), datMoc(env, 'tam_dung', 0), ...k.st]);
+        return dap((dung ? '▶ Đã gỡ tạm dừng — máy tự làm việc lại.' : '▶ Máy đang không tạm dừng.')
+          + (k.khoi_dong.length ? ` Đã cho làm: <b>${k.khoi_dong.join(', ')}</b>.` : ' Không có việc nào chờ khởi động.')
+          + (tat ? (rieng ? ' Máy nhà đang tắt — mở máy là làm bù.' : ' Hệ thống đang nhiều việc, sẽ làm bù ngay khi rảnh.') : ''));
+      }
+      case 'khac':
+      case 'cho': {
+        await ghiThuong(0);
+        const x = await guiDanhSach(env, l.ten, chat, m.message_id);
+        return x ? dap(x) : {};
+      }
+      case 'help': {
+        await ghiThuong(0);
+        const du = rieng && laChu;   // chủ nhà chat riêng thấy đủ, nơi khác chỉ lệnh chung
+        const nhom = {};
+        for (const x of dsLenh(ch.tenChu).filter((x) => du || x.ai !== 'chu')) (nhom[x.nhom] ||= []).push(`/${x.ten} — ${esc(x.mo_ta)}`);
+        return dap(Object.entries(nhom).map(([k, v]) => `<b>${k}</b>\n${v.join('\n')}`).join('\n\n')
+          + (du ? '' : `\n\nLệnh của ${tenChu} xem trong chat riêng với bot.`));
+      }
+      case 'xoa': {   // 7f — tối thượng như /viec; Reply /xoa trần chỉ khi tin gắn ĐÚNG một thẻ, không đoán
+        let mas = [];
+        if (lenh.du) mas = [...lenh.du.matchAll(/(?:(?:oHa|Task)-)?(\d{8}-\d{2,3})/gi)].map((x) => `${TIEN_TO}-${x[1]}`);
+        else if (rep) {
+          const r = await db.prepare('SELECT ma_viec FROM bnv_tin WHERE chat_id=? AND message_id=?').bind(chat, rep.message_id).first();
+          const trongChu = [...new Set([...repChu.matchAll(new RegExp(MA_RE.source, 'g'))].map((x) => doiMa(x[0])))];
+          mas = r?.ma_viec ? [r.ma_viec] : trongChu.length === 1 ? trongChu : [];
+        }
+        if (!mas.length) {
+          await ghiThuong(0);
+          return dap('ℹ Không xác định được đúng một thẻ — gõ <b>/xoa oHa-ddmmyyyy-NN</b>, hoặc Reply /xoa vào tin của đúng một thẻ.');
+        }
+        const x = await huyThe(env, mas, `chủ nhà /xoa ở ${nguon}`);
+        await run([sqlTin(env, coTin(m, noiDung, 0), up), ...x.st]);
+        return dap(x.text);
+      }
+      case 'lam': {   // 7e — trần (không mã, không Reply) = mở lượt duyệt; /lam <mã> · /lam tatca · Reply /lam = cho làm thẳng
+        const dungChu = dung ? ' Máy đang tạm dừng (/pause) — gõ /khoidong để máy chạy.' : '';
+        if (!lenh.du && !rep) {
+          const x = await dlYeuCau(env, chat, m.message_id, rieng, tat);
+          await run([sqlTin(env, coTin(m, noiDung, 0), up), ...x.st]);
+          return dap(x.text + dungChu);
+        }
+        let mas = [];
+        if (/^(tatca|tất cả)$/i.test(lenh.du)) mas = await mucCho(env);
+        else if (lenh.du) mas = [...lenh.du.matchAll(/(?:(?:oHa|Task)-)?(\d{8}-\d{2,3})/gi)].map((x) => `${TIEN_TO}-${x[1]}`);
+        else {
+          const r = await db.prepare('SELECT ma_viec FROM bnv_tin WHERE chat_id=? AND message_id=?').bind(chat, rep.message_id).first();
+          const ma = r?.ma_viec || maTrongChu(repChu);
+          if (ma) mas = [ma];
+        }
+        if (!mas.length) {
+          await ghiThuong(0);
+          return dap(lenh.du ? 'ℹ Không thấy mã việc nào trong lệnh — gõ <b>/lam oHa-ddmmyyyy-NN</b> hoặc <b>/lam tatca</b>.' : 'ℹ Không có việc nào đang chờ để cho làm.');
+        }
+        const k = await khoiDong(env, mas, `chủ nhà /lam ở ${nguon}`);
+        await run([sqlTin(env, coTin(m, noiDung, 0, { ma_viec: mas.length === 1 ? mas[0] : null }), up), ...k.st]);
+        return dap((k.khoi_dong.length ? `▶ Đã cho làm: <b>${k.khoi_dong.join(', ')}</b>.` : '▶ Không khởi động việc nào.')
+          + (k.bo_qua.length ? ` Không còn chờ nên bỏ qua: ${k.bo_qua.join(', ')}.` : '')
+          + (k.khoi_dong.length && tat ? (rieng ? ' Máy nhà đang tắt — mở máy là làm.' : ' Hệ thống đang nhiều việc, sẽ làm ngay khi rảnh.') : '')
+          + dungChu);
+      }
+      case 'viec': {   // 4.6 — mọi nhóm có bot + chat riêng chủ nhà (bảng 7f); tối thượng
+        let nd = lenh.du;
+        let tepViec = tep;
+        if (!nd && rep) {
+          nd = repChu || (tepCua(rep) ? '[tệp đính kèm]' : '');
+          tepViec = tepViec || tepCua(rep);
+        }
+        if (!nd) {
+          await ghiThuong(0);
+          return { traLoi: traLoi(chat, m.message_id, `${DAU_FORCE} (chữ + ảnh/tệp nếu có), em lên thẻ ngay.`, { reply_markup: { force_reply: true, selective: true } }) };
+        }
+        return taoViecTuTin(env, ctx, m, nd, tepViec, nguon, laSep, tat, up, dung);
+      }
+    }
   }
 
-  // 7e — chủ nhà Reply tin phương án duyệt lượt (chat riêng): đứng TRƯỚC /viec và luồng Reply tin có mã.
+  // 7d — Reply tiếp vào tin bot của luồng CLI (không gõ lệnh) = lời mới, chỉ chủ nhà qua cổng chung.
+  // Người khác Reply tin luồng này không phải lời CLI → để luồng sau xử như cũ (7d.1).
+  if (repBot && chuDuoc && DAU_CLI.some((d) => repChu.startsWith(d))) {
+    await cliLoi(text);
+    return dap(await cauCli());
+  }
+
+  // 7e — chủ nhà Reply tin phương án duyệt lượt (chat riêng): đứng TRƯỚC luồng Reply tin có mã.
   if (rieng && laChu && repBot) {
     const dlt = await db.prepare('SELECT * FROM bnv_duyet_luot_tin WHERE chat_id=? AND message_id=?').bind(chat, rep.message_id).first();
     if (dlt) {
@@ -367,63 +528,46 @@ async function xuLy(env, ctx, m, opt = {}) {
     }
   }
 
-  const nguon = rieng ? 'chat riêng chủ nhà' : `nhóm ${m.chat.title || chat}`;
-  const tat = await mayTat(env);
-
-  // 7e — /lam: chỉ chủ nhà. Trần (không mã, không Reply) = mở lượt duyệt; /lam <mã> · /lam tatca · Reply /lam = cho làm thẳng.
-  if (lenh?.lenh === 'lam') {
-    if (!laChu) {   // sếp / người khác: lưu, im, không mở lượt
-      await ghiThuong(0);
-      return {};
+  if (repBot && chuDuoc) {
+    // 7f — Reply tin danh sách (/khac /cho /lamdi): tin tóm cần «#số lời», tin một thẻ thì cả tin là lời. Ghi như lời chủ
+    // quyết hộ, bật cờ chưa đọc để con canh gọi phiên dậy (đường THẺ).
+    const d = await db.prepare('SELECT loai, ds FROM bnv_danh_sach WHERE chat_id=? AND message_id=?').bind(chat, rep.message_id).first();
+    if (d) {
+      const mas = JSON.parse(d.ds || '[]');
+      let ma = null;
+      let loi = noiDung;
+      if (d.loai.endsWith('-the') && mas.length === 1) ma = mas[0];
+      else {
+        const r = /^#\s*(\d{1,3})\s*[:.)\-–]?\s*([\s\S]+)$/u.exec(text.trim());
+        if (r && mas[Number(r[1]) - 1]) [ma, loi] = [mas[Number(r[1]) - 1], r[2].trim()];
+      }
+      if (!ma) {
+        await ghiThuong(0);
+        return dap('ℹ Gõ <b>#số lời</b> (vd #2 cứ làm theo 1A) — số theo danh sách, hoặc Reply thẳng tin của thẻ.');
+      }
+      const v = await db.prepare('SELECT ma, trang_thai, nguon, chuyen_sang FROM bnv_viec WHERE ma=?').bind(ma).first();
+      if (!v) {
+        await ghiThuong(0);
+        return dap(`Chưa ghi được vào thẻ — không tìm thấy thẻ ${esc(ma)}.`);
+      }
+      return ghiVaoThe(env, ctx, m, v, { coChu, laSep, laChu, tat: giuc, up, noiDung: loi, canBao: 1, quyetHo: true });
     }
-    if (!lenh.du && !rep) {
-      const x = await dlYeuCau(env, chat, m.message_id, rieng, tat);
-      await run([sqlTin(env, coTin(m, noiDung, 0), up), ...x.st]);
-      return { traLoi: traLoi(chat, m.message_id, x.text) };
+    // 7f — chủ Reply «nhầm / huỷ / xoá» vào dòng «✅ Đã nhận» trong 10 phút sau /viec = tự huỷ thẻ vừa tạo.
+    if (repChu.startsWith('✅ Đã nhận') && HUY_NHAM_RE.test(text.normalize('NFC').trim())) {
+      const ma = maTrongChu(repChu);
+      const v = ma && (await db.prepare('SELECT tao_luc FROM bnv_viec WHERE ma=?').bind(ma).first());
+      if (v && t - v.tao_luc <= HUY_NHAM_GIAY) {
+        const x = await huyThe(env, [ma], `chủ nhà Reply «${text.trim()}» trong 10 phút sau /viec`);
+        await run([sqlTin(env, coTin(m, noiDung, 0, { ma_viec: ma }), up), ...x.st]);
+        return dap(x.text);
+      }
     }
-    let mas = [];
-    if (/^(tatca|tất cả)$/i.test(lenh.du)) mas = await mucCho(env);
-    else if (lenh.du) mas = [...lenh.du.matchAll(/(?:(?:oHa|Task)-)?(\d{8}-\d{2,3})/gi)].map((x) => `${TIEN_TO}-${x[1]}`);
-    else {
-      const r = await db.prepare('SELECT ma_viec FROM bnv_tin WHERE chat_id=? AND message_id=?').bind(chat, rep.message_id).first();
-      const ma = r?.ma_viec || maTrongChu(repChu);
-      if (ma) mas = [ma];
-    }
-    if (!mas.length) {
-      await ghiThuong(0);
-      return { traLoi: traLoi(chat, m.message_id, lenh.du ? 'ℹ Không thấy mã việc nào trong lệnh — gõ <b>/lam oHa-ddmmyyyy-NN</b> hoặc <b>/lam tatca</b>.' : 'ℹ Không có việc nào đang chờ để cho làm.') };
-    }
-    const k = await khoiDong(env, mas, `chủ nhà /lam ở ${nguon}`);
-    await run([sqlTin(env, coTin(m, noiDung, 0, { ma_viec: mas.length === 1 ? mas[0] : null }), up), ...k.st]);
-    const cau = (k.khoi_dong.length ? `▶ Đã cho làm: <b>${k.khoi_dong.join(', ')}</b>.` : '▶ Không khởi động việc nào.')
-      + (k.bo_qua.length ? ` Không còn chờ nên bỏ qua: ${k.bo_qua.join(', ')}.` : '')
-      + (k.khoi_dong.length && tat ? (rieng ? ' Máy nhà đang tắt — mở máy là làm.' : ' Hệ thống đang nhiều việc, sẽ làm ngay khi rảnh.') : '');
-    return { traLoi: traLoi(chat, m.message_id, cau) };
-  }
-
-  // 4.6 /viec — chỉ người trong danh sách, chỉ trong nhóm. Người khác / chat riêng: nuốt, bot im.
-  if (lenh?.lenh === 'viec') {
-    if (rieng || !(laSep || laChu)) {
-      await ghiThuong(0);
-      return {};
-    }
-    let nd = lenh.du;
-    let tepViec = tep;
-    if (!nd && rep) {
-      nd = repChu || (tepCua(rep) ? '[tệp đính kèm]' : '');
-      tepViec = tepViec || tepCua(rep);
-    }
-    if (!nd) {
-      await ghiThuong(0);
-      return { traLoi: traLoi(chat, m.message_id, `${DAU_FORCE} (chữ + ảnh/tệp nếu có), em lên thẻ ngay.`, { reply_markup: { force_reply: true, selective: true } }) };
-    }
-    return taoViecTuTin(env, ctx, m, nd, tepViec, nguon, laSep, tat, up);
   }
 
   if (repBot) {
     // ForceReply của /viec trần → tạo thẻ.
     if (repChu.startsWith(DAU_FORCE) && (laSep || laChu)) {
-      return taoViecTuTin(env, ctx, m, coChu ? text : '[tin không có chữ]', tep, nguon, laSep, tat, up);
+      return taoViecTuTin(env, ctx, m, coChu ? text : '[tin không có chữ]', tep, nguon, laSep, tat, up, dung);
     }
     // 4.1 Reply vào tin bot → tra mã theo message_id trong kho, không có thì đọc mã trong chữ; tin máy không mã → thẻ con canh trưởng.
     const r = await db.prepare('SELECT ma_viec FROM bnv_tin WHERE chat_id=? AND message_id=?').bind(chat, rep.message_id).first();
@@ -435,7 +579,7 @@ async function xuLy(env, ctx, m, opt = {}) {
       await ghiThuong(laSep ? 1 : 0);
       return { traLoi: traLoi(chat, m.message_id, `Chưa ghi được vào thẻ — không tìm thấy thẻ ${esc(ma)}, em đã lưu tin để xử lý tay.`) };
     }
-    return ghiVaoThe(env, ctx, m, v, { coChu, laSep, laChu, tat, up, noiDung });
+    return ghiVaoThe(env, ctx, m, v, { coChu, laSep, laChu, tat: giuc, up, noiDung });
   }
 
   // 4.3 Album cùng media_group với tin đã gắn → gắn cùng việc, không đáp.
@@ -461,7 +605,7 @@ async function xuLy(env, ctx, m, opt = {}) {
       if (v) {
         // Gửi liền nhiều tệp: chỉ tệp đầu có dòng xác nhận, tệp sau chỉ ✍.
         const imLang = laTepRoi && truoc.anh && t - truoc.nhan_luc <= 60;
-        return ghiVaoThe(env, ctx, m, v, { coChu: false, laSep, laChu, tat, up, noiDung, imLang, doiTrangThai: false });
+        return ghiVaoThe(env, ctx, m, v, { coChu: false, laSep, laChu, tat: giuc, up, noiDung, imLang, doiTrangThai: false });
       }
     }
   }
@@ -471,7 +615,7 @@ async function xuLy(env, ctx, m, opt = {}) {
   return {};
 }
 
-async function taoViecTuTin(env, ctx, m, nd, tep, nguon, laSep, tat, up) {
+async function taoViecTuTin(env, ctx, m, nd, tep, nguon, laSep, tat, up, dung = 0) {
   const chat = String(m.chat.id);
   const giao = m.date || nowS();
   const link = linkTin(chat, m.message_id);
@@ -485,16 +629,16 @@ async function taoViecTuTin(env, ctx, m, nd, tep, nguon, laSep, tat, up) {
   ]);
   const ma = kq[0].results[0].ma;
   ctx.waitUntil(tha(env, chat, m.message_id, '✍'));
-  const them = tat ? ' (máy đang tắt, mở máy sẽ chạy)' : '';
+  const them = tat ? ' (máy đang tắt, mở máy sẽ chạy)' : dung ? ` (máy đang tạm dừng — chạy khi /khoidong hoặc ${GIO_KHOI_DONG}h sáng)` : '';
   return { traLoi: traLoi(chat, m.message_id, `✅ Đã nhận · ${ma} · Đã lên thẻ${them}`) };
 }
 
 async function ghiVaoThe(env, ctx, m, v, o) {
   const chat = String(m.chat.id);
   const t = nowS();
-  const st = [sqlTin(env, coTin(m, o.noiDung, o.laSep || !o.laChu ? 1 : 0, { ma_viec: v.ma }), o.up)];
+  const st = [sqlTin(env, coTin(m, o.noiDung, o.canBao ?? (o.laSep || !o.laChu ? 1 : 0), { ma_viec: v.ma }), o.up)];
   // Chỉ người (không phải chủ nhà thuần) trả lời mới đổi trạng thái chờ → đã trả lời; thẻ đã Xong thì mở lại.
-  if (o.doiTrangThai !== false && (o.laSep || !o.laChu) && o.coChu && v.nguon !== 'he-thong' && ['cho-sep-tra-loi', 'xong', 'cho-xac-nhan'].includes(v.trang_thai)) {
+  if (o.doiTrangThai !== false && (o.laSep || !o.laChu || o.quyetHo) && o.coChu && v.nguon !== 'he-thong' && ['cho-sep-tra-loi', 'xong', 'cho-xac-nhan'].includes(v.trang_thai)) {
     const moi = v.trang_thai === 'cho-xac-nhan' ? 'cho-xac-nhan' : 'sep-da-tra-loi';
     st.push(env.DB.prepare('UPDATE bnv_viec SET trang_thai=?, cap_nhat=? WHERE ma=?').bind(moi, t, v.ma));
   } else {
@@ -613,6 +757,182 @@ async function khoiDong(env, mas, nguon) {
     kd.push(ma);
   }
   return { st, khoi_dong: kd, bo_qua: bq };
+}
+
+// ---------- 7f bộ lệnh chung ----------
+// /xoa — xoá mềm: sang «huy» (bộ gọn = Xong + dấu huỷ), ẩn khỏi việc chờ / tin nhắc, lời chưa đọc gắn đã đọc; mở lại bằng CLI `chuyen`.
+async function huyThe(env, mas, nguon) {
+  const st = []; const huy = []; const bo = [];
+  for (const ma of [...new Set(mas)]) {
+    const v = await env.DB.prepare('SELECT trang_thai, nguon FROM bnv_viec WHERE ma=?').bind(ma).first();
+    if (!v) { bo.push(`${ma} (không có)`); continue; }
+    if (v.nguon) { bo.push(`${ma} (thẻ hệ thống, không huỷ)`); continue; }
+    if (TT_DONG.includes(v.trang_thai)) { bo.push(`${ma} (đã ${v.trang_thai === 'huy' ? 'huỷ' : 'đóng'})`); continue; }
+    st.push(env.DB.prepare('UPDATE bnv_viec SET trang_thai=?, cap_nhat=? WHERE ma=? AND trang_thai=?').bind('huy', nowS(), ma, v.trang_thai));
+    st.push(env.DB.prepare('UPDATE bnv_tin SET claude_doc_luc=? WHERE ma_viec=? AND claude_doc_luc IS NULL').bind(nowS(), ma));
+    st.push(dongMay(env, ma, `✖ Huỷ thẻ (${nguon}) — trạng thái trước: ${v.trang_thai}; mở lại: chuyen --ma ${ma} --tt ${v.trang_thai}`));
+    huy.push(ma);
+  }
+  const text = (huy.length ? `🗑 Đã huỷ thẻ <b>${huy.join(', ')}</b> — ẩn khỏi việc đang chờ và tin nhắc, mở lại được.` : '🗑 Không huỷ thẻ nào.')
+    + (bo.length ? ` Bỏ qua: ${esc(bo.join(', '))}.` : '');
+  return { st, huy, text };
+}
+
+// Mỗi thẻ một tin vào chat; tin ghi vào kho kèm mã thẻ + bảng danh sách → Reply vào là lời chủ ghi đúng thẻ.
+async function guiTinThe(env, chatId, hang, loai, replyTo) {
+  let so = 0;
+  for (const h of hang) {
+    const r = await tg(env, 'sendMessage', { chat_id: chatId, text: h.html, parse_mode: 'HTML', link_preview_options: { is_disabled: true },
+      ...(replyTo ? { reply_parameters: { message_id: replyTo, allow_sending_without_reply: true } } : {}) });
+    if (!r.ok) { console.log('gửi tin thẻ hỏng', h.ma, r.description); continue; }
+    await env.DB.batch([
+      sqlTin(env, { chat_id: chatId, message_id: r.result.message_id, luc: r.result.date, tu_ten: 'bot', la_bot: 1, noi_dung: boThe(h.html), ma_viec: h.ma, can_bao: 0 }),
+      env.DB.prepare('INSERT OR REPLACE INTO bnv_danh_sach(chat_id, message_id, loai, ds, tao_luc) VALUES(?,?,?,?,?)')
+        .bind(String(chatId), r.result.message_id, loai + '-the', JSON.stringify([h.ma]), nowS()),
+    ]);
+    so++;
+  }
+  return so;
+}
+
+const trich = (s, n) => { const x = boThe(s).replace(/\s+/g, ' ').trim(); return x.length > n ? x.slice(0, n - 1) + '…' : x; };
+const dauThe = (ma, tieuDe) => `<b>[${ma}] ${esc(trich(tieuDe, 70))}</b>`;
+
+async function theTheo(env, tts) {
+  const r = await env.DB.prepare(
+    `SELECT v.ma, v.tieu_de, v.noi_dung, v.cap_nhat, v.trang_thai,
+       (SELECT b.noi_dung FROM bnv_tin b WHERE b.ma_viec=v.ma AND b.la_bot=1 AND b.chat_id!='may' AND ${KHONG_DANH_SACH} ORDER BY b.id DESC LIMIT 1) AS bot_cuoi
+     FROM bnv_viec v WHERE v.trang_thai IN (${tts.map(() => '?').join(',')}) AND v.nguon IS NULL ORDER BY v.cap_nhat`
+  ).bind(...tts).all();
+  return r.results || [];
+}
+
+// /khac · /cho — MÁY CHỦ TRẢ: một tin tóm (Reply «#số lời») + mỗi thẻ một tin, trần TRAN_THE_LUOT/lượt, gõ lại gửi tiếp.
+async function guiDanhSach(env, loai, chat, mid) {
+  const ch = cauHinh(env);
+  const t = nowS();
+  const nhom = loai === 'khac'
+    ? [['Chờ người khác trả lời', await theTheo(env, ['cho-sep-tra-loi'])]]
+    : [[`Chờ ${ch.tenChu} quyết / cho làm`, await theTheo(env, [TT_CHO])],
+      ['Chờ người khác trả lời', await theTheo(env, ['cho-sep-tra-loi'])],
+      ['Chờ dùng thử', null]];   // bộ trạng thái gọn (mục 3) không có cột «chờ dùng thử»
+  const ds_ = nhom.flatMap(([ten, a]) => (a || []).map((v) => ({ ...v, nhomTen: ten })));
+  if (!ds_.length) return loai === 'khac' ? 'ℹ Không có việc nào đang chờ người khác.' : 'ℹ Không có việc nào đang chờ.';
+  const kTu = `ds_tiep:${loai}:${chat}`;
+  const kLuc = `ds_luc:${loai}:${chat}`;
+  let tu = (await docMoc(env, kTu)) || 0;
+  if (tu >= ds_.length || t - ((await docMoc(env, kLuc)) || 0) > DS_HET_HAN_GIAY) tu = 0;
+  if (tu === 0) {
+    let stt = 0;
+    const khoi = nhom.map(([ten, a]) => {
+      if (a === null) return `<b>${esc(ten)}</b>: bộ trạng thái của oHa chưa có cột này`;
+      const dong = a.map((v) => `#${++stt} ${v.ma} — ${esc(trich(v.tieu_de, 50))} (từ ${ngayGioVN(v.cap_nhat)})`);
+      return `<b>${esc(ten)} (${a.length})</b>` + (dong.length ? '\n' + (dong.length > 30 ? [...dong.slice(0, 30), `…và ${dong.length - 30} thẻ nữa`] : dong).join('\n') : '');
+    });
+    const dau = loai === 'khac' ? `⏳ Việc chờ người khác — ${ds_.length} thẻ` : `📋 Việc đang chờ — ${ds_.length} thẻ`;
+    const html = `<b>${dau}</b>\n\n${khoi.join('\n\n')}\n\n👉 ${esc(ch.tenChu)} Reply tin này: <b>#số lời</b> (vd #2 cứ làm theo 1A) — hoặc Reply tin từng thẻ.`;
+    const r = await tg(env, 'sendMessage', { chat_id: chat, text: html, parse_mode: 'HTML', reply_parameters: { message_id: mid, allow_sending_without_reply: true } });
+    if (!r.ok) return `Chưa gửi được danh sách — ${esc(r.description || 'Telegram lỗi')}.`;
+    await env.DB.batch([
+      sqlTin(env, { chat_id: chat, message_id: r.result.message_id, luc: r.result.date, tu_ten: 'bot', la_bot: 1, noi_dung: boThe(html), can_bao: 0 }),
+      env.DB.prepare('INSERT OR REPLACE INTO bnv_danh_sach(chat_id, message_id, loai, ds, tao_luc) VALUES(?,?,?,?,?)')
+        .bind(chat, r.result.message_id, loai, JSON.stringify(ds_.map((v) => v.ma)), t),
+    ]);
+  }
+  const den = Math.min(tu + TRAN_THE_LUOT, ds_.length);
+  await guiTinThe(env, chat, ds_.slice(tu, den).map((v, i) => ({ ma: v.ma, html: [
+    dauThe(v.ma, v.tieu_de),
+    `#${tu + i + 1} · ⏳ ${esc(v.nhomTen)} · từ ${ngayGioVN(v.cap_nhat)}`,
+    v.bot_cuoi ? `Máy hỏi gần nhất: «${esc(trich(v.bot_cuoi, 160))}»` : `Nội dung: «${esc(trich(v.noi_dung, 160))}»`,
+    `👉 Reply tin này: lời ${esc(ch.tenChu)} ghi vào thẻ`,
+  ].join('\n') })), loai);
+  await env.DB.batch([datMoc(env, kTu, den), datMoc(env, kLuc, t)]);
+  const con = ds_.length - den;
+  if (tu === 0 && !con) return null;
+  return (tu ? `▶ Gửi tiếp thẻ #${tu + 1}–#${den} / ${ds_.length}.` : `▶ Đã gửi thẻ #1–#${den} / ${ds_.length}.`)
+    + (con ? ` Còn ${con} thẻ — gõ lại /${loai} để gửi tiếp.` : ' Đã gửi hết.');
+}
+
+// Sổ dồn /lamdi = mọi lời NGƯỜI chưa mang cờ đã-đọc trên thẻ đang mở (thẻ còn chờ chủ nhà cho làm thì để /lam · /khoidong lo).
+const SO_DON = `FROM bnv_tin t JOIN bnv_viec v ON v.ma=t.ma_viec
+  WHERE t.la_bot=0 AND t.tu_id IS NOT NULL AND t.claude_doc_luc IS NULL AND v.trang_thai NOT IN ('xong','huy','da-chuyen','${TT_CHO}')
+    AND (t.noi_dung NOT LIKE '/%' OR t.noi_dung LIKE '/viec%')`;
+
+// /lamdi (chủ gõ) · lịch gom (tuLich). Gỡ cờ /pause → một dòng CLITELL `tong-hop` (chỉ khi con canh đang nghe; bản cũ chưa
+// nhận thì thay) + bật cờ chưa đọc cho các lời đó để `moi` in ra có id → gửi chủ nhà mỗi thẻ một tin.
+async function lamDi(env, o = {}) {
+  const ch = cauHinh(env);
+  const t = nowS();
+  const st = [];
+  const dung = await tamDung(env);
+  if (o.tuLich && dung) return { text: 'bỏ lượt: đang tạm dừng' };
+  if (!o.tuLich && dung) st.push(datMoc(env, 'tam_dung', 0));
+  const go = !o.tuLich && dung ? ' Đã gỡ tạm dừng.' : '';
+  const xong = async (text) => { if (st.length) await env.DB.batch(st); return { text }; };
+  const rs = (await env.DB.prepare(`SELECT t.id, t.ma_viec, t.tu_ten, t.noi_dung, v.tieu_de ${SO_DON} ORDER BY t.id`).all()).results || [];
+  if (!rs.length) return xong('📨 CLI · Không có trao đổi nào chưa làm trên các thẻ — sổ trống.' + go);
+  const maxId = rs[rs.length - 1].id;
+  // Lịch chỉ gom khi có lời mới từ lượt gom trước — không thì mỗi 2 giờ lại gửi chủ nhà cùng mấy tin thẻ cũ.
+  if (o.tuLich && maxId <= ((await docMoc(env, 'lamdi_moc')) || 0)) return { text: 'bỏ lượt: không có lời mới' };
+  const theo = {};
+  for (const r of rs) (theo[r.ma_viec] ||= { tieu_de: r.tieu_de, loi: [] }).loi.push(r);
+  const mas = Object.keys(theo);
+  if (!(await canhNghe(env))) return xong(`📨 CLI · Sổ giữ nguyên (${rs.length} lời / ${mas.length} thẻ), CLI không nghe — chưa có phiên Claude CLI nào chạy con canh; mở phiên rồi gõ lại /lamdi.` + go);
+  if (o.tuLich && (await env.DB.prepare(`SELECT 1 FROM bnv_clitell WHERE loai='tong-hop' AND nhan_luc IS NULL LIMIT 1`).first()))
+    return { text: 'bỏ lượt: còn bản sổ dồn chưa nhận' };
+  const ids = rs.map((r) => r.id);
+  const chu = `/lamdi — SỔ DỒN: ${rs.length} lời chưa làm trên ${mas.length} thẻ (${mas.join(', ')}). Làm đúng .claude/commands/check-viec-sep.md `
+    + `mục «Sổ dồn»: chạy moi lấy id rồi xử TỪNG mục (id kho: ${ids.slice(0, 60).join(',')}${ids.length > 60 ? ',…' : ''}).`;
+  st.push(env.DB.prepare(`DELETE FROM bnv_clitell WHERE loai='tong-hop' AND nhan_luc IS NULL`));
+  st.push(env.DB.prepare('INSERT INTO bnv_clitell(chu, chat_id, message_id, tao_luc, loai) VALUES(?,?,?,?,?)')
+    .bind(chu, String(o.chat || 'may'), o.mid || -(Date.now() * 1000 + Math.floor(Math.random() * 1000)), t, 'tong-hop'));
+  st.push(env.DB.prepare(`UPDATE bnv_tin SET can_bao=1 WHERE id IN (SELECT t.id ${SO_DON} AND t.id<=?)`).bind(maxId));
+  st.push(datMoc(env, 'lamdi_moc', maxId));
+  await env.DB.batch(st);
+  const tenChu = esc(ch.tenChu);
+  const so = await guiTinThe(env, ch.chu, mas.slice(0, TRAN_THE_LUOT).map((ma) => {
+    const x = theo[ma];
+    const dong = x.loi.slice(-3).map((r) => `• <b>${esc(r.tu_ten || 'người gửi')}</b>: «${esc(trich(r.noi_dung, 100))}»`);
+    return { ma, html: [dauThe(ma, x.tieu_de), `🗂 ${x.loi.length} lời chưa làm — đã đẩy vào phiên Claude:`, ...dong,
+      ...(x.loi.length > 3 ? [`…và ${x.loi.length - 3} lời trước đó`] : []), `👉 Reply tin này: lời ${tenChu} ghi vào thẻ`].join('\n') };
+  }), 'lamdi');
+  return { text: `📨 CLI · Đã đẩy sổ dồn ${rs.length} lời / ${mas.length} thẻ vào phiên Claude CLI đang chạy; gửi ${tenChu} ${so} tin thẻ trong chat riêng`
+    + (mas.length > TRAN_THE_LUOT ? ` (${mas.length - TRAN_THE_LUOT} thẻ còn lại chỉ có trong phiên)` : '') + '.' + go };
+}
+
+// Lịch trên Cron Trigger */5 sẵn có (không thêm trigger): mỗi việc chạy một lần trong giờ đó, giành lượt bằng mốc.
+async function lich(env, ts) {
+  const gio = Number(gioVN(ts).slice(0, 2));
+  const ngay = Number(ngayVN(ts));
+  const lanDau = async (khoa, gt) => {
+    if ((await docMoc(env, khoa)) === gt) return false;
+    await datMoc(env, khoa, gt).run();
+    return true;
+  };
+  if (gio === GIO_TAM_DUNG && (await lanDau('lich_tam_dung', ngay)) && !(await tamDung(env))) await datMoc(env, 'tam_dung', ts).run();
+  if (gio === GIO_KHOI_DONG && (await lanDau('lich_khoi_dong', ngay))) await datMoc(env, 'tam_dung', 0).run();
+  if (GIO_GOM.includes(gio) && (await lanDau('lich_gom', ngay * 100 + gio))) console.log('lịch gom /lamdi:', (await lamDi(env, { tuLich: true })).text);
+}
+
+// Menu «/» sinh từ dsLenh (cùng nguồn chữ /help), đặt QUA máy chủ — máy nhà không gọi Telegram thẳng.
+function phamViMenu(env) {
+  const ch = cauHinh(env);
+  const L = dsLenh(ch.tenChu);
+  const lay = (f) => L.filter(f).map((l) => ({ command: l.ten, description: l.mo_ta.slice(0, 256) }));
+  return [
+    ['mặc định', { type: 'default' }, lay((l) => l.ai === 'moi')],
+    ['mọi nhóm', { type: 'all_group_chats' }, lay((l) => l.ai !== 'chu')],
+    ['chat riêng chủ nhà', { type: 'chat', chat_id: Number(ch.chu) }, lay(() => true)],
+    ['chủ nhà trong nhóm chính', { type: 'chat_member', chat_id: Number(ch.chatSep), user_id: Number(ch.chu) }, lay((l) => l.ai !== 'chu' || l.noi === 'chinh')],
+  ];
+}
+async function datMenu(env, xem) {
+  const kq = [];
+  for (const [ten, scope, commands] of phamViMenu(env)) {
+    const r = xem ? await tg(env, 'getMyCommands', { scope }) : await tg(env, 'setMyCommands', { scope, commands });
+    kq.push({ ten, ok: !!r.ok, lenh: xem ? (r.result || []).map((c) => c.command) : commands.map((c) => c.command), ...(r.ok ? {} : { loi: r.description }) });
+  }
+  return { ok: kq.every((x) => x.ok), pham_vi: kq };
 }
 
 // Việc «của nhóm»: có tin ở một nhóm (không phải chat riêng chủ nhà / dòng máy).
@@ -811,7 +1131,7 @@ async function quetNhac(env, thu = false) {
     `SELECT t.id, t.ma_viec, t.tu_ten, t.noi_dung FROM bnv_tin t JOIN bnv_viec v ON v.ma=t.ma_viec
      WHERE t.la_bot=0 AND t.tu_id IS NOT NULL AND t.claude_doc_luc IS NULL AND t.nhac_luc IS NULL
        AND t.nhan_luc < ? AND v.trang_thai NOT IN ('xong','huy','da-chuyen')
-       AND NOT EXISTS (SELECT 1 FROM bnv_tin b WHERE b.ma_viec=t.ma_viec AND b.la_bot=1 AND b.chat_id!='may' AND b.luc > t.luc)
+       AND NOT EXISTS (SELECT 1 FROM bnv_tin b WHERE b.ma_viec=t.ma_viec AND b.la_bot=1 AND b.chat_id!='may' AND b.luc > t.luc AND ${KHONG_DANH_SACH})
      ORDER BY t.id LIMIT 50`
   ).bind(t - NGUONG_NHAC_GIAY).all();
   const hang = rs.results || [];
@@ -979,7 +1299,7 @@ async function api(req, env) {
       const dl = await dlMo(env);
       const duyet_luot = dl && DL_CAN_MAY.includes(dl.trang_thai)
         ? { id: dl.id, trang_thai: dl.trang_thai, ban: dl.ban, cap_nhat: dl.cap_nhat, gop_y: dl.gop_y } : null;
-      return json({ ok: true, tin: r.results, duyet_luot });
+      return json({ ok: true, tin: r.results, duyet_luot, tam_dung: !!(await tamDung(env)) });
     }
     case 'duyet-luot-xem': {
       const d = b.id ? await dlCo(env, b.id) : await dlMo(env);
@@ -1099,13 +1419,13 @@ async function api(req, env) {
       return json({ ok: true, so: r.map((x) => x.meta.changes) });
     }
     case 'clitell': {
-      const r = await db.prepare('SELECT id, tao_luc AS luc, chu, noi_tiep FROM bnv_clitell WHERE nhan_luc IS NULL ORDER BY id').all();
-      return json({ ok: true, loi_cli: r.results });
+      const r = await db.prepare('SELECT id, tao_luc AS luc, chu, noi_tiep, loai FROM bnv_clitell WHERE nhan_luc IS NULL ORDER BY id').all();
+      return json({ ok: true, loi_cli: r.results, tam_dung: !!(await tamDung(env)) });
     }
     case 'clitell-da-nhan': {
       if (!idsHopLe(b.ids)) return json({ ok: false, loi: 'ids rỗng' }, 400);
       const r = await db.prepare(`UPDATE bnv_clitell SET nhan_luc=? WHERE id IN (${trong(b.ids)}) AND nhan_luc IS NULL RETURNING chat_id, message_id`).bind(t, ...b.ids.map(Number)).all();
-      for (const x of r.results || []) await tha(env, x.chat_id, x.message_id, '👀');
+      for (const x of r.results || []) if (x.chat_id !== 'may') await tha(env, x.chat_id, x.message_id, '👀');
       return json({ ok: true, so: (r.results || []).length });
     }
     case 'clitell-tra': {
@@ -1125,10 +1445,14 @@ async function api(req, env) {
       ]);
       return json({ ok: true, message_id: kq.result.message_id });
     }
+    case 'menu':
+      return json(await datMenu(env, false));
+    case 'menu-xem':
+      return json(await datMenu(env, true));
     case 'quet-nhac':
       return json(await quetNhac(env, !!b.thu));
     case 'nhip': {
-      return json({ ok: true, nhip_tim: await docMoc(env, 'nhip_tim'), canh_nghe: await docMoc(env, 'canh_nghe'), may_tat: await mayTat(env), ai_luot_hom_nay: (await docMoc(env, 'ai_luot:' + ngayVN(t))) || 0 });
+      return json({ ok: true, nhip_tim: await docMoc(env, 'nhip_tim'), canh_nghe: await docMoc(env, 'canh_nghe'), may_tat: await mayTat(env), tam_dung: await tamDung(env), ai_luot_hom_nay: (await docMoc(env, 'ai_luot:' + ngayVN(t))) || 0 });
     }
     default:
       return json({ ok: false, loi: 'act lạ' }, 404);
@@ -1149,7 +1473,8 @@ export default {
     }
     return new Response('oha-bot', { status: 200 });
   },
-  async scheduled(_ev, env, ctx) {
+  async scheduled(ev, env, ctx) {
+    ctx.waitUntil(lich(env, Math.floor((ev?.scheduledTime || Date.now()) / 1000)).catch((e) => console.log('lịch lỗi', String(e))));
     ctx.waitUntil(quetNhac(env).catch((e) => console.log('quét nhắc lỗi', String(e))));
     ctx.waitUntil(ngheLai(env, ctx).catch((e) => console.log('nghe lại lỗi', String(e))));
   },

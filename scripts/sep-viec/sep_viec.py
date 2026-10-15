@@ -139,7 +139,9 @@ def in_loi_cli(ds, bao_da_nhan=True):
         return
     print("📨 LỜI CHỦ GỬI THẲNG VÀO CLI — coi như chủ gõ trong cửa sổ này:")
     for c in ds:
-        print(f"  [clitell #{c['id']} · {gio(c['luc'])}] {c['chu']}")
+        # 7f: lenh_may = /tatmay /momay (làm đúng tệp lệnh ghi trong lời) · tong-hop = sổ dồn /lamdi
+        nhan = {"lenh_may": "⚙ LỆNH MÁY", "tong-hop": "🗂 SỔ DỒN"}.get(c.get("loai"), "clitell")
+        print(f"  [{nhan} #{c['id']} · {gio(c['luc'])}] {c['chu']}")
         if c.get("noi_tiep"):
             print(f"      (Reply vào: «{c['noi_tiep'][:300]}»)")
     print("  → trả lời chủ: python3 scripts/sep-viec/sep_viec.py clitell-tra --id <id> --chu \"…\"")
@@ -160,6 +162,8 @@ def cmd_moi(a):
     if a.json:
         print(json.dumps({"loi_cli": loi_cli, "tin": tin, "duyet_luot": dl}, ensure_ascii=False, indent=1))
     else:
+        if r.get("tam_dung"):
+            print("⏸ Máy đang TẠM DỪNG (/pause) — con canh không gọi phiên dậy cho việc thẻ tới /khoidong hoặc 7h sáng.")
         if dl:
             print("📋 " + dong_duyet_luot(dl))
         in_loi_cli(loi_cli, bao_da_nhan=False)
@@ -217,15 +221,25 @@ def cmd_canh(a):
     pfile = os.path.join(TRANG, "canh.pid")
     open(pfile, "w").write(str(os.getpid()))
     het = time.time() + a.phut * 60
+    bao_dung = False
     try:
         while time.time() < het:
             try:
+                # Lời chủ / lệnh máy (/tatmay /momay) vẫn gọi phiên dậy kể cả lúc /pause — chủ đang nói thẳng với phiên.
                 cli = goi("clitell", canh=True)
                 if cli.get("ok") and cli.get("loi_cli"):
                     in_loi_cli(cli["loi_cli"])
                     return
                 r = goi("chua-doc")
-                if r.get("ok"):
+                if r.get("ok") and r.get("tam_dung"):
+                    # 7f /pause: vẫn hỏi mỗi lượt (không tốn token) nhưng KHÔNG thoát; không ghi da-thay để /khoidong xong
+                    # lượt sau thấy đủ mục chưa báo mà gọi phiên làm bù.
+                    if not bao_dung:
+                        print("(con canh: máy đang TẠM DỪNG — vẫn hỏi, không gọi phiên dậy cho việc thẻ tới /khoidong)", file=sys.stderr)
+                        bao_dung = True
+                    ghi_json("trang-thai.json", {"ids": [], "luc": int(time.time()), "tam_dung": True})
+                elif r.get("ok"):
+                    bao_dung = False
                     ids = [t["id"] for t in r["tin"]]
                     dl = r.get("duyet_luot")
                     # 7e — lượt duyệt cần máy: báo khi lượt/trạng thái đổi, hoặc báo rồi mà quá --nhac-phut vẫn y nguyên.
@@ -248,7 +262,7 @@ def cmd_canh(a):
             except Exception as e:
                 print(f"(con canh: lỗi mạng {e} — thử lại lượt sau)", file=sys.stderr)
             time.sleep(a.giay)
-        print(f"Con canh hết {a.phut} phút, không có tin mới — bật lại nếu còn làm.")
+        print(f"Con canh hết {a.phut} phút, " + ("máy đang TẠM DỪNG (/pause) — bật lại để còn nghe lời chủ." if bao_dung else "không có tin mới — bật lại nếu còn làm."))
     finally:
         if canh_song() == os.getpid():
             os.remove(pfile)
@@ -422,20 +436,14 @@ def cmd_dat_webhook(a):
     cmd_webhook_info(a)
 
 
-LENH_LAM = {"command": "lam", "description": "Duyệt lượt việc đang chờ (/lam) · cho làm thẳng (/lam <mã> · /lam tatca)"}
-
-
 def cmd_menu(a):
-    """Menu «/» (skill bot-commands): /viec mọi nhóm; /clitell + /lam chỉ chủ nhà (chat riêng + chính chủ trong nhóm chính)."""
-    chu = int(can("TG_CHU_NHA_ID"))
-    viec = {"command": "viec", "description": "Giao việc mới cho trợ lý"}
-    kq = [("nhóm /viec", tg("setMyCommands", commands=[viec], scope={"type": "all_group_chats"})),
-          ("chat riêng chủ nhà /clitell /lam", tg("setMyCommands", commands=[
-              {"command": "clitell", "description": "Nhắn thẳng phiên Claude CLI"}, LENH_LAM], scope={"type": "chat", "chat_id": chu})),
-          ("chủ nhà trong nhóm chính /viec /lam", tg("setMyCommands", commands=[viec, LENH_LAM],
-                                                   scope={"type": "chat_member", "chat_id": int(can("TG_CHAT_SEP")), "user_id": chu}))]
-    for ten, r in kq:
-        print(f"menu {ten}:", r.get("ok"), r.get("description") or "")
+    """Menu «/» (7f): máy chủ đặt từ CHỖ KHAI LỆNH DUY NHẤT (cùng nguồn chữ /help) — máy nhà không gọi Telegram thẳng."""
+    r = goi("menu-xem" if getattr(a, "xem", False) else "menu", {})
+    for x in r.get("pham_vi") or []:
+        print(f"menu {x['ten']}:", x["ok"], " ".join("/" + c for c in x["lenh"]), x.get("loi") or "")
+    if not r.get("ok"):
+        print("⛔", r.get("loi") or "có phạm vi đặt menu hỏng")
+        sys.exit(1)
 
 
 def cmd_webhook_info(a):
@@ -833,7 +841,8 @@ def main():
     x.set_defaults(f=cmd_clitell_tra)
     x = s.add_parser("dat-webhook")
     x.set_defaults(f=cmd_dat_webhook)
-    x = s.add_parser("menu", help="khai menu «/» (không đụng webhook)")
+    x = s.add_parser("menu", help="khai menu «/» qua máy chủ (không đụng webhook)")
+    x.add_argument("--xem", action="store_true", help="đọc lại menu từng phạm vi (getMyCommands qua máy chủ)")
     x.set_defaults(f=cmd_menu)
     x = s.add_parser("duyet-luot", help="7e: gom lượt + việc đang chờ + mẫu phương án ra JSON")
     x.add_argument("--id", type=int)

@@ -1,5 +1,5 @@
 -- Kho bot nhận việc oHa (D1). Hợp đồng: skill bot-nhan-viec references/hop-dong.md (bản gọn, 2 bảng tin/viec)
--- + bảng clitell (mục 7d) + bảng moc (nhịp tim, mốc con canh, sổ đếm lượt AI, câu mặc định máy tắt).
+-- + bảng clitell (mục 7d) + bảng moc (nhịp tim, mốc con canh, sổ đếm lượt AI, câu mặc định máy tắt, cờ /pause, mốc lịch 7f).
 -- Dùng chung kho D1 `oha-db` với dự án khác → mọi bảng mang tiền tố bnv_ (bot nhận việc).
 CREATE TABLE IF NOT EXISTS bnv_tin (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,7 +28,14 @@ CREATE TABLE IF NOT EXISTS bnv_clitell (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   chu TEXT NOT NULL, noi_tiep TEXT, chat_id TEXT NOT NULL, message_id INTEGER NOT NULL,
   bot_tin TEXT NOT NULL DEFAULT '[]', tao_luc INTEGER NOT NULL, nhan_luc INTEGER,
+  loai TEXT NOT NULL DEFAULT 'loi',          -- mục 7f: loi · tong-hop (sổ dồn /lamdi) · lenh_may (/tatmay /momay)
   UNIQUE(chat_id, message_id)
+);
+
+-- Mục 7f: tin danh sách bot gửi (/khac /cho /lamdi) — Reply «#số lời» vào tin tóm hoặc Reply tin một thẻ → ghi đúng thẻ.
+CREATE TABLE IF NOT EXISTS bnv_danh_sach (
+  chat_id TEXT NOT NULL, message_id INTEGER NOT NULL, loai TEXT NOT NULL, ds TEXT NOT NULL DEFAULT '[]', tao_luc INTEGER NOT NULL,
+  PRIMARY KEY(chat_id, message_id)
 );
 
 -- Mục 7e: lượt duyệt /lam. trang_thai: cho-may → cho-chu-nha → gop-y → … → da-ok → dang-ap → da-ap.

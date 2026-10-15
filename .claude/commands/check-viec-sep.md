@@ -16,7 +16,12 @@ lại vẫn nhận — CLI và máy chủ tự quy đổi sang `oHa-`).
 
 1. `moi` → mục «📨 LỜI CHỦ GỬI THẲNG VÀO CLI» (nếu có) coi như chủ gõ trong cửa sổ này, xử TRƯỚC; trả chủ bằng
    `clitell-tra --id <id> --chu "…"` (≤6 dòng, ≤600 ký tự). Mở ảnh/tệp in ra bằng Read. Cần toàn cảnh: `keo` rồi đọc
-   `.claude/sep-viec/SO-VIEC.md`.
+   `.claude/sep-viec/SO-VIEC.md`. Trong mục đó có hai loại dòng máy (bộ lệnh chung, skill bot-nhan-viec mục 7f):
+   - **«⚙ LỆNH MÁY»** `/tatmay` · `/momay` → làm ĐÚNG `.claude/commands/tatmay.md` · `.claude/commands/momay.md`.
+   - **«🗂 SỔ DỒN»** (chủ gõ `/lamdi` hoặc lịch gom mỗi 2 giờ 8h–22h) = **Sổ dồn**: chạy `moi` lấy id (các lời trong sổ đã được
+     bật cờ chưa đọc nên `moi` in ra đủ) rồi xử TỪNG mục như bước 2 — không gộp trả một câu chung; xử xong mục nào
+     `da-doc --id` đúng mục đó. Báo chủ một dòng `clitell-tra` khi xong cả sổ.
+   Dòng «⏸ Máy đang TẠM DỪNG» (chủ gõ `/pause`, hoặc lịch 23h) → chỉ xử lời CLI; việc thẻ để tới `/khoidong` (hoặc 7h sáng).
 2. Từng tin:
    - **việc mới** (mã thẻ `cho-xac-nhan`) → nhận: `trang-thai --ma <mã> --tt dang-lam`, làm theo luật dự án.
    - **dòng «▶ Chủ nhà cho làm»** (chủ gõ `/lam <mã>` · `/lam tatca` · áp lượt) → việc đã sang `dang-lam`, làm luôn.
