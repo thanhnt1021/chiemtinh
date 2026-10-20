@@ -233,6 +233,42 @@ function sqlTin(env, r, upsert = false) {
   return st.bind(...b);
 }
 
+// ---------- xin quyền cho hook máy Mac (Task-20102026-02, ChicHub) ----------
+// Hook `hop_quyen_vang_gate.py` gửi tin hỏi «1A cho phép · 1B không» bằng chính bot này; bot có webhook nên
+// hook không getUpdates được (409). Worker giữ câu Reply của anh Thành vào tin đó, hook đọc qua GET /xin-quyen.
+const XQ_RE = /Mã xin phép:\s*(XQ-[0-9a-f]{8,32})/;
+const XQ_ANH_MAC_DINH = '1247334831';
+
+function maXinQuyen(env, m) {
+  if (!env.XIN_QUYEN_KHOA) return null;   // chưa dựng khoá → hành vi cũ nguyên vẹn
+  const rep = m.reply_to_message;
+  if (!rep?.from?.is_bot) return null;
+  const ten = String(env.TG_BOT_USERNAME || '').toLowerCase();
+  if (ten && String(rep.from.username || '').toLowerCase() !== ten) return null;
+  const r = XQ_RE.exec(String(rep.text || rep.caption || ''));
+  return r ? r[1] : null;
+}
+
+async function luuXinQuyen(env, ma, m) {
+  // Chỉ nhận Reply của anh Thành; người khác Reply vào tin hỏi quyền thì bỏ (không lưu, không vào luồng cũ).
+  if (String(m.from.id) !== String(env.XIN_QUYEN_ANH_ID || XQ_ANH_MAC_DINH)) return;
+  const chu = String(m.text || m.caption || '').slice(0, 500);
+  const k = /^\s*1\s*([AaBb])(?![A-Za-z0-9])/.exec(chu);
+  await env.DB.prepare(
+    `INSERT INTO bnv_xin_quyen(ma, tra_loi, chu, chat_id, message_id, tu_id, luc) VALUES(?,?,?,?,?,?,?)
+     ON CONFLICT(ma) DO UPDATE SET tra_loi=excluded.tra_loi, chu=excluded.chu, message_id=excluded.message_id, luc=excluded.luc`
+  ).bind(ma, k ? '1' + k[1].toUpperCase() : null, chu, String(m.chat.id), m.message_id, String(m.from.id), nowS()).run();
+}
+
+async function docXinQuyen(req, env) {
+  const khoa = env.XIN_QUYEN_KHOA;
+  if (!khoa || req.headers.get('x-xin-quyen-khoa') !== khoa) return json({ ok: false, loi: 'unauthorized' }, 401);
+  const ma = new URL(req.url).searchParams.get('ma') || '';
+  if (!/^XQ-[0-9a-f]{8,32}$/.test(ma)) return json({ ok: false, loi: 'mã lạ' }, 400);
+  const r = await env.DB.prepare('SELECT tra_loi, chu, chat_id, message_id, luc FROM bnv_xin_quyen WHERE ma=?').bind(ma).first();
+  return json({ ok: true, ma, tra_loi: r?.tra_loi ?? null, chu: r?.chu ?? null, chat_id: r?.chat_id ?? null, message_id: r?.message_id ?? null, luc: r?.luc ?? null });
+}
+
 // ---------- webhook ----------
 async function webhook(req, env, ctx) {
   const sec = env.TG_WEBHOOK_SECRET;
@@ -246,6 +282,17 @@ async function webhook(req, env, ctx) {
   if (upd.message_reaction) return OK();   // khai để Telegram gửi cảm xúc; bản gọn chưa dùng
   const m = upd.message || upd.edited_message;
   if (!m || !m.chat || !m.from) return OK();
+  const xq = maXinQuyen(env, m);
+  if (xq) {
+    // Reply vào tin hỏi quyền của máy Mac: KHÔNG vào luồng oHa cũ (chữ «1A» không thành việc mới).
+    try {
+      await luuXinQuyen(env, xq, m);
+    } catch (e) {
+      console.log('xin-quyen lỗi', String(e?.stack || e));
+      return new Response('loi kho', { status: 500 });   // Telegram gửi lại
+    }
+    return OK();
+  }
   const ch = cauHinh(env);
   const chat = String(m.chat.id);
   const rieng = m.chat.type === 'private';
@@ -1493,6 +1540,14 @@ export default {
   async fetch(req, env, ctx) {
     const p = new URL(req.url).pathname;
     if (req.method === 'POST' && (p === '/hook' || p === '/hook.php')) return webhook(req, env, ctx);
+    if (req.method === 'GET' && p === '/xin-quyen') {
+      try {
+        return await docXinQuyen(req, env);
+      } catch (e) {
+        console.log('xin-quyen đọc lỗi', String(e?.stack || e));
+        return json({ ok: false, loi: 'lỗi máy chủ' }, 500);
+      }
+    }
     if (p === '/api' || p === '/api.php') {
       try {
         return await api(req, env);
