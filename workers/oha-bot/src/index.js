@@ -4,9 +4,23 @@
 // Founder chốt 12/10/2026: mã việc của dự án là `oHa-ddmmyyyy-NN`. Mã cũ `Task-…` (tin bot gửi trước ngày đổi, sếp gõ lại)
 // vẫn nhận và quy đổi sang oHa- — thẻ trong kho đã đổi tên, đừng bắt người gõ lại.
 const TIEN_TO = 'oHa';
-const MA_RE = /(?:oHa|Task)-(?:\d{8}-\d{2,3}|CANH)/;
-const doiMa = (s) => String(s ?? '').trim().replace(/^Task-/i, TIEN_TO + '-').replace(/^oha-/i, TIEN_TO + '-');
-const maTrongChu = (s) => { const r = MA_RE.exec(String(s ?? '')); return r ? doiMa(r[0]) : null; };
+// Đa dự án (W47, thẻ ChicHub Task-21102026-08, anh Thành 21/10 «1A 2A 3B»): oHa là dự án GỐC, cấu hình vẫn đọc từ biến
+// môi trường như trước; dự án khác (TUNG, ANHTAN, DAT…) là dòng bảng bnv_du_an. Mỗi lượt xử lý mang một `env` bọc
+// (env.DA = dự án) → mọi hàm cũ tự đọc đúng tiền tố mã, nhóm, mốc của dự án đó mà không phải đổi chữ ký.
+const laGoc = (env) => !env.DA;
+const tienTo = (env) => env.DA?.ma || TIEN_TO;
+const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+// Nguồn regex tiền tố của dự án: oHa nhận cả mã cũ Task-; dự án khác chỉ tiền tố của nó (không phân biệt hoa thường).
+const nguonTien = (env) => (laGoc(env) ? 'oHa|Task' : reEsc(tienTo(env)));
+const coRe = (env, g = '') => (laGoc(env) ? g : 'i' + g);
+const maRe = (env, g = '') => new RegExp(`(?:${nguonTien(env)})-(?:\\d{8}-\\d{2,3}|CANH)`, coRe(env, g));
+const maSoRe = (env) => new RegExp(`(?:(?:${nguonTien(env)})-)?(\\d{8}-\\d{2,3})`, 'gi');
+const doiMa = (env, s) => {
+  const x = String(s ?? '').trim();
+  if (!laGoc(env)) return x.replace(new RegExp(`^${reEsc(tienTo(env))}-`, 'i'), tienTo(env) + '-');
+  return x.replace(/^Task-/i, TIEN_TO + '-').replace(/^oha-/i, TIEN_TO + '-');
+};
+const maTrongChu = (env, s) => { const r = maRe(env).exec(String(s ?? '')); return r ? doiMa(env, r[0]) : null; };
 const TRANG_THAI = ['cho-xac-nhan', 'cho-sep-tra-loi', 'sep-da-tra-loi', 'dang-lam', 'xong', 'huy', 'da-chuyen'];
 const TT_DONG = ['xong', 'huy', 'da-chuyen'];
 // 7e — việc «đang chờ chủ nhà cho làm» của bộ gọn = sếp giao, chưa ai nhận.
@@ -80,11 +94,47 @@ function ngayVN(ts) {
 
 // Thẻ con canh trưởng tìm theo NGUỒN hệ thống (mục 7c), không ghi cứng mã.
 async function maCanh(env) {
-  const r = await env.DB.prepare("SELECT ma FROM bnv_viec WHERE nguon='he-thong' ORDER BY tao_luc LIMIT 1").first();
-  return r?.ma || TIEN_TO + '-CANH';
+  const r = await env.DB.prepare("SELECT ma FROM bnv_viec WHERE nguon='he-thong' AND du_an=? ORDER BY tao_luc LIMIT 1").bind(tienTo(env)).first();
+  return r?.ma || tienTo(env) + '-CANH';
 }
 
+// ---------- đa dự án ----------
+function docDuAn(r) {
+  const j = (s) => { try { const x = JSON.parse(s || '[]'); return Array.isArray(x) ? x : []; } catch { return []; } };
+  return {
+    ma: String(r.ma), ten: String(r.ten || r.ma), chat_chinh: r.chat_chinh ? String(r.chat_chinh) : '',
+    chat_phu: j(r.chat_phu).map(String), sep: j(r.sep).map(String), bat: !!r.bat,
+    chu_de: r.chu_de_rieng ? Number(r.chu_de_rieng) : null, rieng_vao_nhom: !!r.rieng_vao_nhom,
+    bi_danh: [String(r.ma).toLowerCase(), ...j(r.bi_danh).map((s) => String(s).toLowerCase())],
+  };
+}
+// Tiền tố đi thẳng vào SQL (sổ dồn) nên chỉ nhận chữ cái — dòng lạ bỏ qua.
+async function dsDuAn(env) {
+  const r = await env.DB.prepare('SELECT * FROM bnv_du_an ORDER BY ma').all();
+  return (r.results || []).filter((x) => /^[A-Za-z]{2,10}$/.test(x.ma) && x.ma !== TIEN_TO).map(docDuAn);
+}
+function voiDuAn(env, d) {
+  if (!d) return env;
+  const e = Object.create(env);
+  e.DA = d;
+  return e;
+}
+// Dự án gốc + các dự án đang bật — cho lịch chạy (cron) và quét nhắc.
+const cacEnv = async (env) => [env, ...(await dsDuAn(env)).filter((d) => d.bat).map((d) => voiDuAn(env, d))];
+
 function cauHinh(env) {
+  if (env.DA) {
+    const d = env.DA;
+    return {
+      chatSep: d.chat_chinh,
+      noiBo: [d.chat_chinh, ...d.chat_phu].filter(Boolean),
+      ngoai: [],
+      sep: d.sep,
+      chu: String(env.TG_CHU_NHA_ID || ''),
+      botTen: String(env.TG_BOT_USERNAME || '').toLowerCase(),
+      tenChu: String(env.TEN_CHU_NHA || 'chủ nhà'),
+    };
+  }
   return {
     chatSep: String(env.TG_CHAT_SEP || ''),
     noiBo: [String(env.TG_CHAT_SEP || ''), ...ds(env.TG_CHAT_NOI_BO)].filter(Boolean),
@@ -100,6 +150,14 @@ function cauHinh(env) {
 const tgGoc = (env) => String(env.TG_API_BASE || 'https://api.telegram.org').replace(/\/$/, '');
 
 async function tg(env, method, body) {
+  // 3B — dự án có chủ đề riêng trong chat riêng chủ nhà: mọi tin máy gửi chủ nhà tự vào đúng chủ đề đó.
+  const th = env.DA?.chu_de;
+  if (th && /^(send|copy|forward)/.test(method)) {
+    const chu = String(env.TG_CHU_NHA_ID || '');
+    if (body instanceof FormData) {
+      if (String(body.get('chat_id')) === chu && !body.has('message_thread_id')) body.append('message_thread_id', String(th));
+    } else if (body && String(body.chat_id) === chu && body.message_thread_id == null) body = { ...body, message_thread_id: th };
+  }
   try {
     const r = await fetch(`${tgGoc(env)}/bot${env.TG_BOT_TOKEN}/${method}`, {
       method: 'POST',
@@ -114,12 +172,14 @@ async function tg(env, method, body) {
 const tha = (env, chat_id, message_id, emoji) =>
   tg(env, 'setMessageReaction', { chat_id, message_id, reaction: [{ type: 'emoji', emoji }] });
 
+// Mốc của dự án khác mang tiền tố «TUNG:nhip_tim»; mốc của oHa giữ tên cũ. Sổ đếm lượt AI dùng chung cả bot.
+const khoaMoc = (env, k) => (laGoc(env) || k.startsWith('ai_luot:') ? k : `${tienTo(env)}:${k}`);
 async function docMoc(env, khoa) {
-  const r = await env.DB.prepare('SELECT gia_tri FROM bnv_moc WHERE khoa=?').bind(khoa).first();
+  const r = await env.DB.prepare('SELECT gia_tri FROM bnv_moc WHERE khoa=?').bind(khoaMoc(env, khoa)).first();
   return r ? r.gia_tri : null;
 }
 const datMoc = (env, khoa, v) =>
-  env.DB.prepare('INSERT INTO bnv_moc(khoa, gia_tri) VALUES(?,?) ON CONFLICT(khoa) DO UPDATE SET gia_tri=excluded.gia_tri').bind(khoa, v);
+  env.DB.prepare('INSERT INTO bnv_moc(khoa, gia_tri) VALUES(?,?) ON CONFLICT(khoa) DO UPDATE SET gia_tri=excluded.gia_tri').bind(khoaMoc(env, khoa), v);
 
 async function mayTat(env) {
   if (String(env.SEP_VIEC_NHIP_TIM || '').toLowerCase() === 'tat') return true;
@@ -210,25 +270,26 @@ function linkTin(chatId, mid) {
 function sqlTaoViec(env, v) {
   const ngay = v.ngay || ngayVN(v.giao_luc || nowS());
   const t = nowS();
+  // Mỗi dự án một bộ đếm: số thứ tự trong ngày đếm riêng theo du_an.
   return env.DB.prepare(
-    `INSERT INTO bnv_viec(ma, ngay, stt, tieu_de, noi_dung, nguoi_giao, giao_luc, trang_thai, tin_goc, tao_luc, cap_nhat)
-     SELECT '${TIEN_TO}-'||?1||'-'||printf('%02d', COALESCE(MAX(stt),0)+1), ?1, COALESCE(MAX(stt),0)+1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?8
-     FROM bnv_viec WHERE ngay=?1 RETURNING ma`
-  ).bind(ngay, v.tieu_de, v.noi_dung || '', v.nguoi_giao ?? null, v.giao_luc ?? t, v.trang_thai || 'cho-xac-nhan', v.tin_goc ?? null, t);
+    `INSERT INTO bnv_viec(ma, ngay, stt, tieu_de, noi_dung, nguoi_giao, giao_luc, trang_thai, tin_goc, tao_luc, cap_nhat, du_an)
+     SELECT ?9||'-'||?1||'-'||printf('%02d', COALESCE(MAX(stt),0)+1), ?1, COALESCE(MAX(stt),0)+1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?8, ?9
+     FROM bnv_viec WHERE ngay=?1 AND du_an=?9 RETURNING ma`
+  ).bind(ngay, v.tieu_de, v.noi_dung || '', v.nguoi_giao ?? null, v.giao_luc ?? t, v.trang_thai || 'cho-xac-nhan', v.tin_goc ?? null, t, tienTo(env));
 }
 
 function sqlTin(env, r, upsert = false) {
-  const cot = 'chat_id, message_id, luc, tu_id, tu_ten, la_bot, noi_dung, reply_to, media_group, anh, ma_viec, raw, nhan_luc, can_bao';
-  const maExpr = r.ma_viec_moi ? `(SELECT ma FROM bnv_viec WHERE ngay=?15 ORDER BY stt DESC LIMIT 1)` : '?11';
+  const cot = 'chat_id, message_id, luc, tu_id, tu_ten, la_bot, noi_dung, reply_to, media_group, anh, ma_viec, raw, nhan_luc, can_bao, du_an';
+  const maExpr = r.ma_viec_moi ? `(SELECT ma FROM bnv_viec WHERE ngay=?16 AND du_an=?15 ORDER BY stt DESC LIMIT 1)` : '?11';
   const sau = upsert
     ? ` ON CONFLICT(chat_id, message_id) DO UPDATE SET noi_dung=excluded.noi_dung, ma_viec=excluded.ma_viec,
          can_bao=excluded.can_bao, raw=excluded.raw`
     : ' ON CONFLICT(chat_id, message_id) DO NOTHING';
   const st = env.DB.prepare(
-    `INSERT INTO bnv_tin(${cot}) VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,${maExpr},?12,?13,?14)${sau}`
+    `INSERT INTO bnv_tin(${cot}) VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,${maExpr},?12,?13,?14,?15)${sau}`
   );
   const b = [String(r.chat_id), r.message_id, r.luc, r.tu_id ?? null, r.tu_ten ?? null, r.la_bot ? 1 : 0, r.noi_dung || '',
-    r.reply_to ?? null, r.media_group ?? null, r.anh ?? null, r.ma_viec ?? null, r.raw ?? null, nowS(), r.can_bao ? 1 : 0];
+    r.reply_to ?? null, r.media_group ?? null, r.anh ?? null, r.ma_viec ?? null, r.raw ?? null, nowS(), r.can_bao ? 1 : 0, tienTo(env)];
   if (r.ma_viec_moi) b.push(r.ma_viec_moi);
   return st.bind(...b);
 }
@@ -270,6 +331,50 @@ async function docXinQuyen(req, env) {
 }
 
 // ---------- webhook ----------
+// Tin trong một chủ đề của chat riêng (Bot API 9.3+): câu đáp phải vào đúng chủ đề đó.
+const theoChuDe = (m) => (m.chat?.type === 'private' && m.message_thread_id ? { message_thread_id: m.message_thread_id } : {});
+
+// Tin này của dự án nào. Trả null = bỏ (như hành vi cũ), { tat } = dự án chưa bật (chỉ chủ nhà chat riêng mới được báo),
+// { env, text? } = xử lý bằng env của dự án (text = chữ đã cắt bí danh dự án).
+// Nhóm: oHa theo biến môi trường; nhóm khác tra bnv_du_an. Chat riêng chủ nhà: chủ đề riêng → bí danh sau lệnh
+// («/viec tung …») → tin bot được Reply thuộc dự án nào → mặc định oHa (đúng như trước khi có đa dự án).
+async function chonDuAn(env, m) {
+  const ch = cauHinh(env);
+  const chat = String(m.chat.id);
+  if (m.chat.type !== 'private') {
+    if (ch.noiBo.includes(chat)) return { env };
+    const d = (await dsDuAn(env)).find((x) => x.chat_chinh === chat || x.chat_phu.includes(chat));
+    return d && d.bat ? { env: voiDuAn(env, d) } : null;
+  }
+  if (String(m.from.id) !== ch.chu) return null;
+  const ds_ = await dsDuAn(env);
+  if (!ds_.length) return { env };
+  const ra = (d, text) => (d.bat ? { env: voiDuAn(env, d), ...(text != null ? { text } : {}) } : { tat: d });
+  if (m.message_thread_id) {
+    const d = ds_.find((x) => x.chu_de === Number(m.message_thread_id));
+    if (d) return ra(d);
+  }
+  const text = String(m.text ?? '');
+  const r = /^(\/[A-Za-z]+(?:@\w+)?)\s+#?([A-Za-z]{2,10}):?(?=\s|$)\s*([\s\S]*)$/.exec(text.trim());
+  if (r) {
+    const d = ds_.find((x) => x.bi_danh.includes(r[2].toLowerCase()));
+    if (d) return ra(d, `${r[1]} ${r[3]}`.trim());
+  }
+  const rep = m.reply_to_message;
+  if (rep) {
+    const t = await env.DB.prepare('SELECT du_an FROM bnv_tin WHERE chat_id=? AND message_id=?').bind(chat, rep.message_id).first();
+    let ma = t?.du_an || null;
+    if (!ma) {
+      const chu = String(rep.text ?? rep.caption ?? '');
+      const d = ds_.find((x) => new RegExp(`(?:^|[^A-Za-z])${reEsc(x.ma)}-(?:\\d{8}-\\d{2,3}|CANH)`, 'i').test(chu));
+      ma = d?.ma || null;
+    }
+    const d = ma && ds_.find((x) => x.ma === ma);
+    if (d) return ra(d);
+  }
+  return { env };
+}
+
 async function webhook(req, env, ctx) {
   const sec = env.TG_WEBHOOK_SECRET;
   if (!sec || req.headers.get('x-telegram-bot-api-secret-token') !== sec) return new Response('unauthorized', { status: 401 });
@@ -293,11 +398,20 @@ async function webhook(req, env, ctx) {
     }
     return OK();
   }
-  const ch = cauHinh(env);
-  const chat = String(m.chat.id);
   const rieng = m.chat.type === 'private';
+  let chon;
+  try {
+    chon = await chonDuAn(env, m);
+  } catch (e) {
+    console.log('chọn dự án lỗi', String(e?.stack || e));
+    return new Response('loi kho', { status: 500 });   // Telegram gửi lại
+  }
   // Người lạ chat riêng (kể cả /clitell) → bỏ, không lưu, KHÔNG đáp: không lộ bot có lệnh gì (skill 7d.1, luật 4.6).
-  if (rieng ? String(m.from.id) !== ch.chu : !ch.noiBo.includes(chat)) return OK();   // người lạ / nhóm ngoài danh sách: bỏ, không lưu
+  if (!chon) return OK();   // người lạ / nhóm ngoài danh sách / nhóm của dự án chưa bật: bỏ, không lưu
+  if (chon.tat) return json(traLoi(String(m.chat.id), m.message_id,
+    `ℹ Dự án <b>${esc(chon.tat.ten)}</b> chưa bật trên bot này (đang chờ chuyển giao) — tin chưa ghi.`, theoChuDe(m)));
+  env = chon.env;
+  if (chon.text != null) m.text = chon.text;
   try {
     const t = !upd.edited_message ? thoaiCua(m) : null;
     const coViec = rieng || m.reply_to_message?.from?.is_bot;
@@ -308,7 +422,7 @@ async function webhook(req, env, ctx) {
       return OK();
     }
     const kq = await xuLy(env, ctx, m, { sua: !!upd.edited_message });
-    return kq.traLoi ? json(kq.traLoi) : OK();
+    return kq.traLoi ? json({ ...kq.traLoi, ...theoChuDe(m) }) : OK();
   } catch (e) {
     console.log('webhook lỗi', String(e?.stack || e));
     return new Response('loi kho', { status: 500 });   // Telegram gửi lại
@@ -323,7 +437,7 @@ async function ngheRoiXuLy(env, ctx, m, t) {
     const x = await xuLy(env, ctx, m2, { daNghe: true });
     if (x.traLoi) {
       const { method, ...body } = x.traLoi;
-      await tg(env, method, body);
+      await tg(env, method, { ...body, ...theoChuDe(m) });
     }
   } catch (e) {
     console.log('xử lý thoại lỗi', String(e));
@@ -340,12 +454,13 @@ async function ngheRoiXuLy(env, ctx, m, t) {
 // Lượt nghe nền bị cắt giữa chừng (đã gặp khi thử) thì dòng thô kẹt «đang nghe…» — cron vớt lại, không để im.
 async function ngheLai(env, ctx) {
   const rs = await env.DB.prepare(
-    `SELECT raw FROM bnv_tin WHERE noi_dung LIKE '🎤 (thoại %) đang nghe…' AND nhan_luc < ? AND raw IS NOT NULL ORDER BY id LIMIT 3`
+    `SELECT raw, du_an FROM bnv_tin WHERE noi_dung LIKE '🎤 (thoại %) đang nghe…' AND nhan_luc < ? AND raw IS NOT NULL ORDER BY id LIMIT 3`
   ).bind(nowS() - 120).all();
+  const ds_ = (rs.results || []).some((r) => r.du_an !== TIEN_TO) ? await dsDuAn(env) : [];
   for (const r of rs.results || []) {
     const m = JSON.parse(r.raw);
     const t = thoaiCua(m);
-    if (t) await ngheRoiXuLy(env, ctx, m, t);
+    if (t) await ngheRoiXuLy(voiDuAn(env, ds_.find((d) => d.ma === r.du_an)), ctx, m, t);
   }
 }
 
@@ -417,8 +532,8 @@ async function xuLy(env, ctx, m, opt = {}) {
   const tenChu = esc(ch.tenChu);
   const cliLoi = (chu, loai = 'loi') => run([
     sqlTin(env, coTin(m, noiDung, 0), up),
-    db.prepare('INSERT INTO bnv_clitell(chu, noi_tiep, chat_id, message_id, tao_luc, loai) VALUES(?,?,?,?,?,?) ON CONFLICT DO NOTHING')
-      .bind(chu || '(không kèm lời — xem tin được Reply)', rep ? repChu.slice(0, 2000) : null, chat, m.message_id, t, loai),
+    db.prepare('INSERT INTO bnv_clitell(chu, noi_tiep, chat_id, message_id, tao_luc, loai, du_an) VALUES(?,?,?,?,?,?,?) ON CONFLICT DO NOTHING')
+      .bind(chu || '(không kèm lời — xem tin được Reply)', rep ? repChu.slice(0, 2000) : null, chat, m.message_id, t, loai, tienTo(env)),
   ]);
   const cauCli = async () => ((await canhNghe(env))
     ? '📨 CLI · Đã chuyển vào phiên Claude CLI đang chạy — phiên sẽ đọc trong khoảng 1 phút.'
@@ -498,15 +613,15 @@ async function xuLy(env, ctx, m, opt = {}) {
       }
       case 'xoa': {   // 7f — tối thượng như /viec; Reply /xoa trần chỉ khi tin gắn ĐÚNG một thẻ, không đoán
         let mas = [];
-        if (lenh.du) mas = [...lenh.du.matchAll(/(?:(?:oHa|Task)-)?(\d{8}-\d{2,3})/gi)].map((x) => `${TIEN_TO}-${x[1]}`);
+        if (lenh.du) mas = [...lenh.du.matchAll(maSoRe(env))].map((x) => `${tienTo(env)}-${x[1]}`);
         else if (rep) {
           const r = await db.prepare('SELECT ma_viec FROM bnv_tin WHERE chat_id=? AND message_id=?').bind(chat, rep.message_id).first();
-          const trongChu = [...new Set([...repChu.matchAll(new RegExp(MA_RE.source, 'g'))].map((x) => doiMa(x[0])))];
+          const trongChu = [...new Set([...repChu.matchAll(maRe(env, 'g'))].map((x) => doiMa(env, x[0])))];
           mas = r?.ma_viec ? [r.ma_viec] : trongChu.length === 1 ? trongChu : [];
         }
         if (!mas.length) {
           await ghiThuong(0);
-          return dap('ℹ Không xác định được đúng một thẻ — gõ <b>/xoa oHa-ddmmyyyy-NN</b>, hoặc Reply /xoa vào tin của đúng một thẻ.');
+          return dap('ℹ Không xác định được đúng một thẻ — gõ <b>/xoa ${tienTo(env)}-ddmmyyyy-NN</b>, hoặc Reply /xoa vào tin của đúng một thẻ.');
         }
         const x = await huyThe(env, mas, `chủ nhà /xoa ở ${nguon}`);
         await run([sqlTin(env, coTin(m, noiDung, 0), up), ...x.st]);
@@ -521,15 +636,15 @@ async function xuLy(env, ctx, m, opt = {}) {
         }
         let mas = [];
         if (/^(tatca|tất cả)$/i.test(lenh.du)) mas = await mucCho(env);
-        else if (lenh.du) mas = [...lenh.du.matchAll(/(?:(?:oHa|Task)-)?(\d{8}-\d{2,3})/gi)].map((x) => `${TIEN_TO}-${x[1]}`);
+        else if (lenh.du) mas = [...lenh.du.matchAll(maSoRe(env))].map((x) => `${tienTo(env)}-${x[1]}`);
         else {
           const r = await db.prepare('SELECT ma_viec FROM bnv_tin WHERE chat_id=? AND message_id=?').bind(chat, rep.message_id).first();
-          const ma = r?.ma_viec || maTrongChu(repChu);
+          const ma = r?.ma_viec || maTrongChu(env, repChu);
           if (ma) mas = [ma];
         }
         if (!mas.length) {
           await ghiThuong(0);
-          return dap(lenh.du ? 'ℹ Không thấy mã việc nào trong lệnh — gõ <b>/lam oHa-ddmmyyyy-NN</b> hoặc <b>/lam tatca</b>.' : 'ℹ Không có việc nào đang chờ để cho làm.');
+          return dap(lenh.du ? 'ℹ Không thấy mã việc nào trong lệnh — gõ <b>/lam ${tienTo(env)}-ddmmyyyy-NN</b> hoặc <b>/lam tatca</b>.' : 'ℹ Không có việc nào đang chờ để cho làm.');
         }
         const k = await khoiDong(env, mas, `chủ nhà /lam ở ${nguon}`);
         await run([sqlTin(env, coTin(m, noiDung, 0, { ma_viec: mas.length === 1 ? mas[0] : null }), up), ...k.st]);
@@ -617,7 +732,7 @@ async function xuLy(env, ctx, m, opt = {}) {
     }
     // 7f — chủ Reply «nhầm / huỷ / xoá» vào dòng «✅ Đã nhận» trong 10 phút sau /viec = tự huỷ thẻ vừa tạo.
     if (repChu.startsWith('✅ Đã nhận') && HUY_NHAM_RE.test(text.normalize('NFC').trim())) {
-      const ma = maTrongChu(repChu);
+      const ma = maTrongChu(env, repChu);
       const v = ma && (await db.prepare('SELECT tao_luc FROM bnv_viec WHERE ma=?').bind(ma).first());
       if (v && t - v.tao_luc <= HUY_NHAM_GIAY) {
         const x = await huyThe(env, [ma], `chủ nhà Reply «${text.trim()}» trong 10 phút sau /viec`);
@@ -640,7 +755,7 @@ async function xuLy(env, ctx, m, opt = {}) {
     }
     // 4.1 Reply vào tin bot → tra mã theo message_id trong kho, không có thì đọc mã trong chữ; tin máy không mã → thẻ con canh trưởng.
     const r = await db.prepare('SELECT ma_viec FROM bnv_tin WHERE chat_id=? AND message_id=?').bind(chat, rep.message_id).first();
-    const ma = r?.ma_viec || maTrongChu(repChu) || (await maCanh(env));
+    const ma = r?.ma_viec || maTrongChu(env, repChu) || (await maCanh(env));
     let v = await db.prepare('SELECT ma, trang_thai, nguon, chuyen_sang FROM bnv_viec WHERE ma=?').bind(ma).first();
     // 7e: việc phụ đã gộp → Reply tin cũ của nó vào việc chính.
     if (v?.chuyen_sang) v = (await db.prepare('SELECT ma, trang_thai, nguon, chuyen_sang FROM bnv_viec WHERE ma=?').bind(v.chuyen_sang).first()) || v;
@@ -669,8 +784,8 @@ async function xuLy(env, ctx, m, opt = {}) {
   // 4.10 Tệp rời / chú thích ngay sau tin việc trong chat riêng chủ nhà → gắn thẻ đó.
   if (rieng && (laSep || laChu)) {
     const truoc = await db.prepare(
-      `SELECT ma_viec, anh, nhan_luc FROM bnv_tin WHERE chat_id=? AND tu_id=? AND la_bot=0 AND message_id<? ORDER BY message_id DESC LIMIT 1`
-    ).bind(chat, tuId, m.message_id).first();
+      `SELECT ma_viec, anh, nhan_luc FROM bnv_tin WHERE chat_id=? AND tu_id=? AND la_bot=0 AND message_id<? AND du_an=? ORDER BY message_id DESC LIMIT 1`
+    ).bind(chat, tuId, m.message_id, tienTo(env)).first();
     const gan = truoc?.ma_viec && truoc.ma_viec !== (await maCanh(env));
     const laTepRoi = tep && !text.trim() && gan && t - truoc.nhan_luc <= TEP_ROI_GIAY;
     const laChuThich = !tep && coChu && gan && truoc.anh && t - truoc.nhan_luc <= CHU_THICH_GIAY;
@@ -749,13 +864,13 @@ function dongMay(env, ma, noiDung, canBao = 0) {
 }
 
 async function mucCho(env) {
-  const r = await env.DB.prepare('SELECT ma FROM bnv_viec WHERE trang_thai=? AND nguon IS NULL ORDER BY ngay, stt').bind(TT_CHO).all();
+  const r = await env.DB.prepare('SELECT ma FROM bnv_viec WHERE trang_thai=? AND nguon IS NULL AND du_an=? ORDER BY ngay, stt').bind(TT_CHO, tienTo(env)).all();
   return (r.results || []).map((x) => x.ma);
 }
 async function moKhac(env) {
   const r = await env.DB.prepare(
-    `SELECT ma FROM bnv_viec WHERE trang_thai IN ('cho-sep-tra-loi','sep-da-tra-loi','dang-lam') AND nguon IS NULL ORDER BY ngay, stt`
-  ).all();
+    `SELECT ma FROM bnv_viec WHERE trang_thai IN ('cho-sep-tra-loi','sep-da-tra-loi','dang-lam') AND nguon IS NULL AND du_an=? ORDER BY ngay, stt`
+  ).bind(tienTo(env)).all();
   return (r.results || []).map((x) => x.ma);
 }
 
@@ -766,8 +881,8 @@ function dlDoc(r) {
 }
 const dlCo = async (env, id) => dlDoc(await env.DB.prepare('SELECT * FROM bnv_duyet_luot WHERE id=?').bind(Number(id)).first());
 const dlMo = async (env) => dlDoc(await env.DB.prepare(
-  `SELECT * FROM bnv_duyet_luot WHERE trang_thai IN (${DL_MO.map(() => '?').join(',')}) ORDER BY id DESC LIMIT 1`
-).bind(...DL_MO).first());
+  `SELECT * FROM bnv_duyet_luot WHERE trang_thai IN (${DL_MO.map(() => '?').join(',')}) AND du_an=? ORDER BY id DESC LIMIT 1`
+).bind(...DL_MO, tienTo(env)).first());
 function dlDoi(env, id, o) {
   const k = Object.keys(o);
   const v = k.map((x) => (o[x] !== null && typeof o[x] === 'object' ? JSON.stringify(o[x]) : o[x]));
@@ -787,8 +902,8 @@ async function dlYeuCau(env, chat, mid, rieng, tat) {
   // id lượt = MAX+1 tính trước để câu đáp mang đúng số; UNIQUE id chặn hai lượt cùng số nếu hai tin tới cùng lúc.
   const r = await env.DB.prepare('SELECT COALESCE(MAX(id),0)+1 AS id FROM bnv_duyet_luot').first();
   const id = r.id;
-  const st = [env.DB.prepare('INSERT INTO bnv_duyet_luot (id, trang_thai, yeu_cau_chat, yeu_cau_mid, tao_luc, cap_nhat) VALUES (?,?,?,?,?,?)')
-    .bind(id, 'cho-may', chat, mid, nowS(), nowS())];
+  const st = [env.DB.prepare('INSERT INTO bnv_duyet_luot (id, trang_thai, yeu_cau_chat, yeu_cau_mid, tao_luc, cap_nhat, du_an) VALUES (?,?,?,?,?,?,?)')
+    .bind(id, 'cho-may', chat, mid, nowS(), nowS(), tienTo(env))];
   if (tat)   // trong nhóm sếp đọc được: không nói «máy tắt», chỉ nói đang nhiều việc
     return { st, text: `📝 Đã ghi yêu cầu duyệt lượt <b>DL${id}</b> (${n} việc đang chờ). `
       + (rieng ? 'Máy nhà đang tắt — mở máy là duyệt ngay, yêu cầu không mất.' : 'Hệ thống đang nhiều việc, sẽ duyệt ngay khi rảnh — yêu cầu không mất.') };
@@ -879,8 +994,8 @@ async function theTheo(env, tts) {
   const r = await env.DB.prepare(
     `SELECT v.ma, v.tieu_de, v.noi_dung, v.cap_nhat, v.trang_thai,
        (SELECT b.noi_dung FROM bnv_tin b WHERE b.ma_viec=v.ma AND b.la_bot=1 AND b.chat_id!='may' AND ${KHONG_DANH_SACH} ORDER BY b.id DESC LIMIT 1) AS bot_cuoi
-     FROM bnv_viec v WHERE v.trang_thai IN (${tts.map(() => '?').join(',')}) AND v.nguon IS NULL ORDER BY v.cap_nhat`
-  ).bind(...tts).all();
+     FROM bnv_viec v WHERE v.trang_thai IN (${tts.map(() => '?').join(',')}) AND v.nguon IS NULL AND v.du_an=? ORDER BY v.cap_nhat`
+  ).bind(...tts, tienTo(env)).all();
   return r.results || [];
 }
 
@@ -902,7 +1017,7 @@ async function guiDanhSach(env, loai, chat, mid) {
   if (tu === 0) {
     let stt = 0;
     const khoi = nhom.map(([ten, a]) => {
-      if (a === null) return `<b>${esc(ten)}</b>: bộ trạng thái của oHa chưa có cột này`;
+      if (a === null) return `<b>${esc(ten)}</b>: bộ trạng thái của ${esc(tienTo(env))} chưa có cột này`;
       const dong = a.map((v) => `#${++stt} ${v.ma} — ${esc(trich(v.tieu_de, 50))} (từ ${ngayGioVN(v.cap_nhat)})`);
       return `<b>${esc(ten)} (${a.length})</b>` + (dong.length ? '\n' + (dong.length > 30 ? [...dong.slice(0, 30), `…và ${dong.length - 30} thẻ nữa`] : dong).join('\n') : '');
     });
@@ -931,9 +1046,10 @@ async function guiDanhSach(env, loai, chat, mid) {
 }
 
 // Sổ dồn /lamdi = mọi lời NGƯỜI chưa mang cờ đã-đọc trên thẻ đang mở (thẻ còn chờ chủ nhà cho làm thì để /lam · /khoidong lo).
-const SO_DON = `FROM bnv_tin t JOIN bnv_viec v ON v.ma=t.ma_viec
+// Tiền tố dự án đã lọc chỉ chữ cái (dsDuAn) nên ghép thẳng vào chuỗi được.
+const soDon = (env) => `FROM bnv_tin t JOIN bnv_viec v ON v.ma=t.ma_viec
   WHERE t.la_bot=0 AND t.tu_id IS NOT NULL AND t.claude_doc_luc IS NULL AND v.trang_thai NOT IN ('xong','huy','da-chuyen','${TT_CHO}')
-    AND (t.noi_dung NOT LIKE '/%' OR t.noi_dung LIKE '/viec%')`;
+    AND (t.noi_dung NOT LIKE '/%' OR t.noi_dung LIKE '/viec%') AND v.du_an='${tienTo(env)}'`;
 
 // /lamdi (chủ gõ) · lịch gom (tuLich). Gỡ cờ /pause → một dòng CLITELL `tong-hop` (chỉ khi con canh đang nghe; bản cũ chưa
 // nhận thì thay) + bật cờ chưa đọc cho các lời đó để `moi` in ra có id → gửi chủ nhà mỗi thẻ một tin.
@@ -946,7 +1062,7 @@ async function lamDi(env, o = {}) {
   if (!o.tuLich && dung) st.push(datMoc(env, 'tam_dung', 0));
   const go = !o.tuLich && dung ? ' Đã gỡ tạm dừng.' : '';
   const xong = async (text) => { if (st.length) await env.DB.batch(st); return { text }; };
-  const rs = (await env.DB.prepare(`SELECT t.id, t.ma_viec, t.tu_ten, t.noi_dung, v.tieu_de ${SO_DON} ORDER BY t.id`).all()).results || [];
+  const rs = (await env.DB.prepare(`SELECT t.id, t.ma_viec, t.tu_ten, t.noi_dung, v.tieu_de ${soDon(env)} ORDER BY t.id`).all()).results || [];
   if (!rs.length) return xong('📨 CLI · Không có trao đổi nào chưa làm trên các thẻ — sổ trống.' + go);
   const maxId = rs[rs.length - 1].id;
   // Lịch chỉ gom khi có lời mới từ lượt gom trước — không thì mỗi 2 giờ lại gửi chủ nhà cùng mấy tin thẻ cũ.
@@ -955,15 +1071,15 @@ async function lamDi(env, o = {}) {
   for (const r of rs) (theo[r.ma_viec] ||= { tieu_de: r.tieu_de, loi: [] }).loi.push(r);
   const mas = Object.keys(theo);
   if (!(await canhNghe(env))) return xong(`📨 CLI · Sổ giữ nguyên (${rs.length} lời / ${mas.length} thẻ), CLI không nghe — chưa có phiên Claude CLI nào chạy con canh; mở phiên rồi gõ lại /lamdi.` + go);
-  if (o.tuLich && (await env.DB.prepare(`SELECT 1 FROM bnv_clitell WHERE loai='tong-hop' AND nhan_luc IS NULL LIMIT 1`).first()))
+  if (o.tuLich && (await env.DB.prepare(`SELECT 1 FROM bnv_clitell WHERE loai='tong-hop' AND nhan_luc IS NULL AND du_an=? LIMIT 1`).bind(tienTo(env)).first()))
     return { text: 'bỏ lượt: còn bản sổ dồn chưa nhận' };
   const ids = rs.map((r) => r.id);
   const chu = `/lamdi — SỔ DỒN: ${rs.length} lời chưa làm trên ${mas.length} thẻ (${mas.join(', ')}). Làm đúng .claude/commands/check-viec-sep.md `
     + `mục «Sổ dồn»: chạy moi lấy id rồi xử TỪNG mục (id kho: ${ids.slice(0, 60).join(',')}${ids.length > 60 ? ',…' : ''}).`;
-  st.push(env.DB.prepare(`DELETE FROM bnv_clitell WHERE loai='tong-hop' AND nhan_luc IS NULL`));
-  st.push(env.DB.prepare('INSERT INTO bnv_clitell(chu, chat_id, message_id, tao_luc, loai) VALUES(?,?,?,?,?)')
-    .bind(chu, String(o.chat || 'may'), o.mid || -(Date.now() * 1000 + Math.floor(Math.random() * 1000)), t, 'tong-hop'));
-  st.push(env.DB.prepare(`UPDATE bnv_tin SET can_bao=1 WHERE id IN (SELECT t.id ${SO_DON} AND t.id<=?)`).bind(maxId));
+  st.push(env.DB.prepare(`DELETE FROM bnv_clitell WHERE loai='tong-hop' AND nhan_luc IS NULL AND du_an=?`).bind(tienTo(env)));
+  st.push(env.DB.prepare('INSERT INTO bnv_clitell(chu, chat_id, message_id, tao_luc, loai, du_an) VALUES(?,?,?,?,?,?)')
+    .bind(chu, String(o.chat || 'may'), o.mid || -(Date.now() * 1000 + Math.floor(Math.random() * 1000)), t, 'tong-hop', tienTo(env)));
+  st.push(env.DB.prepare(`UPDATE bnv_tin SET can_bao=1 WHERE id IN (SELECT t.id ${soDon(env)} AND t.id<=?)`).bind(maxId));
   st.push(datMoc(env, 'lamdi_moc', maxId));
   await env.DB.batch(st);
   const tenChu = esc(ch.tenChu);
@@ -996,6 +1112,9 @@ function phamViMenu(env) {
   const ch = cauHinh(env);
   const L = dsLenh(ch.tenChu);
   const lay = (f) => L.filter(f).map((l) => ({ command: l.ten, description: l.mo_ta.slice(0, 256) }));
+  // Dự án khác dùng chung menu mặc định / mọi nhóm / chat riêng với oHa — chỉ khai thêm phạm vi chủ nhà trong nhóm chính của nó.
+  if (!laGoc(env))
+    return ch.chatSep ? [['chủ nhà trong nhóm chính', { type: 'chat_member', chat_id: Number(ch.chatSep), user_id: Number(ch.chu) }, lay((l) => l.ai !== 'chu' || l.noi === 'chinh')]] : [];
   return [
     ['mặc định', { type: 'default' }, lay((l) => l.ai === 'moi')],
     ['mọi nhóm', { type: 'all_group_chats' }, lay((l) => l.ai !== 'chu')],
@@ -1034,13 +1153,13 @@ async function dlSoat(env, pa) {
   const mang = (x) => (Array.isArray(x) ? x : []);
   for (const [nhom, truong] of [['lam', 'du_kien'], ['bo', 'vi_sao'], ['de_sau', 'vi_sao']])
     for (const x of mang(pa[nhom])) {
-      const ma = doiMa(s(x?.ma)); const chu = s(x?.[truong]);
+      const ma = doiMa(env, s(x?.ma)); const chu = s(x?.[truong]);
       if (nhom === 'lam' && !chu) loi.push(`${ma}: thiếu dòng dự kiến làm gì (du_kien)`);
       them(ma, nhom);
       chuan[nhom].push({ ma, [truong]: chu });
     }
   for (const x of mang(pa.hoi)) {
-    const ma = doiMa(s(x?.ma)); const ai = s(x?.ai); const cau = s(x?.cau);
+    const ma = doiMa(env, s(x?.ma)); const ai = s(x?.ai); const cau = s(x?.cau);
     if (!['sep', 'chu-nha'].includes(ai)) loi.push(`${ma}: hỏi ai phải là sep | chu-nha`);
     if (!HOI_RE.test(cau)) loi.push(`${ma}: câu hỏi phải đúng khuôn «1. …? 1A … · 1B …»`);
     them(ma, 'hoi');
@@ -1048,8 +1167,8 @@ async function dlSoat(env, pa) {
   }
   const xep = (ma) => (dem[ma] || []).filter((n) => ['lam', 'hoi', 'de_sau'].includes(n));
   for (const x of mang(pa.gop)) {
-    const chinh = doiMa(s(x?.chinh));
-    const phu = [...new Set(mang(x?.phu).map((p) => doiMa(s(p))).filter(Boolean))];
+    const chinh = doiMa(env, s(x?.chinh));
+    const phu = [...new Set(mang(x?.phu).map((p) => doiMa(env, s(p))).filter(Boolean))];
     if (!phu.length) loi.push(`gộp vào ${chinh}: thiếu việc phụ`);
     if (phu.includes(chinh)) loi.push(`gộp: ${chinh} vừa là việc chính vừa là việc phụ`);
     for (const p of phu) them(p, 'gop');
@@ -1207,10 +1326,10 @@ async function quetNhac(env, thu = false) {
   const rs = await env.DB.prepare(
     `SELECT t.id, t.ma_viec, t.tu_ten, t.noi_dung FROM bnv_tin t JOIN bnv_viec v ON v.ma=t.ma_viec
      WHERE t.la_bot=0 AND t.tu_id IS NOT NULL AND t.claude_doc_luc IS NULL AND t.nhac_luc IS NULL
-       AND t.nhan_luc < ? AND v.trang_thai NOT IN ('xong','huy','da-chuyen')
+       AND t.nhan_luc < ? AND v.trang_thai NOT IN ('xong','huy','da-chuyen') AND v.du_an=?
        AND NOT EXISTS (SELECT 1 FROM bnv_tin b WHERE b.ma_viec=t.ma_viec AND b.la_bot=1 AND b.chat_id!='may' AND b.luc > t.luc AND ${KHONG_DANH_SACH})
      ORDER BY t.id LIMIT 50`
-  ).bind(t - NGUONG_NHAC_GIAY).all();
+  ).bind(t - NGUONG_NHAC_GIAY, tienTo(env)).all();
   const hang = rs.results || [];
   if (thu || !hang.length) return { ok: true, thu, so: hang.length, hang };
   const ids = hang.map((h) => h.id);
@@ -1239,8 +1358,12 @@ async function quetNhac(env, thu = false) {
 // ---------- lối máy ----------
 async function guiTin(env, b) {
   const ch = cauHinh(env);
+  // Dự án chưa bật (chờ lượt chuyển giao từ bot cũ) → máy nhà chưa được nói vào nhóm của nó, kẻo hai bot cùng nói.
+  if (env.DA && !env.DA.bat && !b.thu) return json({ ok: false, loi: `dự án ${env.DA.ma} chưa bật trên bot — chưa gửi tin` }, 409);
   let chatId = ch.chatSep;
-  if (b.rieng) chatId = ch.chu;
+  // Dự án «tin riêng về nhóm» (TUNG — anh Thành 20/10: mọi chuyện của thẻ nằm trong nhóm để lưu một chỗ): --rieng vẫn vào
+  // nhóm; thật cần hỏi riêng anh thì rieng_that.
+  if (b.rieng && (b.rieng_that || !env.DA?.rieng_vao_nhom || !ch.chatSep)) chatId = ch.chu;
   else if (b.chat_id) {
     chatId = String(b.chat_id);
     if (!ch.noiBo.includes(chatId) && !ch.ngoai.includes(chatId) && chatId !== ch.chu) return json({ ok: false, loi: 'nhóm không nằm trong danh sách' }, 422);
@@ -1249,7 +1372,7 @@ async function guiTin(env, b) {
   const anh = Array.isArray(b.anh) ? b.anh : [];
   // Tài liệu (PDF hướng dẫn…) gửi bằng sendDocument; chữ tin thành chú thích tệp, Reply vào tệp vẫn về đúng thẻ.
   const tep = b.tep && typeof b.tep.b64 === 'string' ? { ten: String(b.tep.ten || 'tai-lieu.pdf').replace(/[\\/\r\n]/g, '_').slice(0, 120), b64: b.tep.b64 } : null;
-  let ma = b.ma ? doiMa(b.ma) : null;
+  let ma = b.ma ? doiMa(env, b.ma) : null;
   if (ma && !b.thu) {
     const v = await env.DB.prepare('SELECT ma FROM bnv_viec WHERE ma=?').bind(ma).first();
     if (!v) return json({ ok: false, loi: `không có thẻ ${ma}` }, 404);
@@ -1263,9 +1386,9 @@ async function guiTin(env, b) {
   })();
   // Đo khuôn mục 5 TRƯỚC khi cấp mã / gửi.
   const loi = [];
-  const dong = boThe(html.replace('{MA}', TIEN_TO + '-00000000-00')).split('\n');
+  const dong = boThe(html.replace('{MA}', tienTo(env) + '-00000000-00')).split('\n');
   const dau = dong[0].trim();
-  if (!new RegExp(`^\\[${TIEN_TO}-(\\d{8}-\\d{2,3}|CANH)\\]\\s+\\S`).test(dau)) loi.push(`dòng đầu phải là «[${TIEN_TO}-…] tiêu đề»`);
+  if (!new RegExp(`^\\[${reEsc(tienTo(env))}-(\\d{8}-\\d{2,3}|CANH)\\]\\s+\\S`).test(dau)) loi.push(`dòng đầu phải là «[${tienTo(env)}-…] tiêu đề»`);
   if (dau.replace(/^\[[^\]]+\]\s*/, '').length > 70) loi.push('tiêu đề quá 70 ký tự');
   if (!/^<b>/.test(html.trim())) loi.push('dòng đầu phải in đậm');
   const than = dong.slice(1).filter((x) => x.trim());
@@ -1343,6 +1466,13 @@ async function luuUpdateCu(env, u) {
 async function api(req, env) {
   const tok = env.SEP_VIEC_TOKEN;
   if (!tok || req.headers.get('x-sep-viec-token') !== tok) return json({ ok: false, loi: 'unauthorized' }, 401);
+  // Máy nhà của dự án khác gửi kèm X-Du-An (sep_viec.py đọc SEP_VIEC_DU_AN); thiếu = oHa như trước.
+  const maDa = String(req.headers.get('x-du-an') || '').trim();
+  if (maDa && maDa !== TIEN_TO) {
+    const d = (await dsDuAn(env)).find((x) => x.ma === maDa);
+    if (!d) return json({ ok: false, loi: `dự án lạ: ${maDa}` }, 404);
+    env = voiDuAn(env, d);
+  }
   const db = env.DB;
   const t = nowS();
   const nhip = [];
@@ -1359,20 +1489,20 @@ async function api(req, env) {
 
   switch (act) {
     case 'moc': {
-      const r = await db.prepare('SELECT MAX(id) AS moc FROM bnv_tin').first();
+      const r = await db.prepare('SELECT MAX(id) AS moc FROM bnv_tin WHERE du_an=?').bind(tienTo(env)).first();
       return json({ ok: true, moc: r?.moc || 0 });
     }
     case 'tat-ca': {
-      const v = await db.prepare('SELECT * FROM bnv_viec ORDER BY ngay DESC, stt').all();
-      const ti = await db.prepare('SELECT id, chat_id, message_id, luc, tu_ten, la_bot, noi_dung, reply_to, anh, ma_viec, sua_luc, ban_truoc, can_bao, claude_doc_luc FROM bnv_tin WHERE ma_viec IS NOT NULL ORDER BY id').all();
+      const v = await db.prepare('SELECT * FROM bnv_viec WHERE du_an=? ORDER BY ngay DESC, stt').bind(tienTo(env)).all();
+      const ti = await db.prepare('SELECT id, chat_id, message_id, luc, tu_ten, la_bot, noi_dung, reply_to, anh, ma_viec, sua_luc, ban_truoc, can_bao, claude_doc_luc FROM bnv_tin WHERE ma_viec IN (SELECT ma FROM bnv_viec WHERE du_an=?) ORDER BY id').bind(tienTo(env)).all();
       return json({ ok: true, viec: v.results, tin: ti.results });
     }
     case 'chua-doc': {
       const r = await db.prepare(
         `SELECT t.id, t.chat_id, t.message_id, t.luc, t.tu_ten, t.noi_dung, t.reply_to, t.anh, t.ma_viec, t.sua_luc, t.ban_truoc,
                 v.tieu_de, v.trang_thai
-         FROM bnv_tin t LEFT JOIN bnv_viec v ON v.ma=t.ma_viec WHERE t.can_bao=1 AND t.claude_doc_luc IS NULL ORDER BY t.id`
-      ).all();
+         FROM bnv_tin t LEFT JOIN bnv_viec v ON v.ma=t.ma_viec WHERE t.can_bao=1 AND t.claude_doc_luc IS NULL AND t.du_an=? ORDER BY t.id`
+      ).bind(tienTo(env)).all();
       const dl = await dlMo(env);
       const duyet_luot = dl && DL_CAN_MAY.includes(dl.trang_thai)
         ? { id: dl.id, trang_thai: dl.trang_thai, ban: dl.ban, cap_nhat: dl.cap_nhat, gop_y: dl.gop_y } : null;
@@ -1403,7 +1533,7 @@ async function api(req, env) {
     case 'ap-hoi': {
       const d = await dlCo(env, b.id);
       if (!d || d.trang_thai !== 'dang-ap') return json({ ok: false, loi: 'lượt không ở «dang-ap»' }, 409);
-      const ma = doiMa(b.ma);
+      const ma = doiMa(env, b.ma);
       if (!(d.phuong_an?.hoi || []).some((x) => x.ma === ma)) return json({ ok: false, loi: `${ma} không nằm trong mục hỏi của lượt` }, 400);
       const kq = d.ket_qua;
       if (!kq.hoi_da_gui.includes(ma)) kq.hoi_da_gui.push(ma);
@@ -1423,12 +1553,12 @@ async function api(req, env) {
       const ma = String(b.ma || '');
       let ngay = null;
       const st = [];
-      const day = /^(?:(?:oHa|Task)-)?(\d{8})(?:-(\d{2,3}))?$/i.exec(ma);
-      if (ma && !day) return json({ ok: false, loi: `mã sai khuôn ${TIEN_TO}-ddmmyyyy[-NN]` }, 422);
+      const day = new RegExp(`^(?:(?:${nguonTien(env)})-)?(\\d{8})(?:-(\\d{2,3}))?$`, 'i').exec(ma);
+      if (ma && !day) return json({ ok: false, loi: `mã sai khuôn ${tienTo(env)}-ddmmyyyy[-NN]` }, 422);
       if (day?.[2]) {
-        if (await db.prepare('SELECT 1 FROM bnv_viec WHERE ma=?').bind(`${TIEN_TO}-${day[1]}-${day[2]}`).first()) return json({ ok: false, loi: 'mã đã có' }, 409);
-        st.push(db.prepare(`INSERT INTO bnv_viec(ma, ngay, stt, tieu_de, noi_dung, nguoi_giao, giao_luc, trang_thai, tin_goc, tao_luc, cap_nhat) VALUES(?,?,?,?,?,?,?,?,?,?,?) RETURNING ma`)
-          .bind(`${TIEN_TO}-${day[1]}-${day[2]}`, day[1], Number(day[2]), b.tieu_de, b.noi_dung || '', b.nguoi_giao ?? null, b.giao_luc ?? t, b.trang_thai || 'cho-xac-nhan', b.tin_goc ?? null, t, t));
+        if (await db.prepare('SELECT 1 FROM bnv_viec WHERE ma=?').bind(`${tienTo(env)}-${day[1]}-${day[2]}`).first()) return json({ ok: false, loi: 'mã đã có' }, 409);
+        st.push(db.prepare(`INSERT INTO bnv_viec(ma, ngay, stt, tieu_de, noi_dung, nguoi_giao, giao_luc, trang_thai, tin_goc, tao_luc, cap_nhat, du_an) VALUES(?,?,?,?,?,?,?,?,?,?,?,?) RETURNING ma`)
+          .bind(`${tienTo(env)}-${day[1]}-${day[2]}`, day[1], Number(day[2]), b.tieu_de, b.noi_dung || '', b.nguoi_giao ?? null, b.giao_luc ?? t, b.trang_thai || 'cho-xac-nhan', b.tin_goc ?? null, t, t, tienTo(env)));
       } else {
         ngay = day ? day[1] : null;
         st.push(sqlTaoViec(env, { ngay, tieu_de: b.tieu_de, noi_dung: b.noi_dung, nguoi_giao: b.nguoi_giao, giao_luc: b.giao_luc ?? t, tin_goc: b.tin_goc, trang_thai: b.trang_thai }));
@@ -1443,7 +1573,7 @@ async function api(req, env) {
     }
     case 'gan-tin': {
       if (!b.ma || !idsHopLe(b.message_ids)) return json({ ok: false, loi: 'thiếu ma / message_ids' }, 400);
-      b.ma = doiMa(b.ma);
+      b.ma = doiMa(env, b.ma);
       const chat = String(b.chat_id || cauHinh(env).chatSep);
       const r = await db.prepare(`UPDATE bnv_tin SET ma_viec=? WHERE chat_id=? AND message_id IN (${trong(b.message_ids)})`).bind(b.ma, chat, ...b.message_ids.map(Number)).run();
       return json({ ok: true, so: r.meta.changes });
@@ -1451,7 +1581,7 @@ async function api(req, env) {
     case 'trang-thai':
     case 'ghi': {
       if (!b.ma) return json({ ok: false, loi: 'thiếu ma' }, 400);
-      b.ma = doiMa(b.ma);
+      b.ma = doiMa(env, b.ma);
       const v = await db.prepare('SELECT ma, nguon FROM bnv_viec WHERE ma=?').bind(b.ma).first();
       if (!v) return json({ ok: false, loi: 'không có thẻ' }, 404);
       const tt = b.trang_thai;
@@ -1476,13 +1606,13 @@ async function api(req, env) {
     }
     case 'xoa': {
       const tin = Array.isArray(b.tin) ? b.tin.map(Number) : [];
-      const ma = Array.isArray(b.ma) ? b.ma.map(doiMa) : [];
+      const ma = Array.isArray(b.ma) ? b.ma.map((x) => doiMa(env, x)) : [];
       const cli = Array.isArray(b.clitell) ? b.clitell.map(Number) : [];
       const dlx = Array.isArray(b.dl) ? b.dl.map(Number) : [];
       if (!tin.length && !ma.length && !cli.length && !dlx.length) return json({ ok: false, loi: 'nêu đích danh tin / ma / clitell / dl' }, 400);
       if (ma.includes(await maCanh(env))) return json({ ok: false, loi: 'không xoá thẻ con canh trưởng' }, 422);
       const st = [];
-      if (tin.length) st.push(db.prepare(`DELETE FROM bnv_tin WHERE message_id IN (${trong(tin)})`).bind(...tin));
+      if (tin.length) st.push(db.prepare(`DELETE FROM bnv_tin WHERE message_id IN (${trong(tin)}) AND du_an=?`).bind(...tin, tienTo(env)));
       if (ma.length) {
         st.push(db.prepare(`DELETE FROM bnv_tin WHERE chat_id='may' AND ma_viec IN (${trong(ma)})`).bind(...ma));
         st.push(db.prepare(`DELETE FROM bnv_viec WHERE ma IN (${trong(ma)})`).bind(...ma));
@@ -1496,7 +1626,7 @@ async function api(req, env) {
       return json({ ok: true, so: r.map((x) => x.meta.changes) });
     }
     case 'clitell': {
-      const r = await db.prepare('SELECT id, tao_luc AS luc, chu, noi_tiep, loai FROM bnv_clitell WHERE nhan_luc IS NULL ORDER BY id').all();
+      const r = await db.prepare('SELECT id, tao_luc AS luc, chu, noi_tiep, loai FROM bnv_clitell WHERE nhan_luc IS NULL AND du_an=? ORDER BY id').bind(tienTo(env)).all();
       return json({ ok: true, loi_cli: r.results, tam_dung: !!(await tamDung(env)) });
     }
     case 'clitell-da-nhan': {
@@ -1559,8 +1689,13 @@ export default {
     return new Response('oha-bot', { status: 200 });
   },
   async scheduled(ev, env, ctx) {
-    ctx.waitUntil(lich(env, Math.floor((ev?.scheduledTime || Date.now()) / 1000)).catch((e) => console.log('lịch lỗi', String(e))));
-    ctx.waitUntil(quetNhac(env).catch((e) => console.log('quét nhắc lỗi', String(e))));
+    const ts = Math.floor((ev?.scheduledTime || Date.now()) / 1000);
+    // Mỗi dự án đang bật chạy lịch + quét nhắc riêng; lỗi đọc bảng dự án thì vẫn chạy oHa như cũ.
+    const ds_ = await cacEnv(env).catch((e) => { console.log('đọc dự án lỗi', String(e)); return [env]; });
+    for (const e of ds_) {
+      ctx.waitUntil(lich(e, ts).catch((x) => console.log('lịch lỗi', tienTo(e), String(x))));
+      ctx.waitUntil(quetNhac(e).catch((x) => console.log('quét nhắc lỗi', tienTo(e), String(x))));
+    }
     ctx.waitUntil(ngheLai(env, ctx).catch((e) => console.log('nghe lại lỗi', String(e))));
   },
 };
