@@ -1378,7 +1378,8 @@ async function guiTin(env, b) {
     if (!v) return json({ ok: false, loi: `không có thẻ ${ma}` }, 404);
   }
   // 7e: gửi riêng chủ nhà một việc của NHÓM chỉ được khi câu đó nằm trong mục «hỏi chủ nhà» của lượt duyệt đang áp.
-  if (ma && b.rieng && (await viecTrongNhom(env, ma)) && !(b.duyet_luot && (await dlChoHoiRieng(env, b.duyet_luot, ma, !!b.thu))))
+  // Dự án «tin riêng về nhóm» (TUNG): rieng_that là lối thoát có chủ đích anh Thành chốt 20/10 — giữ đúng như bot ChicHub cũ.
+  if (ma && b.rieng && !(b.rieng_that && env.DA?.rieng_vao_nhom) && (await viecTrongNhom(env, ma)) &&!(b.duyet_luot && (await dlChoHoiRieng(env, b.duyet_luot, ma, !!b.thu))))
     return json({ ok: false, loi: `${ma} là việc của nhóm — hỏi chủ nhà riêng chỉ qua lượt duyệt (/lam), hoặc hỏi ngay trong nhóm` }, 409);
   const html = b.html ? String(b.chu) : (() => {
     const d = String(b.chu).split('\n');

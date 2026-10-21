@@ -25,13 +25,18 @@ VN = timezone(timedelta(hours=7))
 TRANG_THAI = ["cho-xac-nhan", "cho-sep-tra-loi", "sep-da-tra-loi", "dang-lam", "xong", "huy", "da-chuyen"]
 TT_DONG = ("xong", "huy", "da-chuyen")
 # Founder chốt 12/10/2026: mã việc dự án là oHa-ddmmyyyy-NN. Mã cũ Task-… gõ vào vẫn nhận, CLI quy đổi.
-TIEN_TO = "oHa"
+# Đa dự án (W47 21/10/2026, Task-21102026-08 ChicHub): cùng một bot, dự án khác đặt SEP_VIEC_DU_AN=TUNG trong .env
+# → mã TUNG-ddmmyyyy-NN, mọi lệnh gửi kèm header X-Du-An để máy chủ đọc đúng sổ của dự án đó.
+TIEN_TO_GOC = "oHa"
+TIEN_TO = TIEN_TO_GOC  # đặt lại sau khi đọc .env (dưới)
 
 
 def doi_ma(s):
     if not s:
         return s
     s = s.strip()
+    if TIEN_TO != TIEN_TO_GOC:
+        return re.sub(r"^" + re.escape(TIEN_TO) + "-", TIEN_TO + "-", s, flags=re.I)
     return re.sub(r"^(?:task|oha)-", TIEN_TO + "-", s, flags=re.I)
 
 
@@ -44,13 +49,16 @@ def doc_env():
             if d and not d.startswith("#") and "=" in d:
                 k, v = d.split("=", 1)
                 e[k.strip()] = v.strip().strip('"').strip("'")
-    for k in list(e) + ["SEP_VIEC_URL"]:
+    for k in list(e) + ["SEP_VIEC_URL", "SEP_VIEC_DU_AN"]:
         if os.environ.get(k):
             e[k] = os.environ[k]
     return e
 
 
 ENV = doc_env()
+TIEN_TO = (ENV.get("SEP_VIEC_DU_AN") or TIEN_TO_GOC).strip()
+if not re.fullmatch(r"[A-Za-z]{2,10}", TIEN_TO):
+    sys.exit(f"SEP_VIEC_DU_AN lạ: {TIEN_TO!r} — chỉ chữ cái, 2–10 ký tự")
 # Ca thử trỏ TG_API_BASE về máy Telegram giả → không gọi Telegram thật.
 TG_GOC = (os.environ.get("TG_API_BASE") or ENV.get("TG_API_BASE") or "https://api.telegram.org").rstrip("/")
 
@@ -68,6 +76,8 @@ def goi(act, body=None, canh=False):
          "Content-Type": "application/json"}
     if canh:
         h["X-Canh"] = "1"
+    if TIEN_TO != TIEN_TO_GOC:
+        h["X-Du-An"] = TIEN_TO
     data = json.dumps(body, ensure_ascii=False).encode() if body is not None else None
     req = urllib.request.Request(url, data=data, headers=h, method="POST" if data is not None else "GET")
     try:
@@ -337,6 +347,9 @@ def cmd_gui(a):
             body[k] = v
     if a.rieng:
         body["rieng"] = True
+    if getattr(a, "rieng_that", False):
+        body["rieng"] = True
+        body["rieng_that"] = True
     if tep:
         body["tep"] = tep
     r = goi("gui", body)
@@ -387,7 +400,7 @@ def cmd_keo(a):
     theo = {}
     for t in r["tin"]:
         theo.setdefault(t["ma_viec"], []).append(t)
-    dong = ["# Sổ việc sếp (bot nhận việc oHa) — tự sinh bởi `sep_viec.py keo`, đừng sửa tay", "",
+    dong = [f"# Sổ việc sếp (bot nhận việc {TIEN_TO}) — tự sinh bởi `sep_viec.py keo`, đừng sửa tay", "",
             f"Kéo lúc {datetime.now(VN).strftime('%d/%m/%Y %H:%M')} (giờ VN).", ""]
     con = 0
     for v in r["viec"]:
@@ -804,6 +817,8 @@ def main():
     x.add_argument("--nhom")
     x.add_argument("--reply", type=int)
     x.add_argument("--rieng", action="store_true")
+    x.add_argument("--rieng-that", action="store_true",
+                   help="dự án «tin riêng về nhóm» (TUNG): thật cần hỏi riêng chủ nhà thì dùng cờ này thay --rieng")
     x.add_argument("--thu", action="store_true")
     x.set_defaults(f=cmd_gui)
     x = s.add_parser("tao-viec")

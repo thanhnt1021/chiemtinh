@@ -3,12 +3,29 @@
 # Luật markdown = xác suất → chuyển thành cổng (skill bot-nhan-viec mục 7). Một tệp, ba chế độ. Fail-open.
 import json, os, re, sys
 
+
+def tien_to_du_an():
+    """Đa dự án (W47 21/10/2026): tiền tố mã đọc từ SEP_VIEC_DU_AN trong .env của dự án; thiếu = oHa (mã cũ Task-… vẫn tính)."""
+    goc = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    t = os.environ.get("SEP_VIEC_DU_AN") or ""
+    try:
+        for d in open(os.path.join(goc, ".env"), encoding="utf-8"):
+            if not t and d.strip().startswith("SEP_VIEC_DU_AN="):
+                t = d.split("=", 1)[1].strip().strip('"').strip("'")
+    except Exception:
+        pass
+    return t if re.fullmatch(r"[A-Za-z]{2,10}", t or "") else "oHa"
+
+
+TIEN_TO = tien_to_du_an()
+NGUON_MA = "oHa|Task" if TIEN_TO == "oHa" else re.escape(TIEN_TO)
+
 # Mã dự án oHa-…; mã cũ Task-… chủ gõ lại vẫn tính, quy đổi sang oHa- (thẻ trong kho đã đổi tên).
-MA = re.compile(r"(?:oHa|Task)-(?:\d{8}-\d{2,3}|CANH)")
+MA = re.compile(r"(?:" + NGUON_MA + r")-(?:\d{8}-\d{2,3}|CANH)", re.I if TIEN_TO != "oHa" else 0)
 
 
 def doi_ma(m):
-    return "oHa-" + m.split("-", 1)[1]
+    return TIEN_TO + "-" + m.split("-", 1)[1]
 QUYET = re.compile(r"\b\d[A-D]\b|\b(ừ|ok|oke|chốt|giữ nguyên|bỏ|làm đi)\b", re.I)
 TIN_MAY = ("<task-notification>", "[SYSTEM NOTIFICATION")   # thông báo máy KHÔNG phải lời chủ
 TRAN_CHAN = 3
@@ -59,7 +76,7 @@ def main():
             return
         thieu = [m for m in k["ma"] if not any(
             re.search(r"sep_viec\.py\s+(ghi|chuyen)\b", c)
-            and re.search(r"--ma\s+['\"]?(?:oHa|Task)-" + re.escape(m.split("-", 1)[1]) + r"\b", c) for c in cmds)]
+            and re.search(r"--ma\s+['\"]?(?:" + NGUON_MA + r")-" + re.escape(m.split("-", 1)[1]) + r"\b", c, re.I) for c in cmds)]
         if not thieu or k.get("lan", 0) >= TRAN_CHAN:
             os.remove(kho)
             return
