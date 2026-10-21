@@ -344,6 +344,10 @@ async function chonDuAn(env, m) {
   if (m.chat.type !== 'private') {
     if (ch.noiBo.includes(chat)) return { env };
     const d = (await dsDuAn(env)).find((x) => x.chat_chinh === chat || x.chat_phu.includes(chat));
+    // Nhóm chưa gắn dự án: chỉ ghi mã + tên nhóm (không nội dung) — webhook nuốt getUpdates nên đây là lối duy nhất
+    // biết mã nhóm mới chủ nhà vừa thêm bot (ca nhóm anh Tân lập lại 21/10, Task-21102026-08).
+    if (!d) await env.DB.prepare('INSERT INTO bnv_nhom_la(chat_id, ten, lan_dau, lan_cuoi, so_tin) VALUES (?1, ?2, ?3, ?3, 1) ON CONFLICT(chat_id) DO UPDATE SET ten = ?2, lan_cuoi = ?3, so_tin = so_tin + 1')
+      .bind(chat, String(m.chat.title ?? ''), Math.floor(Date.now() / 1000)).run().catch((e) => console.log('ghi nhóm lạ lỗi', String(e)));
     return d && d.bat ? { env: voiDuAn(env, d) } : null;
   }
   if (String(m.from.id) !== ch.chu) return null;
