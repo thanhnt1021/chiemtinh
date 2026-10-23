@@ -12,9 +12,10 @@ class Config:
     # Cấu hình Web
     PERMANENT_SESSION_LIFETIME = 86400 * 30 # 30 ngày
     
-    # Cấu hình Admin
-    ADMIN_USER = "nguydev"
-    ADMIN_PASS_HASH = lib.hash_password("***DA-GO***")
+    # Cấu hình Admin — mật khẩu đọc từ .env (không vào git); thiếu thì không ai đăng nhập admin được
+    lib.nap_env_local()
+    ADMIN_USER = os.environ.get("ADMIN_USER", "nguydev")
+    ADMIN_PASS_HASH = lib.hash_password(os.environ["ADMIN_PASS"]) if os.environ.get("ADMIN_PASS") else None
 
     # Cấu hình Google Services
     SHEETS_SCOPE = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']

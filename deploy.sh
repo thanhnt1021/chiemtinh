@@ -115,8 +115,9 @@ class Config:
     SECRET_FILE = os.path.join(BASE_DIR, 'secret.key')
     CREDS_PATH = os.path.join(BASE_DIR, 'mine01.json')
     PERMANENT_SESSION_LIFETIME = 86400 * 30 
-    ADMIN_USER = "nguydev"
-    ADMIN_PASS_HASH = lib.hash_password("***DA-GO***")
+    lib.nap_env_local()
+    ADMIN_USER = os.environ.get("ADMIN_USER", "nguydev")
+    ADMIN_PASS_HASH = lib.hash_password(os.environ["ADMIN_PASS"]) if os.environ.get("ADMIN_PASS") else None
     SHEETS_SCOPE = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
     SPREADSHEET_KEY_PLANETS = '1JKvme29_UelRvZzN_pzzg5ZLh9HIT0lWo1uf7UlpCbs'
     WORKSHEET_NAME_PLANETS = 'list'

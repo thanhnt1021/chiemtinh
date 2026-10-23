@@ -1,18 +1,37 @@
 # astro00_lib/db_models.py
-from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, Text, ForeignKey, desc
+from sqlalchemy import URL, create_engine, Column, Integer, String, Float, Boolean, Text, ForeignKey, desc
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from sqlalchemy.dialects.postgresql import JSONB
 from datetime import datetime
 import hashlib
+import os
+
+_GOC_DU_AN = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def nap_env_local():
+    """Nạp .env ở gốc dự án vào os.environ; biến môi trường đã có thì đè .env.
+    Mật khẩu để trong .env (không vào git) vì repo mở công khai — oHa-23102026-03."""
+    p = os.path.join(_GOC_DU_AN, ".env")
+    if not os.path.exists(p):
+        return
+    for d in open(p, encoding="utf-8"):
+        d = d.strip()
+        if d and not d.startswith("#") and "=" in d:
+            k, v = d.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
+
+nap_env_local()
 
 # --- CẤU HÌNH POSTGRESQL ---
-DB_USER = "nguydev"
-DB_PASS = "***DA-GO***"
-DB_HOST = "localhost"
-DB_PORT = "5432"
-DB_NAME = "astro"
+DB_USER = os.environ.get("DB_USER", "nguydev")
+DB_PASS = os.environ.get("DB_PASS", "")
+DB_HOST = os.environ.get("DB_HOST", "localhost")
+DB_PORT = os.environ.get("DB_PORT", "5432")
+DB_NAME = os.environ.get("DB_NAME", "astro")
 
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+DATABASE_URL = URL.create("postgresql", username=DB_USER, password=DB_PASS, host=DB_HOST, port=int(DB_PORT), database=DB_NAME)
 
 Base = declarative_base()
 engine = create_engine(DATABASE_URL)
