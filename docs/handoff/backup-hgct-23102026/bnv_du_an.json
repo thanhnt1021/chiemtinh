@@ -1,0 +1,63 @@
+[
+  {
+    "results": [
+      {
+        "ma": "TUNG",
+        "ten": "nhóm Bạn Tùng",
+        "chat_chinh": "-5325766797",
+        "chat_phu": "[]",
+        "sep": "[]",
+        "bat": 1,
+        "chu_de_rieng": null,
+        "rieng_vao_nhom": 1,
+        "bi_danh": "[\"tung\"]",
+        "thu_muc": "~/PycharmProjects/tung",
+        "tao_luc": 1792573453
+      },
+      {
+        "ma": "ANHTAN",
+        "ten": "anh Tân PY",
+        "chat_chinh": "-5471163159",
+        "chat_phu": "[]",
+        "sep": "[]",
+        "bat": 1,
+        "chu_de_rieng": null,
+        "rieng_vao_nhom": 0,
+        "bi_danh": "[\"anhtan\"]",
+        "thu_muc": "~/PycharmProjects/anhtan",
+        "tao_luc": 1792573453
+      },
+      {
+        "ma": "DAT",
+        "ten": "nhóm Đạt (Meta Testing)",
+        "chat_chinh": "-5508701709",
+        "chat_phu": "[]",
+        "sep": "[]",
+        "bat": 1,
+        "chu_de_rieng": null,
+        "rieng_vao_nhom": 0,
+        "bi_danh": "[\"dat\"]",
+        "thu_muc": "~/PycharmProjects/dat",
+        "tao_luc": 1792573453
+      }
+    ],
+    "success": true,
+    "meta": {
+      "served_by": "v3-prod",
+      "served_by_region": "APAC",
+      "served_by_colo": "HKG",
+      "served_by_primary": true,
+      "timings": {
+        "sql_duration_ms": 0.236
+      },
+      "duration": 0.236,
+      "changes": 0,
+      "last_row_id": 0,
+      "changed_db": false,
+      "size_after": 765952,
+      "rows_read": 3,
+      "rows_written": 0,
+      "total_attempts": 1
+    }
+  }
+]
